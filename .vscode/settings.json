@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "xstring": "cpp",
+        "vector": "cpp",
+        "queue": "cpp",
+        "functional": "cpp",
+        "*.tpp": "cpp",
+        "iostream": "cpp"
+    }
+}
