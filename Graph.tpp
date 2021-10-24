@@ -8,5 +8,6 @@ void SimpleGraph::assignVertices(vector<T> vertices, function<string(T)> labelma
         lab = labelmaker(vertices[i]);
         addNode(lab);
     }
+    head = V[0];
 }
 #endif

@@ -5,6 +5,7 @@
         "queue": "cpp",
         "functional": "cpp",
         "*.tpp": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "iosfwd": "cpp"
     }
 }

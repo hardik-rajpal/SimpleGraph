@@ -3,18 +3,21 @@
 #include<bits/stdc++.h>
 #define MAXV 100
 #define MAXE 4950 //100C2
+#define literal(expr) #expr
 using namespace std;
+string quotestring(string tbq);
 vector<string> split(string str, string sep);
 class Node{
     public:
-    string label;
-    int coords[2];//coordinates for animation program;
-    int weight;//equivalent to radius for animation program;
-    string colour;
+    string label="";
+    int coords[2]={0, 0};//coordinates for animation program;
+    int weight=1;//equivalent to radius for animation program;
+    string color="";
     vector<Node*> adjlist = {};
     Node(string _label){
         this->label = _label;
     }
+    string serialize();
 };
 class Edge{
     public:
@@ -30,7 +33,7 @@ class SimpleGraph{
     public:
     //undirected, uniweight graph, with no self loops
     int nv=0, ne=0;//number of vertices and edges
-    string cmds="";//string holding list of commands executed on Simplegraph.
+    string snapshots="[ \n";//string holding list of commands executed on Simplegraph.
     //These commands can be interpreted by the animation program.
     vector<Node*> V={};//Vector of vertices.
     vector<Edge*> E={};//vector of edges.
@@ -72,7 +75,9 @@ class SimpleGraph{
     /*✅*/Edge *getEdgeByNodes(Node*n1, Node*n2);
     
     //export all edit graph operations for animation program.
-    string exportCmds();
+    /*✅*/string exportShots();
+    /*✅*/string serialize();
+    /*✅*/void takeShot();
 };
 #include"Graph.tpp"
 #endif

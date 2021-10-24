@@ -101,11 +101,11 @@ int SimpleGraph::addEdgesByRelation(function<bool(string, string)> relation){
 }
 string SimpleGraph::getAdjList(){
     string alstr = "";
-    cout<<V.size()<<"\n";
-    for(int i=0;i<V.size();i++){
-        cout<<V[i]->adjlist.size()<<" ";
-    }
-    cout<<"\n";
+    // cout<<V.size()<<"\n";
+    // for(int i=0;i<V.size();i++){
+    //     cout<<V[i]->adjlist.size()<<" ";
+    // }
+    // cout<<"\n";
     
     
     for(int i=0;i<nv;i++){
@@ -258,4 +258,66 @@ SimpleGraph SimpleGraph::getInducedSubgraph(vector<Node*> vToExclude){
 
     cout<<subgraph->V.size()<<" "<<this->V.size()<<"\n";
     return (*subgraph);
+}
+
+//recursize serialize function
+
+string SimpleGraph::serialize(){
+    string temp;
+    ostringstream ss;
+    ss<<(this->head);
+    temp = ss.str();
+
+    string data = "{ \"H\":";
+    data = data + quotestring(temp) + ",\n";
+    data = data + "\"V\": [\n";
+    for(int i=0;i<nv-1;i++){
+        data = data + V[i]->serialize() + ",\n";       
+    }
+    data = data + V[nv-1]->serialize() + "\n]";       
+    data = data + "\n}";
+    return data;
+}
+string quotestring(string tbq){
+    return "\""+tbq+"\"";
+}
+
+string Node::serialize(){
+        string data = "{ ";
+        string temp;
+        ostringstream ss;
+        ss<<this;
+        temp = ss.str();
+        data = data +  quotestring("ptr") +" : "+ quotestring(temp) + ",\n";
+        data = data + quotestring("color") + " : " + quotestring(this->color) + ",\n";
+        data = data + quotestring("label") + " : " + quotestring(this->label) + ",\n";
+        data = data + quotestring("weight") + ": " + to_string(this->weight) + ",\n";
+        data = data + quotestring("coords") + ": {\n";
+        data = data + quotestring("x") + ": "+ to_string(coords[0])+",\n";
+        data = data + quotestring("y") + ": "+ to_string(coords[1])+"\n},\n";
+        data = data + quotestring("adjlist") + " : [\n";
+        int deg = adjlist.size();
+        for(int i=0;i<deg-1;i++){
+            ostringstream ss;
+            ss<<(this->adjlist[i]);
+            temp = ss.str();
+            data = data + quotestring(temp) + ",\n";
+        }
+        if(deg>1){
+        ostringstream tss;
+        tss<<(this->adjlist[deg-1]);
+        temp = tss.str();
+        data = data + quotestring(temp);
+
+        }
+        data = data + "\n]";
+        data = data + "\n}";
+        
+        return data;
+    }
+void SimpleGraph::takeShot(){
+    snapshots = snapshots+this->serialize() + ",";
+};
+string SimpleGraph::exportShots(){
+    return snapshots.substr(0, snapshots.length()-1) + "\n]";
 }
