@@ -16,19 +16,18 @@ vector<string> split(string str, string sep){
     return parts;
 }
 Node* SimpleGraph::addNode(string label){
-    Node n(label);
+    Node *n;
+    n = new Node(label);
     V.push_back(n);
     nv++;
-    vector<Node*> list = {};
-    adjlist.push_back(list);
-    return &V[V.size()-1];
+    return V[V.size()-1];
 }
 SimpleGraph::SimpleGraph(){};
 SimpleGraph::SimpleGraph(vector<string> labels){
     for(int i=0;i<labels.size();i++){
         addNode(labels[i]);
     }
-    head = &V[0];
+    head = V[0];
 }
 SimpleGraph::SimpleGraph(bool adjmat[MAXV][MAXV], vector<string> labels){
     for(int i=0;i<labels.size();i++){
@@ -39,11 +38,11 @@ SimpleGraph::SimpleGraph(bool adjmat[MAXV][MAXV], vector<string> labels){
         for(int j=0;j<i;j++){
             if(adjmat[i][j]){
                 // cout<<i<<" "<<j<<"\n";
-                connectNodes(&V[i], &V[j]);
+                connectNodes(V[i], V[j]);
             }
         }
     }
-    head = &V[0];
+    head = V[0];
 }
 //Uncompleted method.
 SimpleGraph::SimpleGraph(string adjlist){
@@ -82,8 +81,8 @@ SimpleGraph::SimpleGraph(string adjlist){
 }
 Node* SimpleGraph::getNodeByLabel(string label){
     for(int i=0;i<V.size(); i++){
-        if(V[i].label == label){
-            return &V[i];
+        if(V[i]->label == label){
+            return V[i];
         }
     }
     return NULL;
@@ -93,8 +92,8 @@ Node* SimpleGraph::getNodeByLabel(string label){
 int SimpleGraph::addEdgesByRelation(function<bool(string, string)> relation){
     for(int i=0;i<V.size();i++){
         for(int j=0;j<i;j++){
-            if(relation(V[i].label, V[j].label)){
-                connectNodes(&V[i], &V[j]);
+            if(relation(V[i]->label, V[j]->label)){
+                connectNodes(V[i], V[j]);
             }
         }
     }
@@ -102,15 +101,13 @@ int SimpleGraph::addEdgesByRelation(function<bool(string, string)> relation){
 }
 string SimpleGraph::getAdjList(){
     string alstr = "";
-    // for (auto x:adjlist){
-    //     cout<<x[0]->label<<" ";
-    // }
     for(int i=0;i<nv;i++){
-        // cout<<i<<": "<<adjlist[i].size()<<"\n";
-        alstr = alstr + V[i].label + ":";
-        alstr = alstr + adjlist[i][0]->label;
-        for(int j=1;j<adjlist[i].size();j++){
-            alstr =alstr + ","+ adjlist[i][j]->label;
+        alstr = alstr + V[i]->label + ":";
+        if(V[i]->adjlist.size()>0){
+            alstr = alstr + V[i]->adjlist[0]->label;
+            for(int j=1;j<V[i]->adjlist.size();j++){
+                alstr =alstr + ","+ V[i]->adjlist[j]->label;
+            }
         }
         alstr = alstr + "\n";
     }
@@ -118,9 +115,9 @@ string SimpleGraph::getAdjList(){
 }
 bool SimpleGraph::areConnected(Node *n1, Node*n2){
     for(int i=0;i<nv;i++){
-        if(&V[i]==n1){
-            for(int j=0;j<adjlist[i].size();j++){
-                if(adjlist[i][j]==n2){
+        if(V[i]==n1){
+            for(int j=0;j<V[i]->adjlist.size();j++){
+                if(V[i]->adjlist[j]==n2){
                     return true;
                 }
             }
@@ -134,18 +131,18 @@ Edge *SimpleGraph::connectNodes(Node*n1, Node*n2){
         // cout<<"W:Attempted to connect adjacent nodes!\n";
         return NULL;
     }
-    
-    E.push_back(Edge(n1, n2));
+    Edge *e = new Edge(n1, n2);
+    E.push_back(e);
     ne++;
     for(int i=0;i<nv;i++){
-        if(&V[i]==n1){
-            adjlist[i].push_back(n2);
+        if(V[i]==n1){
+            V[i]->adjlist.push_back(n2);
         }
-        if(&V[i]==n2){
-            adjlist[i].push_back(n1);
+        if(V[i]==n2){
+            V[i]->adjlist.push_back(n1);
         }
     }
-    return &E[E.size()-1];
+    return E[E.size()-1];
 }
 Node *SimpleGraph::addBranch(Node *root, vector<string> vlabels, vector<string> elabels){
     Node *n2;
@@ -153,30 +150,106 @@ Node *SimpleGraph::addBranch(Node *root, vector<string> vlabels, vector<string> 
     if(elabels.size()==0){
         for(int i=0;i<vlabels.size();i++){
             // cout<<i<<"\n";
-            cout<<root<<"\n";
+            // cout<<root<<"\n";
             n2 = addNode(vlabels[i]);
-            cout<<root<<"\n";
-            cout<<"Label assigned: "<<n2->label<<".\n";
-                for(auto x:adjlist){
-                    cout<<x.size()<<":";
-                    for(auto y: x){
-                        cout<<y->label<<" ";
-                    }
-                }cout<<"\n";
+            // cout<<root<<"\n";
+            // cout<<"Label assigned: "<<n2->label<<".\n";
             connectNodes(root, n2);
             root = n2;
-            cout<<root->label<<"\n";
+            // cout<<root->label<<"\n";
             // cout<<"done\n";
         }
     }
-    // for(auto x:V){
-    //     cout<<x.label<<"\n";
-    // }
-    for(auto x:adjlist){
-        cout<<x.size()<<":";
-        for(auto y: x){
-            cout<<y->label<<" ";
+    return root;
+}
+bool SimpleGraph::deleteNode(Node *n1){
+    bool deleted = false;
+    for(int i=0;i<nv;i++){
+        if(V[i]==n1){
+            V[i] = V[V.size()-1];
+            V.pop_back();
+            deleted = true;
+        }
+        else{
+            for(int j=0;j<V[i]->adjlist.size();j++){
+                if(V[i]->adjlist[j]==n1){
+                    int sz = V[i]->adjlist.size();
+                    V[i]->adjlist[j]=V[i]->adjlist[sz-1];
+                    V[i]->adjlist.pop_back();
+                }
+            }
         }
     }
-    return root;
+    nv--;
+    int etrm = 0;
+    for(int i=0;i<ne;i++){
+        if(E[i]->n1 == n1 || E[i]->n2 ==n1){
+            E[i] = E[E.size()-1];
+            E.pop_back();
+            etrm++;
+        }
+    }
+    ne = ne - etrm;
+    if(!deleted){
+        cout<<"W:Node to be removed NOT FOUND!";
+    }
+    return deleted;
+}
+Edge *SimpleGraph::getEdgeByNodes(Node*n1, Node*n2){
+    for(int i=0;i<E.size();i++){
+        if((E[i]->n1==n1 && E[i]->n2==n2)||(E[i]->n1==n2 && E[i]->n2==n1)){
+            return E[i];
+        }
+    }
+    return NULL;
+}
+bool SimpleGraph::disconnectNodes(Node *n1, Node*n2){
+    bool deleted = false;
+    for(int i=0;i<E.size();i++){
+        if((E[i]->n1==n1 && E[i]->n2==n2)||(E[i]->n1==n2 && E[i]->n2==n1)){
+            E[i] = E[E.size()-1];
+            E.pop_back();
+            deleted = true;
+            break;
+        }
+    }
+    ne--;
+
+    for(int i=0;i<n1->adjlist.size();i++){
+        if(n1->adjlist[i]==n2){
+            n1->adjlist[i] = n1->adjlist[n1->adjlist.size()-1];
+            n1->adjlist.pop_back();
+            break;
+        }   
+    }
+    for(int i=0;i<n2->adjlist.size();i++){
+        if(n2->adjlist[i]==n1){
+            n2->adjlist[i] = n2->adjlist[n2->adjlist.size()-1];
+            n2->adjlist.pop_back();
+            break;
+        }   
+    }
+    if(!deleted){
+        cout<<"W:Tried To Delete Absent Edge!\n";
+    }
+    return deleted;
+}
+SimpleGraph SimpleGraph::getInducedSubgraph(vector<Node*> vToExclude){
+    SimpleGraph *subgraph = new SimpleGraph(this->getAdjList());string lab;
+    for(int i=0;i<vToExclude.size();i++){
+        
+        
+        lab = vToExclude[i]->label;
+        cout<<this->getNodeByLabel(lab)<<" "<<subgraph->getNodeByLabel(lab)<<"\n";
+    }
+    for(int i=0;i<V.size();i++){
+        for(int j=0;j<vToExclude.size();j++){
+            if(V[i]==vToExclude[j]){
+                subgraph->deleteNode(subgraph->V[i]);
+            }
+        }
+    }
+
+    cout<<subgraph->V.size()<<" "<<this->V.size()<<"\n";
+    return (*subgraph);
 }

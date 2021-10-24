@@ -11,6 +11,7 @@ class Node{
     int coords[2];//coordinates for animation program;
     int weight;//equivalent to radius for animation program;
     string colour;
+    vector<Node*> adjlist = {};
     Node(string _label){
         this->label = _label;
     }
@@ -31,9 +32,8 @@ class SimpleGraph{
     int nv=0, ne=0;//number of vertices and edges
     string cmds="";//string holding list of commands executed on Simplegraph.
     //These commands can be interpreted by the animation program.
-    vector<Node> V={};//Vector of vertices.
-    vector<Edge> E={};//vector of edges.
-    vector<vector<Node*>> adjlist = {};//adjacency list
+    vector<Node*> V={};//Vector of vertices.
+    vector<Edge*> E={};//vector of edges.
     Node* head = NULL;//pointer to head for animation purposes
 
     //constructors
@@ -48,7 +48,7 @@ class SimpleGraph{
     vector<Node*> generalSearch(Node *s, function<Node(vector<Node>)> selector);//return a vector of nodes
     
     //subgraphs.
-    SimpleGraph getInducedSubgraph(Node *vToExclude[]);//return induced subgraphs by deleteing given vertices.
+    SimpleGraph getInducedSubgraph(vector<Node*> vToExclude);//return induced subgraphs by deleteing given vertices.
     vector<SimpleGraph> getConnectedComponents();//return connected components
 
     //Edit graph
@@ -56,11 +56,11 @@ class SimpleGraph{
     void assignVertices(vector<T> vertices, function<string(T)> labelmaker);
     //add overload with addBranchby label
     //assumes root is a valid pointer in the graph.
-    Node *addBranch(Node* root, vector<string> vlabels, vector<string> elabels);//add a series of nodes at root.
+    /*✅*/Node *addBranch(Node* root, vector<string> vlabels, vector<string> elabels);//add a series of nodes at root.
     /*✅*/int addEdgesByRelation(function<bool(string, string)> relation);//check each pair of nodes for relation between labels and add edge if true.
     /*✅*/Edge *connectNodes(Node*n1, Node*n2);//connect nodes.
-    bool deleteNode(Node *n1);
-    bool deleteEdge(Edge *e);
+    /*✅*/bool deleteNode(Node *n1);
+    /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
 
     //getters.
