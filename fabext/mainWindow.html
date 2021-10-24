@@ -6,14 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
 
     <title>Hello, world!</title>
   </head>
   <body>
-      <canvas id="canvas"></canvas>
-    <h1>Hello, world!!</h1>
-    <script src="fabric.min.js"></script>
-    <script src="fabric.js"></script>
+      <!-- <canvas id="canvas"></canvas> -->
+    <form id="col">
+      <input type="file" id="snapshots">
+      <button type="submit">Submit</button>
+    </form>
+    
+    <script>
+      document.querySelector('#col').addEventListener('submit', submitFile);
+      function submitFile(e){
+        e.preventDefault();
+        const snapshots = document.querySelector('#snapshots').files[0]
+        // ipcRenderer.send('snapshots:load', snapshots)
+        let reader = new FileReader();
+        reader.onload = (data)=>{
+          console.log(JSON.parse(data.target.result))
+        }
+        reader.readAsText(snapshots)
+        console.log(snapshots);
+      }
+    </script>
+    <!-- <script src="fabric.min.js"></script> -->
+    <!-- <script src="fabric.js"></script> -->
   </body>
 </html>
