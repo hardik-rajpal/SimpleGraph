@@ -25,8 +25,11 @@ int main(int argc, char *argv[]){
     // myg.deleteNode(myg.getNodeByLabel("2"));
     // myg.disconnectNodes(myg.getNodeByLabel("1"), myg.getNodeByLabel("2"));
     vector<Node*> vte = {myg.getNodeByLabel("2")};
+    // SimpleGraph sg = SimpleGraph(myg.getAdjList());
+    // string a = myg.getAdjList();
     SimpleGraph sg = myg.getInducedSubgraph(vte);
     cout<<myg.getAdjList();
+    // cout<<"*"<<a<<"*\n";
     cout<<sg.getAdjList();
     // cout<<myg.nv<<" "<<myg.ne<<"\n";
 }

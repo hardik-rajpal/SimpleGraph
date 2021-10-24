@@ -48,7 +48,7 @@ class SimpleGraph{
     vector<Node*> generalSearch(Node *s, function<Node(vector<Node>)> selector);//return a vector of nodes
     
     //subgraphs.
-    SimpleGraph getInducedSubgraph(vector<Node*> vToExclude);//return induced subgraphs by deleteing given vertices.
+    /*✅*/SimpleGraph getInducedSubgraph(vector<Node*> vToExclude);//return induced subgraphs by deleteing given vertices.
     vector<SimpleGraph> getConnectedComponents();//return connected components
 
     //Edit graph
@@ -69,7 +69,7 @@ class SimpleGraph{
     /*✅*/bool areConnected(Node*n1, Node*n2);
     vector<Node*> getpathbetween(Node *n1, Node*n2);
     int getdistanceBetween(Node *n1, Node *n2);
-    Edge *getEdgeByNodes(Node*n1, Node*n2);
+    /*✅*/Edge *getEdgeByNodes(Node*n1, Node*n2);
     
     //export all edit graph operations for animation program.
     string exportCmds();

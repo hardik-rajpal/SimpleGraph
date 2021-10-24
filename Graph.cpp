@@ -101,6 +101,13 @@ int SimpleGraph::addEdgesByRelation(function<bool(string, string)> relation){
 }
 string SimpleGraph::getAdjList(){
     string alstr = "";
+    cout<<V.size()<<"\n";
+    for(int i=0;i<V.size();i++){
+        cout<<V[i]->adjlist.size()<<" ";
+    }
+    cout<<"\n";
+    
+    
     for(int i=0;i<nv;i++){
         alstr = alstr + V[i]->label + ":";
         if(V[i]->adjlist.size()>0){
@@ -111,7 +118,7 @@ string SimpleGraph::getAdjList(){
         }
         alstr = alstr + "\n";
     }
-    return alstr;
+    return alstr.substr(0, alstr.length()-1);
 }
 bool SimpleGraph::areConnected(Node *n1, Node*n2){
     for(int i=0;i<nv;i++){
@@ -236,9 +243,8 @@ bool SimpleGraph::disconnectNodes(Node *n1, Node*n2){
 }
 SimpleGraph SimpleGraph::getInducedSubgraph(vector<Node*> vToExclude){
     SimpleGraph *subgraph = new SimpleGraph(this->getAdjList());string lab;
+    // cout<<subgraph->getAdjList();
     for(int i=0;i<vToExclude.size();i++){
-        
-        
         lab = vToExclude[i]->label;
         cout<<this->getNodeByLabel(lab)<<" "<<subgraph->getNodeByLabel(lab)<<"\n";
     }

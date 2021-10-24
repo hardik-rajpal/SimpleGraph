@@ -1,0 +1,20 @@
+{
+  "name": "fabext",
+  "version": "1.0.0",
+  "description": "Fabric.js powered extension for SimpleGraph module.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "Fabric",
+    "Graph",
+    "SimpleGraph"
+  ],
+  "author": "Hardik Rajpal",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^15.3.0",
+    "fabric": "^4.6.0"
+  }
+}
