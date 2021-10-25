@@ -7,12 +7,21 @@
 using namespace std;
 string quotestring(string tbq);
 vector<string> split(string str, string sep);
+struct Neighbour{
+    Node*n;
+    Edge*e;
+    Neighbour(Node*_n, Edge*_e){
+        n = _n;
+        e = _e;
+    }
+};
 class Node{
     public:
     string label="";
     int coords[2]={0, 0};//coordinates for animation program;
     int weight=1;//equivalent to radius for animation program;
     string color="";
+    vector<Neighbour> adjlist2= {};
     vector<Node*> adjlist = {};
     Node(string _label){
         this->label = _label;
