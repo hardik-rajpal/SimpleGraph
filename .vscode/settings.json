@@ -6,6 +6,7 @@
         "functional": "cpp",
         "*.tpp": "cpp",
         "iostream": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "random": "cpp"
     }
 }
