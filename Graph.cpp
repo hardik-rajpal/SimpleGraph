@@ -274,7 +274,13 @@ string SimpleGraph::serialize(){
     for(int i=0;i<nv-1;i++){
         data = data + V[i]->serialize() + ",\n";       
     }
-    data = data + V[nv-1]->serialize() + "\n]";       
+    data = data + V[nv-1]->serialize() + "\n],\n";       
+    data = data + "\"E\": [\n";
+    for(int i=0;i<ne-1;i++){
+        data = data + E[i]->serialize() + ",\n";       
+    }
+    data = data + E[ne-1]->serialize() + "\n]";       
+    
     data = data + "\n}";
     return data;
 }
@@ -320,4 +326,23 @@ void SimpleGraph::takeShot(){
 };
 string SimpleGraph::exportShots(){
     return snapshots.substr(0, snapshots.length()-1) + "\n]";
+}
+string Edge::serialize(){
+    string d = "{ \n", temp ="";
+    ostringstream wss;
+    wss<<(this);
+    temp = wss.str();
+    d = d + quotestring("ptr") + " : " + quotestring(temp) + ",\n";
+    ostringstream tss;
+    tss<<(n1);
+    temp = tss.str();
+    d = d + quotestring("n1") + " : " + quotestring(temp) + ",\n";
+    ostringstream ss;
+    ss<<(n2);
+    temp = ss.str();
+    d = d + quotestring("n2") + " : " + quotestring(temp) + ",\n";
+    d = d + quotestring("weight") + " : " + to_string(weight) +",\n";
+    d = d + quotestring("color") + " : " + quotestring(color) +",\n";
+    d = d + quotestring("label") + " : " + quotestring(label) +"\n}";
+    return d;
 }

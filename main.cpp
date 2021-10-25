@@ -8,24 +8,20 @@ string labelmaker(queue<int> q){
 }
 
 int main(int argc, char *argv[]){
-    Node n = Node("Abc");
-    // cout<<n.serialize();
     string adjlist = "1:2,3\n2:1\n3:1";
     // vector<string> lbls = {"a", "b", "c"};
     // vector<string> brnch = {"4", "5", "6"};
     // bool am[MAXV][MAXV];am[1][0] = 0;am[2][0] = 1;am[2][1] = 0;
-    queue<int> intq;
-    vector<queue<int>> vqs;
-    intq.push(1);
-    vqs.push_back(intq);
-    intq.push(2);
-    vqs.push_back(intq);
-    intq.push(3);
-    vqs.push_back(intq);
-    SimpleGraph myg = SimpleGraph();
-    myg.assignVertices<queue<int>>(vqs, labelmaker);
-    myg.takeShot();
-    myg.head = myg.V[1];
-    myg.takeShot();
-    cout<<myg.exportShots();
+    // queue<int> intq;
+    // vector<queue<int>> vqs;
+    // intq.push(1);
+    // vqs.push_back(intq);
+    // intq.push(2);
+    // vqs.push_back(intq);
+    // intq.push(3);
+    // vqs.push_back(intq);
+    // SimpleGraph myg = SimpleGraph();
+    // myg.assignVertices<queue<int>>(vqs, labelmaker);
+    SimpleGraph myg = SimpleGraph(adjlist);
+    cout<<myg.serialize();
 }
