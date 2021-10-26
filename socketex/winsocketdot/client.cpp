@@ -79,17 +79,10 @@ int main(int argc, char **argv)
      ServerAddr.sin_family = AF_INET;
 
      // Port no.
-
      ServerAddr.sin_port = htons(Port);
-
      // The IP address
-
      ServerAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
- 
-
      // Make a connection to the server with socket SendingSocket.
-
      RetCode = connect(SendingSocket, (SOCKADDR *) &ServerAddr, sizeof(ServerAddr));
 
      if(RetCode != 0)
