@@ -26,6 +26,7 @@ int main(int argc, char *argv[]){
     ServerSocket server = ServerSocket(7171, "127.0.0.1");
     SimpleGraph myg = SimpleGraph(adjlist);
     server.listenForClient();
+    Sleep(3000);
     server.sendData(myg.serialize());
     Sleep(10000);
     // cout<<myg.serialize();

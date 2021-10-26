@@ -6,10 +6,11 @@ const {app, BrowserWindow, Menu} = electron;
 let mainWindow;
 
 //listen for the app to be ready.
-app.commandLine.appendSwitch('ignore-sertificate-errors', 'true');
-app.commandLine.appendSwitch('ignore-ssl-errors', 'true');
-app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
-app.commandLine.appendSwitch('ignore-certificate-errors-spki-list');
+// app.commandLine.appendArgument('--allow-insecure-localhost', 'true');
+
+// app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
+// app.commandLine.appendSwitch('ignore-ssl-errors', 'true');
+app.commandLine.appendArgument('--ignore-certificate-errors-spki-list');
 app.on('ready', function(){
     mainWindow = new BrowserWindow({
         width:800,
