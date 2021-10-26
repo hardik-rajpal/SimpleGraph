@@ -6,14 +6,21 @@ const {app, BrowserWindow, Menu} = electron;
 let mainWindow;
 
 //listen for the app to be ready.
+app.commandLine.appendSwitch('ignore-sertificate-errors', 'true');
+app.commandLine.appendSwitch('ignore-ssl-errors', 'true');
+app.commandLine.appendSwitch('allow-insecure-localhost', 'true');
+app.commandLine.appendSwitch('ignore-certificate-errors-spki-list');
 app.on('ready', function(){
     mainWindow = new BrowserWindow({
-        width:300,
-        height:200,
+        width:800,
+        height:600,
         title:'Add File',
         webPreferences:{
             nodeIntegration:true,
-            contextIsolation:false
+            contextIsolation:false,
+            webSecurity:false,
+            allowDisplayInsecureContent:true,
+            allowRunningInsecureContent:true
         }
     });
     mainWindow.loadURL(url.format({

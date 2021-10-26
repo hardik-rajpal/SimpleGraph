@@ -27,5 +27,6 @@ int main(int argc, char *argv[]){
     SimpleGraph myg = SimpleGraph(adjlist);
     server.listenForClient();
     server.sendData(myg.serialize());
-    // Sleep(10000);
+    Sleep(10000);
+    // cout<<myg.serialize();
 }

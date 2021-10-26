@@ -16,7 +16,15 @@
       <input type="file" id="snapshots">
       <button type="submit">Submit</button>
     </form>
-    
+    <!-- <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> -->
+    <script>
+      const socket = new WebSocket('wss://127.0.0.1:7171/', "protocolOne")
+      socket.onmessage = function(event){
+        console.log("Hi");
+        console.log(event);
+        console.log(event.data);
+      }
+    </script>
     <script>
       document.querySelector('#col').addEventListener('submit', submitFile);
       function submitFile(e){

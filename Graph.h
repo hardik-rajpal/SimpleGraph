@@ -1,3 +1,13 @@
+/*
+TODO:
+Don't delete Edge class.
+Restructure Graph functions to use OutEdge instead of Edge class.
+Write serializer for OutEdge
+Write client socket in fabric.js
+
+
+
+*/
 #ifndef GRAPH_H
 #define GRAPH_H
 #include<bits/stdc++.h>
@@ -44,6 +54,17 @@ class Edge{
     }
     string serialize();
 };
+// class OutEdge{
+//     public:
+//     Node* head;
+//     int weight;
+//     string label;
+//     string color;
+//     Edge(Node *_head){
+//         head = _head;
+//     }
+//     string serialize();
+// };
 class SimpleGraph{
     public:
     //undirected, uniweight graph, with no self loops
