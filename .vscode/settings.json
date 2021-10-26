@@ -8,5 +8,6 @@
         "iostream": "cpp",
         "iosfwd": "cpp",
         "random": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

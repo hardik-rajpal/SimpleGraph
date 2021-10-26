@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 #include"Graph.h"
+
 using namespace std;
 string labelmaker(queue<int> q){
     // return to_string(q.front());
@@ -22,6 +23,9 @@ int main(int argc, char *argv[]){
     // vqs.push_back(intq);
     // SimpleGraph myg = SimpleGraph();
     // myg.assignVertices<queue<int>>(vqs, labelmaker);
+    ServerSocket server = ServerSocket(7171, "127.0.0.1");
     SimpleGraph myg = SimpleGraph(adjlist);
-    cout<<myg.serialize();
+    server.listenForClient();
+    server.sendData(myg.serialize());
+    // Sleep(10000);
 }

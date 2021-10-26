@@ -1,9 +1,13 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include<bits/stdc++.h>
+#include <winsock2.h>
+#include <stdio.h>
+#include<string>
 #define MAXV 100
 #define MAXE 4950 //100C2
 #define literal(expr) #expr
+#define MAXBUF 10000
 using namespace std;
 string quotestring(string tbq);
 vector<string> split(string str, string sep);
@@ -89,6 +93,22 @@ class SimpleGraph{
     /*✅*/string exportShots();
     /*✅*/string serialize();
     /*✅*/void takeShot();
+};
+class ServerSocket{
+     public:
+     WSADATA            wsaData;
+     SOCKET             ListeningSocket, NewConnection;
+     SOCKADDR_IN        ServerAddr, SenderInfo;
+     int                Port;
+     // Receiving part
+     char          recvbuff[MAXBUF], sendbuff[MAXBUF];
+     int                ByteReceived, BytesSent,i, nlen, SelectTiming;
+    ServerSocket(int port, string addr);
+    int recvTimeOutTCP(SOCKET socket, long sec, long usec);
+    void listenForClient();
+    string awaitSignal();
+    void sendData(string msg);
+    void closeConnection();
 };
 #include"Graph.tpp"
 #endif
