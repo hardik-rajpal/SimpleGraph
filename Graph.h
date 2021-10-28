@@ -29,6 +29,7 @@ vector<string> split(string str, string sep);
 //         e = _e;
 //     }
 // };
+class HalfEdge;
 class Node{
     public:
     string label="";
@@ -36,7 +37,9 @@ class Node{
     int weight=1;//equivalent to radius for animation program;
     string color="";
     // vector<Neighbour> adjlist2= {};
-    vector<Node*> adjlist = {};
+    vector<HalfEdge*> inlist = {};
+    //use outlist for simplegraph
+    vector<HalfEdge*> outlist = {};
     Node(string _label){
         this->label = _label;
     }
@@ -54,17 +57,18 @@ class Edge{
     }
     string serialize();
 };
-// class OutEdge{
-//     public:
-//     Node* head;
-//     int weight;
-//     string label;
-//     string color;
-//     Edge(Node *_head){
-//         head = _head;
-//     }
-//     string serialize();
-// };
+class HalfEdge{
+    public:
+    Node* end;
+    int weight;
+    string label;
+    string color;
+    HalfEdge* conjugate = NULL;
+    HalfEdge(Node *_end){
+        end = _end;
+    }
+    string serialize();
+};
 class SimpleGraph{
     public:
     //undirected, uniweight graph, with no self loops
@@ -72,7 +76,6 @@ class SimpleGraph{
     string snapshots="[ \n";//string holding list of commands executed on Simplegraph.
     //These commands can be interpreted by the animation program.
     vector<Node*> V={};//Vector of vertices.
-    vector<Edge*> E={};//vector of edges.
     Node* head = NULL;//pointer to head for animation purposes
 
     //constructors
@@ -97,7 +100,7 @@ class SimpleGraph{
     //assumes root is a valid pointer in the graph.
     /*✅*/Node *addBranch(Node* root, vector<string> vlabels, vector<string> elabels);//add a series of nodes at root.
     /*✅*/int addEdgesByRelation(function<bool(string, string)> relation);//check each pair of nodes for relation between labels and add edge if true.
-    /*✅*/Edge *connectNodes(Node*n1, Node*n2);//connect nodes.
+    /*✅*/HalfEdge *connectNodes(Node*n1, Node*n2);//connect nodes.
     /*✅*/bool deleteNode(Node *n1);
     /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
@@ -108,7 +111,7 @@ class SimpleGraph{
     /*✅*/bool areConnected(Node*n1, Node*n2);
     vector<Node*> getpathbetween(Node *n1, Node*n2);
     int getdistanceBetween(Node *n1, Node *n2);
-    /*✅*/Edge *getEdgeByNodes(Node*n1, Node*n2);
+    /*✅*/HalfEdge *getEdgeByNodes(Node*n1, Node*n2);
     
     //export all edit graph operations for animation program.
     /*✅*/string exportShots();

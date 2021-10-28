@@ -110,10 +110,10 @@ string SimpleGraph::getAdjList(){
     
     for(int i=0;i<nv;i++){
         alstr = alstr + V[i]->label + ":";
-        if(V[i]->adjlist.size()>0){
-            alstr = alstr + V[i]->adjlist[0]->label;
-            for(int j=1;j<V[i]->adjlist.size();j++){
-                alstr =alstr + ","+ V[i]->adjlist[j]->label;
+        if(V[i]->outlist.size()>0){
+            alstr = alstr + V[i]->outlist[0]->end->label;
+            for(int j=1;j<V[i]->outlist.size();j++){
+                alstr =alstr + ","+ V[i]->outlist[j]->end->label;
             }
         }
         alstr = alstr + "\n";
@@ -123,8 +123,8 @@ string SimpleGraph::getAdjList(){
 bool SimpleGraph::areConnected(Node *n1, Node*n2){
     for(int i=0;i<nv;i++){
         if(V[i]==n1){
-            for(int j=0;j<V[i]->adjlist.size();j++){
-                if(V[i]->adjlist[j]==n2){
+            for(int j=0;j<V[i]->outlist.size();j++){
+                if(V[i]->outlist[j]->end==n2){
                     return true;
                 }
             }
@@ -132,24 +132,26 @@ bool SimpleGraph::areConnected(Node *n1, Node*n2){
     }
     return false;
 }
-Edge *SimpleGraph::connectNodes(Node*n1, Node*n2){
+HalfEdge *SimpleGraph::connectNodes(Node*n1, Node*n2){
     if(n1==n2){return NULL;}
     if(areConnected(n1, n2)){
         // cout<<"W:Attempted to connect adjacent nodes!\n";
         return NULL;
     }
-    Edge *e = new Edge(n1, n2);
-    E.push_back(e);
+    HalfEdge *e1 = new HalfEdge(n2);
+    HalfEdge *e2 = new HalfEdge(n1);
+    e1->conjugate = e2;
+    e2->conjugate = e1;
     ne++;
     for(int i=0;i<nv;i++){
         if(V[i]==n1){
-            V[i]->adjlist.push_back(n2);
+            V[i]->outlist.push_back(e1);
         }
         if(V[i]==n2){
-            V[i]->adjlist.push_back(n1);
+            V[i]->outlist.push_back(e2);
         }
     }
-    return E[E.size()-1];
+    return e1;
 }
 Node *SimpleGraph::addBranch(Node *root, vector<string> vlabels, vector<string> elabels){
     Node *n2;
@@ -178,64 +180,53 @@ bool SimpleGraph::deleteNode(Node *n1){
             deleted = true;
         }
         else{
-            for(int j=0;j<V[i]->adjlist.size();j++){
-                if(V[i]->adjlist[j]==n1){
-                    int sz = V[i]->adjlist.size();
-                    V[i]->adjlist[j]=V[i]->adjlist[sz-1];
-                    V[i]->adjlist.pop_back();
+            for(int j=0;j<V[i]->outlist.size();j++){
+                if(V[i]->outlist[j]->end==n1){
+                    int sz = V[i]->outlist.size();
+                    V[i]->outlist[j]=V[i]->outlist[sz-1];
+                    V[i]->outlist.pop_back();
+                    ne--;
+                    break;
                 }
             }
         }
     }
     nv--;
     int etrm = 0;
-    for(int i=0;i<ne;i++){
-        if(E[i]->n1 == n1 || E[i]->n2 ==n1){
-            E[i] = E[E.size()-1];
-            E.pop_back();
-            etrm++;
-        }
-    }
-    ne = ne - etrm;
     if(!deleted){
         cout<<"W:Node to be removed NOT FOUND!";
     }
     return deleted;
 }
-Edge *SimpleGraph::getEdgeByNodes(Node*n1, Node*n2){
-    for(int i=0;i<E.size();i++){
-        if((E[i]->n1==n1 && E[i]->n2==n2)||(E[i]->n1==n2 && E[i]->n2==n1)){
-            return E[i];
+HalfEdge *SimpleGraph::getEdgeByNodes(Node*n1, Node*n2){
+    for(int i=0;i<nv;i++){
+        if(V[i]==n1){
+            for(int j=0;j<V[i]->outlist.size();j++){
+                if(V[i]->outlist[j]->end==n2){
+                    return V[i]->outlist[j];
+                }
+            }
         }
     }
     return NULL;
 }
 bool SimpleGraph::disconnectNodes(Node *n1, Node*n2){
     bool deleted = false;
-    for(int i=0;i<E.size();i++){
-        if((E[i]->n1==n1 && E[i]->n2==n2)||(E[i]->n1==n2 && E[i]->n2==n1)){
-            E[i] = E[E.size()-1];
-            E.pop_back();
-            deleted = true;
+    for(int i=0;i<n1->outlist.size();i++){
+        if(n1->outlist[i]->end==n2){
+            n1->outlist[i] = n1->outlist[n1->outlist.size()-1];
+            n1->outlist.pop_back();
             break;
-        }
+        }   
+    }
+    for(int i=0;i<n2->outlist.size();i++){
+        if(n2->outlist[i]->end==n1){
+            n2->outlist[i] = n2->outlist[n2->outlist.size()-1];
+            n2->outlist.pop_back();
+            break;
+        }   
     }
     ne--;
-
-    for(int i=0;i<n1->adjlist.size();i++){
-        if(n1->adjlist[i]==n2){
-            n1->adjlist[i] = n1->adjlist[n1->adjlist.size()-1];
-            n1->adjlist.pop_back();
-            break;
-        }   
-    }
-    for(int i=0;i<n2->adjlist.size();i++){
-        if(n2->adjlist[i]==n1){
-            n2->adjlist[i] = n2->adjlist[n2->adjlist.size()-1];
-            n2->adjlist.pop_back();
-            break;
-        }   
-    }
     if(!deleted){
         cout<<"W:Tried To Delete Absent Edge!\n";
     }
@@ -274,13 +265,7 @@ string SimpleGraph::serialize(){
     for(int i=0;i<nv-1;i++){
         data = data + V[i]->serialize() + ",\n";       
     }
-    data = data + V[nv-1]->serialize() + "\n],\n";       
-    data = data + "\"E\": [\n";
-    for(int i=0;i<ne-1;i++){
-        data = data + E[i]->serialize() + ",\n";       
-    }
-    data = data + E[ne-1]->serialize() + "\n]";       
-    
+    data = data + V[nv-1]->serialize() + "\n]\n";       
     data = data + "\n}";
     return data;
 }
@@ -301,20 +286,14 @@ string Node::serialize(){
         data = data + quotestring("coords") + ": {\n";
         data = data + quotestring("x") + ": "+ to_string(coords[0])+",\n";
         data = data + quotestring("y") + ": "+ to_string(coords[1])+"\n},\n";
-        data = data + quotestring("adjlist") + " : [\n";
-        int deg = adjlist.size();
+        data = data + quotestring("outlist") + " : [\n";
+        
+        int deg = outlist.size();
         for(int i=0;i<deg-1;i++){
-            ostringstream ss;
-            ss<<(this->adjlist[i]);
-            temp = ss.str();
-            data = data + quotestring(temp) + ",\n";
+            data = data + outlist[i]->serialize() + ",\n";
         }
-        if(deg>1){
-        ostringstream tss;
-        tss<<(this->adjlist[deg-1]);
-        temp = tss.str();
-        data = data + quotestring(temp);
-
+        if(deg>=1){
+            data = data + outlist[outlist.size()-1]->serialize() + "\n";
         }
         data = data + "\n]";
         data = data + "\n}";
@@ -327,20 +306,20 @@ void SimpleGraph::takeShot(){
 string SimpleGraph::exportShots(){
     return snapshots.substr(0, snapshots.length()-1) + "\n]";
 }
-string Edge::serialize(){
+string HalfEdge::serialize(){
     string d = "{ \n", temp ="";
     ostringstream wss;
     wss<<(this);
     temp = wss.str();
     d = d + quotestring("ptr") + " : " + quotestring(temp) + ",\n";
     ostringstream tss;
-    tss<<(n1);
+    tss<<(end);
     temp = tss.str();
-    d = d + quotestring("n1") + " : " + quotestring(temp) + ",\n";
+    d = d + quotestring("end") + " : " + quotestring(temp) + ",\n";
     ostringstream ss;
-    ss<<(n2);
+    ss<<(conjugate);
     temp = ss.str();
-    d = d + quotestring("n2") + " : " + quotestring(temp) + ",\n";
+    d = d + quotestring("conjugate") + " : " + quotestring(temp) + ",\n";
     d = d + quotestring("weight") + " : " + to_string(weight) +",\n";
     d = d + quotestring("color") + " : " + quotestring(color) +",\n";
     d = d + quotestring("label") + " : " + quotestring(label) +"\n}";

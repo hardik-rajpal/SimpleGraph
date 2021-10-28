@@ -23,11 +23,11 @@ int main(int argc, char *argv[]){
     // vqs.push_back(intq);
     // SimpleGraph myg = SimpleGraph();
     // myg.assignVertices<queue<int>>(vqs, labelmaker);
-    ServerSocket server = ServerSocket(7171, "127.0.0.1");
+    // ServerSocket server = ServerSocket(7171, "127.0.0.1");
     SimpleGraph myg = SimpleGraph(adjlist);
-    server.listenForClient();
-    Sleep(3000);
-    server.sendData(myg.serialize());
-    Sleep(10000);
-    // cout<<myg.serialize();
+    // server.listenForClient();
+    // Sleep(3000);
+    // server.sendData(myg.serialize());
+    // Sleep(10000);
+    cout<<myg.serialize();
 }
