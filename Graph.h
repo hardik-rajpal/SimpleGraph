@@ -21,6 +21,8 @@ Write client socket in fabric.js
 using namespace std;
 string quotestring(string tbq);
 vector<string> split(string str, string sep);
+vector<string> parseLevel(string data, int level);
+vector<int> toCoords(string kvpair);
 // struct Neighbour{
 //     Node*n;
 //     Edge*e;
@@ -117,6 +119,7 @@ class SimpleGraph{
     /*✅*/string exportShots();
     /*✅*/string serialize();
     /*✅*/void takeShot();
+    void appendRendData(string data);
 };
 class ServerSocket{
      public:

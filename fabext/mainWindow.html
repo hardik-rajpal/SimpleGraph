@@ -11,27 +11,16 @@
     <title>Hello, world!</title>
   </head>
   <body>
+    <button onclick="syncData()">Sync to main.cpp</button>
       <canvas id="canvas"></canvas>
     <form id="col">
       <input type="file" id="snapshots">
       <button type="submit">Submit</button>
     </form>
     <!-- <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> -->
-    <script>
-        const net = require('net');
-        const HOST = '127.0.0.1';
-        const PORT = 7171;
-        var client = new net.Socket();
-        client.connect(PORT, HOST, function(){
-            console.log("Connected Host");
-        })
-
-        client.on('data', function(data){
-            recon = String.fromCharCode.apply(null,data.toJSON().data)
-            //pass JSON.parse(recon) to renderer
-            console.log(JSON.parse(recon).V[0])
-        })
-    </script>
+      <script src="fabric.min.js"></script>
+      <script src="fabric.js"></script>
+      <script src="client.js"></script>
     <script>
       document.querySelector('#col').addEventListener('submit', submitFile);
       function submitFile(e){
@@ -46,7 +35,7 @@
         console.log(snapshots);
       }
     </script>
-    <!-- <script src="fabric.min.js"></script> -->
+
     <!-- <script src="fabric.js"></script> -->
   </body>
 </html>

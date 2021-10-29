@@ -1,88 +1,78 @@
-let radius = 15;
-let radroot = Math.SQRT1_2*radius;
-V = {}
-E = {}
-data = { "H":"0",
-"V": [
-{ "ptr" : "0xf91a58",
-"color" : "red",
-"label" : "1",
-"weight": 1,
-"coords": {
-"x": 0,
-"y": 0
-},
-"outlist" : [
-{ 
-"ptr" : "0xf91998",
-"end" : "0xf91ab8",
-"conjugate" : "0xf97850",
-"weight" : 16325520,
-"color" : "",
-"label" : "a"
-},
-{ 
-"ptr" : "0xf97898",
-"end" : "0xf91b18",
-"conjugate" : "0xf978e0",
-"weight" : 16325536,
-"color" : "",
-"label" : "a"
-}
 
-]
-},
-{ "ptr" : "0xf91ab8",
-"color" : "red",
-"label" : "2",
-"weight": 1,
-"coords": {
-"x": 0,
-"y": 0
-},
-"outlist" : [
-{ 
-"ptr" : "0xf97850",
-"end" : "0xf91a58",
-"conjugate" : "0xf91998",
-"weight" : 16325520,
-"color" : "",
-"label" : "a"
-}
+// data = { "H":"0",
+// "V": [
+// { "ptr" : "0xf91a58",
+// "color" : "red",
+// "label" : "1",
+// "weight": 1,
+// "coords": {
+// "x": 0,
+// "y": 0
+// },
+// "outlist" : [
+// { 
+// "ptr" : "0xf91998",
+// "end" : "0xf91ab8",
+// "conjugate" : "0xf97850",
+// "weight" : 16325520,
+// "color" : "",
+// "label" : "a"
+// },
+// { 
+// "ptr" : "0xf97898",
+// "end" : "0xf91b18",
+// "conjugate" : "0xf978e0",
+// "weight" : 16325536,
+// "color" : "",
+// "label" : "a"
+// }
 
-]
-},
-{ "ptr" : "0xf91b18",
-"color" : "red",
-"label" : "3",
-"weight": 1,
-"coords": {
-"x": 0,
-"y": 0
-},
-"outlist" : [
-{ 
-"ptr" : "0xf978e0",
-"end" : "0xf91a58",
-"conjugate" : "0xf97898",
-"weight" : 16325536,
-"color" : "",
-"label" : "a"
-}
+// ]
+// },
+// { "ptr" : "0xf91ab8",
+// "color" : "red",
+// "label" : "2",
+// "weight": 1,
+// "coords": {
+// "x": 0,
+// "y": 0
+// },
+// "outlist" : [
+// { 
+// "ptr" : "0xf97850",
+// "end" : "0xf91a58",
+// "conjugate" : "0xf91998",
+// "weight" : 16325520,
+// "color" : "",
+// "label" : "a"
+// }
 
-]
-}
-]
+// ]
+// },
+// { "ptr" : "0xf91b18",
+// "color" : "red",
+// "label" : "3",
+// "weight": 1,
+// "coords": {
+// "x": 0,
+// "y": 0
+// },
+// "outlist" : [
+// { 
+// "ptr" : "0xf978e0",
+// "end" : "0xf91a58",
+// "conjugate" : "0xf97898",
+// "weight" : 16325536,
+// "color" : "",
+// "label" : "a"
+// }
 
-}
+// ]
+// }
+// ]
 
-const setBackground = (url, canvas)=>{
-    bgimg = fabric.Image.fromURL('sky.jpg', img=>{
-        canvas.backgroundImage = img
-        canvas.renderAll();
-    })
-    canvas.renderAll()
-}
+// }
+
 const initCanvas = (id)=>{
     return new fabric.Canvas(id, {
         width:500,
@@ -90,9 +80,11 @@ const initCanvas = (id)=>{
         backgroundColor:'#eef'
     })
 }
-const canvas = initCanvas("canvas");
+
 class VNode{
     constructor(x, y, label, color,canvas){
+        let radius = canvas.renderMeta.radius
+        let radroot = Math.SQRT1_2*radius;
         this.x = x
         this.y = y
         this.shape = new fabric.Circle({
@@ -112,11 +104,15 @@ class VNode{
         this.group.hasControls = false;
         this.group.edges=[]
         this.group.edges2=[]
+        this.group.node = this
+        //console.log(canvas.add)
         canvas.add(this.group)
     }
 }
 class Edge{
     constructor(n1, n2, label, color,canvas){
+        let noderadius = canvas.renderMeta.radius
+        let radroot = Math.SQRT1_2*noderadius;
         this.n1 = n1
         this.n2 = n2
         this.label = label
@@ -136,36 +132,38 @@ class Edge{
         canvas.sendToBack(this.line)
         n1.group.edges.push(this.line)
         n2.group.edges2.push(this.line)
-        // console.log(n1.group.edges)
+        // //console.log(n1.group.edges)
         // canvas.sendBackwards(this.group)
     }
 }
-function randCoords(){
+function randCoords(canvas){
     return {x:(canvas.width)/3+(canvas.width/2)*Math.random(), y:(canvas.height/3) + (canvas.height/2)*Math.random()}
 }
-function render(data){
+function render(data,canvas){
+    //console.log(renderMeta.canvas)
+    let renderMeta = canvas.renderMeta
     for(var i=0;i<data.V.length;i++){
-        console.log(data.V[i])
+        //console.log(data.V[i])
         let v = data.V[i]
         if(v.coords.x==0 &&v.coords.y==0){
-            v.coords = randCoords()
+            v.coords = randCoords(canvas)
         }
         if(v.color==""){
             v.color="cyan"
         }
         v.color="cyan"
-        console.log(v.coords)
-        V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,canvas))
+        //console.log(v.coords)
+        renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,canvas))
     }
     for(var i=0;i<data.V.length;i++){
         let v = data.V[i];
         for(var j = 0;j<v.outlist.length;j++){
             
-            if(E[v.outlist[j].ptr]==undefined && E[v.outlist[j].conjugate]==undefined){
+            if(renderMeta.E[v.outlist[j].ptr]==undefined && renderMeta.E[v.outlist[j].conjugate]==undefined){
                 if(v.outlist[j].color==""){
                     v.outlist[j].color = "red"
                 }
-                E[v.outlist[j].ptr] = new Edge(V[v.ptr],V[v.outlist[j].end],v.outlist[j].label,v.outlist[j].color ,canvas); 
+                renderMeta.E[v.outlist[j].ptr] = new Edge(renderMeta.V[v.ptr],renderMeta.V[v.outlist[j].end],v.outlist[j].label,v.outlist[j].color,canvas); 
             }
             else{
     
@@ -174,23 +172,42 @@ function render(data){
         }
     }
 }
-render(data)
-canvas.on('object:moving', function(ev){
-    let group = ev.transform.target
-    console.log(group.edges);
-    console.log(group.left, group.top)
-    // let p = ev.transform.target
-    for(var i=0;i<group.edges.length;i++){
-        console.log(group.edges[i].left, group.edges[i].top)
-        group.edges[i].set({'x1':group.left+ radroot, 'y1':group.top+ radroot})
-        // group.edges[i].stroke = 10
-        canvas.renderAll()
+const nodeDrag = (ev)=>{
+        let group = ev.transform.target
+        //console.log(group.edges);
+        // //console.log()
+        let canvas = ev.target.canvas
+        let renderMeta = ev.target.canvas.renderMeta
+        let radius = renderMeta.radius
+        let radroot = radius*Math.SQRT1_2
+        //console.log(group.left, group.top)
+        // let p = ev.transform.target
+        for(var i=0;i<group.edges.length;i++){
+            console.log(group.edges[i].left, group.edges[i].top)
+            group.edges[i].set({'x1':group.left+ radroot, 'y1':group.top+ radroot})
+            group.node.x = group.left;
+            group.node.y = canvas.height - group.top;
+            // canvas.renderAll()
+        }
+        for(var i=0;i<group.edges2.length;i++){
+            //console.log(group.edges2[i].left, group.edges2[i].top)
+            group.edges2[i].set({'x2':group.left+ radroot, 'y2':group.top+ radroot})
+            // group.edges[i].stroke = 10
+            group.node.x = group.left;
+            group.node.y = canvas.height - group.top;
+            
+        }
+        ev.target.canvas.renderAll()
+}
+function filterForServer(renderMeta){
+    let V = renderMeta.V
+    let toReturn = {};
+    toReturn.V = {};
+    // console.log(Object.keys(V))
+    for(let v of Object.keys(V)){
+        // console.log(V[v])
+        toReturn.V[v] = {x:V[v].x, y:V[v].y};
     }
-    for(var i=0;i<group.edges2.length;i++){
-        console.log(group.edges2[i].left, group.edges2[i].top)
-        group.edges2[i].set({'x2':group.left+ radroot, 'y2':group.top+ radroot})
-        // group.edges[i].stroke = 10
-        canvas.renderAll()
-    }
-    
-})
+    toReturn.ptrs = Object.keys(V);
+    return toReturn;
+}

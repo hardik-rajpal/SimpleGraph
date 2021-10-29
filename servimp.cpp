@@ -103,7 +103,7 @@ void ServerSocket::listenForClient(){
         }
 
         // Set 10 seconds 10 useconds timeout
-        SelectTiming = recvTimeOutTCP(ListeningSocket, 5, 5);
+        SelectTiming = recvTimeOutTCP(ListeningSocket, 100, 100);
         switch (SelectTiming)
         {
             case 0:{

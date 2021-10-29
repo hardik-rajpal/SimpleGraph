@@ -15,6 +15,41 @@ vector<string> split(string str, string sep){
     parts.push_back(str.substr(j,str.length()-j));
     return parts;
 }
+vector<int> toCoords(string kvpair){
+    vector<string> coords = split(kvpair, ",");
+    vector<int> xy;
+    int xc, yc;
+    xc = stoi(split(coords[0], ":")[1]);
+    yc = stoi(split(coords[1], ":")[1]);
+    xy.push_back(xc);
+    xy.push_back(yc);
+    return xy;   
+}
+vector<string> parseLevel(string data, int level){
+    int dtl = 0;
+    int j=0;
+    vector<string> datastr;
+    vector<string> keys;
+    vector<int> bracepos;
+    for(int i=0;i<data.length();i++){
+        if(data[i]=='{'){
+            dtl+=1;
+            bracepos.push_back(i);
+        }
+        if(data[i]=='}'){
+            if(dtl==level){
+                j = bracepos[bracepos.size()-1];
+                string xdata = data.substr(j, 1+i-j);
+                xdata = xdata.substr(1, xdata.length()-2);
+                cout<<xdata<<" added\n";
+                datastr.push_back(xdata);
+                // bracepos.pop_back();
+            }
+            dtl-=1;
+        }
+    }
+    return datastr;
+}
 Node* SimpleGraph::addNode(string label){
     Node *n;
     n = new Node(label);
@@ -324,4 +359,11 @@ string HalfEdge::serialize(){
     d = d + quotestring("color") + " : " + quotestring(color) +",\n";
     d = d + quotestring("label") + " : " + quotestring(label) +"\n}";
     return d;
+}
+void SimpleGraph::appendRendData(string data){
+    vector<string> points = parseLevel(data, 3);
+    for(auto x:points){
+        vector<int> crds = toCoords(x);
+    }
+    cout<<data;
 }
