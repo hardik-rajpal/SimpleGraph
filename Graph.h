@@ -141,6 +141,10 @@ class ServerSocket{
 
 
     /*Graph specific functions here*/
+    void sendDataARP(string msg, SimpleGraph &g){
+        sendData(msg);
+        awaitRecParse(g);
+    }
     string awaitRecParse(SimpleGraph &g){
         sendData("paused");
         while(true){
@@ -148,7 +152,7 @@ class ServerSocket{
             if(resp=="EXIT"){
                 closeConnection();
                 cout<<"\nError fsr\n";
-                return;
+                return "EXIT";
             }
             if(resp.length()>20){
                 g.appendRendData(resp);

@@ -90,7 +90,8 @@ function main(){
         setStatus("Rec.");
         recon = String.fromCharCode.apply(null,data.toJSON().data)
         if(recon=="paused"){
-            setStatus("Connected:Paused <button onclick=\"sendCommand('play')\">Play</button>");
+            setStatus("Connected:Paused <button onclick=\"syncData();sendCommand('play')\">Play</button>");
+            return;
         }
         parsedata = JSON.parse(recon)
         
