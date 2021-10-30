@@ -10,28 +10,22 @@ string labelmaker(queue<int> q){
 
 int main(int argc, char *argv[]){
     string adjlist = "1:2,3\n2:1\n3:1";
-    // vector<string> lbls = {"a", "b", "c"};
-    // vector<string> brnch = {"4", "5", "6"};
-    // bool am[MAXV][MAXV];am[1][0] = 0;am[2][0] = 1;am[2][1] = 0;
-    // queue<int> intq;
-    // vector<queue<int>> vqs;
-    // intq.push(1);
-    // vqs.push_back(intq);
-    // intq.push(2);
-    // vqs.push_back(intq);
-    // intq.push(3);
-    // vqs.push_back(intq);
-    // SimpleGraph myg = SimpleGraph();
-    // myg.assignVertices<queue<int>>(vqs, labelmaker);
     SimpleGraph myg = SimpleGraph(adjlist);
     ServerSocket server = ServerSocket(7171, "127.0.0.1");
     server.listenForClient();
     server.sendData(myg.serialize());
-    while(true){
-        string resp = server.awaitSignal();
-        myg.appendRendData(resp);
-    }
-        
-    cout<<myg.serialize();
-    
+    server.awaitRecParse(myg);
+    vector<string> lbls = {"4", "5", "6"};
+    myg.addBranch(myg.getNodeByLabel("3"), lbls, {});
+    myg.getNodeByLabel("1")->color = "red";
+    cout<<myg.getAdjList();
+    server.sendData(myg.serialize());
+    server.awaitRecParse(myg);
+    lbls = {"2.1", "2.3", "2.4"};
+    myg.addBranch(myg.getNodeByLabel("2"), lbls, {});
+    server.sendData(myg.serialize());
+    server.awaitRecParse(myg);
+    myg.connectNodes(myg.getNodeByLabel("2.4"), myg.getNodeByLabel("6"));
+    server.sendData(myg.serialize());
+    server.awaitRecParse(myg);
 }

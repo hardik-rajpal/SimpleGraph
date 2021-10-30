@@ -1,21 +1,30 @@
 #include<bits/stdc++.h>
 #include"Graph.h"
 using namespace std;
+string ptrtostr(void* ptr){
+    stringstream ss;
+    ss<<ptr;
+    string temp;
+    ss>>temp;
+    return temp;
+}
+
 vector<string> split(string str, string sep){
     vector<string> parts;
     int j = 0;
     for(int i=0;i<str.length();i++){
-        if(str.length()-1-i<sep.length()){break;}
+        if(str.length()-i<sep.length()){break;}
         if(str.substr(i, sep.length())==sep){
             // cout<<str.substr(j, i-j)<<" ";
             parts.push_back(str.substr(j, i-j));
-            j = i+1;
+            j = i+sep.length();
         }
     }
     parts.push_back(str.substr(j,str.length()-j));
     return parts;
 }
 vector<int> toCoords(string kvpair){
+    // kvpair = kvpair.substr(1, kvpair.length()-2);
     vector<string> coords = split(kvpair, ",");
     vector<int> xy;
     int xc, yc;
@@ -25,30 +34,56 @@ vector<int> toCoords(string kvpair){
     xy.push_back(yc);
     return xy;   
 }
-vector<string> parseLevel(string data, int level){
-    int dtl = 0;
-    int j=0;
+vector<vector<string>> parseLists(string data, int level){
+    vector<vector<string>> lists;
     vector<string> datastr;
-    vector<string> keys;
-    vector<int> bracepos;
     for(int i=0;i<data.length();i++){
-        if(data[i]=='{'){
-            dtl+=1;
-            bracepos.push_back(i);
-        }
-        if(data[i]=='}'){
-            if(dtl==level){
-                j = bracepos[bracepos.size()-1];
-                string xdata = data.substr(j, 1+i-j);
-                xdata = xdata.substr(1, xdata.length()-2);
-                cout<<xdata<<" added\n";
-                datastr.push_back(xdata);
-                // bracepos.pop_back();
+        if(data[i]=='['){
+            for(int j=i;j<data.length();j++){
+                if(data[j]==']'){
+                    // cout<<data[i]<<" ";
+                    // cout<<data[j]<<"\n";
+                    // cout<<data.substr(i+1, j-i-1)<<"\n";
+                    // cout<<j-i-1 - (i+1);
+                    datastr.push_back(data.substr(i+1, j-i-1));
+                    i = j;
+                    break;
+                }
             }
-            dtl-=1;
         }
     }
-    return datastr;
+    datastr[0] = datastr[0].substr(1, datastr[0].length()-2);
+    lists.push_back(split(datastr[0], "},{"));
+    // lists.push_back({datastr[0]});
+    for(int i=1;i<datastr.size();i++){
+        vector<string> list = split(datastr[i], ",");
+        lists.push_back(list);
+    }
+    return lists;
+    // int dtl = 0;
+    // int j=0;
+    // vector<string> datastr = {};
+    // vector<string> keys;
+    // vector<int> bracepos;
+    // string xdata;
+    // for(int i=0;i<data.length();i++){
+    //     if(data[i]=='{'){
+    //         dtl+=1;
+    //         bracepos.push_back(i);
+    //     }
+    //     if(data[i]=='}' && i<data.length()-50){
+    //         if(dtl==level){
+    //             j = bracepos[bracepos.size()-1];
+    //             xdata = data.substr(j, 1+i-j);
+    //             xdata = xdata.substr(1, xdata.length()-2);
+    //             cout<<xdata<<" added\n";
+    //             datastr.push_back(xdata);
+    //         }
+    //         dtl-=1;
+    //     }
+    // }
+    // datastr.push_back("Hi");
+    // return datastr;
 }
 Node* SimpleGraph::addNode(string label){
     Node *n;
@@ -361,9 +396,38 @@ string HalfEdge::serialize(){
     return d;
 }
 void SimpleGraph::appendRendData(string data){
-    vector<string> points = parseLevel(data, 3);
-    for(auto x:points){
-        vector<int> crds = toCoords(x);
+    cout<<"Hi";
+    cout<<"\n"<<data<<"\n";
+    vector<vector<string>> strdata = parseLists(data, 3);
+    vector<vector<int>> coords;
+    cout<<strdata.size();
+    for(auto x:strdata[0]){
+        coords.push_back(toCoords(x));
     }
-    cout<<data;
+    cout<<"Hi";
+    for(int i=0;i<strdata[1].size();i++){
+        for(int j=0;j<V.size();j++){
+            if(quotestring(ptrtostr((void*)(V[j])))==strdata[1][i]){
+                V[j]->coords[0] = coords[i][0];
+                V[j]->coords[1] = coords[i][1];
+            }
+        }
+    }
+}
+void SimpleGraph::parseCommand(string cmd){
+    if(cmd=="expjson"){
+        ofstream outf;
+        outf.open("export.json",ios::out);
+        string output = serialize();
+        outf.write(output.c_str(), output.length());
+        outf.close();
+        // cout<<"Exporting json";
+    }
+    else if(cmd=="expmintxt"){
+        ofstream outf;
+        outf.open("export.txt",ios::out);
+        string output = getAdjList();
+        outf.write(output.c_str(), output.length());
+        outf.close();
+    }
 }

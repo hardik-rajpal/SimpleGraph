@@ -7,8 +7,11 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "temp.cpp",
+                "main.cpp",
                 "Graph.cpp",
+                "servimp.cpp",
+                "-l",
+                "ws2_32",
                 "-o",
                 "t"
             ],

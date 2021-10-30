@@ -19,9 +19,10 @@ Write client socket in fabric.js
 #define literal(expr) #expr
 #define MAXBUF 10000
 using namespace std;
+string ptrtostr(void* ptr);
 string quotestring(string tbq);
 vector<string> split(string str, string sep);
-vector<string> parseLevel(string data, int level);
+vector<vector<string>> parseLists(string data, int level);
 vector<int> toCoords(string kvpair);
 // struct Neighbour{
 //     Node*n;
@@ -120,6 +121,7 @@ class SimpleGraph{
     /*✅*/string serialize();
     /*✅*/void takeShot();
     void appendRendData(string data);
+    void parseCommand(string cmd);
 };
 class ServerSocket{
      public:
@@ -136,6 +138,32 @@ class ServerSocket{
     string awaitSignal();
     void sendData(string msg);
     void closeConnection();
+
+
+    /*Graph specific functions here*/
+    string awaitRecParse(SimpleGraph &g){
+        sendData("paused");
+        while(true){
+            string resp = awaitSignal();
+            if(resp=="EXIT"){
+                closeConnection();
+                cout<<"\nError fsr\n";
+                return;
+            }
+            if(resp.length()>20){
+                g.appendRendData(resp);
+            }
+            else if(resp=="play"){
+                return resp;
+            }
+            else{
+                g.parseCommand(resp);
+            }
+        }
+            
+        return "OK";
+    }
+
 };
 #include"Graph.tpp"
 #endif

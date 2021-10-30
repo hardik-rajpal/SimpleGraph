@@ -7,11 +7,13 @@
 
     <!-- Bootstrap CSS -->
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
-
     <title>Hello, world!</title>
   </head>
   <body>
-    <button onclick="syncData()">Sync to main.cpp</button>
+    <a id="a"></a>
+    <h5 id="status"></h5>
+    <button onclick="syncData()">Sync</button>
+    Export: <button onclick="exportJSON()">JSON</button> <button onclick="exportIMG()">Image</button><button onclick="exportMinTXT()">List</button>
       <canvas id="canvas"></canvas>
     <form id="col">
       <input type="file" id="snapshots">
@@ -25,11 +27,11 @@
       document.querySelector('#col').addEventListener('submit', submitFile);
       function submitFile(e){
         e.preventDefault();
-        const snapshots = document.querySelector('#snapshots').files[0]
-        // ipcRenderer.send('snapshots:load', snapshots)
+        const snapshots = document.querySelector('#snapshots').files[0];
         let reader = new FileReader();
         reader.onload = (data)=>{
-          console.log(JSON.parse(data.target.result))
+          resetCanvas(global.canvas);
+          render(JSON.parse(data.target.result), global.canvas)
         }
         reader.readAsText(snapshots)
         console.log(snapshots);

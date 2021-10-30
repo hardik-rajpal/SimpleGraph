@@ -1,78 +1,3 @@
-
-// data = { "H":"0",
-// "V": [
-// { "ptr" : "0xf91a58",
-// "color" : "red",
-// "label" : "1",
-// "weight": 1,
-// "coords": {
-// "x": 0,
-// "y": 0
-// },
-// "outlist" : [
-// { 
-// "ptr" : "0xf91998",
-// "end" : "0xf91ab8",
-// "conjugate" : "0xf97850",
-// "weight" : 16325520,
-// "color" : "",
-// "label" : "a"
-// },
-// { 
-// "ptr" : "0xf97898",
-// "end" : "0xf91b18",
-// "conjugate" : "0xf978e0",
-// "weight" : 16325536,
-// "color" : "",
-// "label" : "a"
-// }
-
-// ]
-// },
-// { "ptr" : "0xf91ab8",
-// "color" : "red",
-// "label" : "2",
-// "weight": 1,
-// "coords": {
-// "x": 0,
-// "y": 0
-// },
-// "outlist" : [
-// { 
-// "ptr" : "0xf97850",
-// "end" : "0xf91a58",
-// "conjugate" : "0xf91998",
-// "weight" : 16325520,
-// "color" : "",
-// "label" : "a"
-// }
-
-// ]
-// },
-// { "ptr" : "0xf91b18",
-// "color" : "red",
-// "label" : "3",
-// "weight": 1,
-// "coords": {
-// "x": 0,
-// "y": 0
-// },
-// "outlist" : [
-// { 
-// "ptr" : "0xf978e0",
-// "end" : "0xf91a58",
-// "conjugate" : "0xf97898",
-// "weight" : 16325536,
-// "color" : "",
-// "label" : "a"
-// }
-
-// ]
-// }
-// ]
-
-// }
-
 const initCanvas = (id)=>{
     return new fabric.Canvas(id, {
         width:500,
@@ -108,6 +33,16 @@ class VNode{
         //console.log(canvas.add)
         canvas.add(this.group)
     }
+    updateNode(data){
+        this.shape.fill = data.color
+        this.shape.x = data.x;this.x = data.x;
+        this.shape.y = this.shape.canvas.height - data.y; this.y = data.y;
+        this.text.text = data.label
+        this.shape.cav
+        console.log(this.text.text)
+        console.log(data)
+        this.shape.canvas.renderAll()
+    }
 }
 class Edge{
     constructor(n1, n2, label, color,canvas){
@@ -140,6 +75,7 @@ function randCoords(canvas){
     return {x:(canvas.width)/3+(canvas.width/2)*Math.random(), y:(canvas.height/3) + (canvas.height/2)*Math.random()}
 }
 function render(data,canvas){
+    canvas.backgroundColor = "#eef";
     //console.log(renderMeta.canvas)
     let renderMeta = canvas.renderMeta
     for(var i=0;i<data.V.length;i++){
@@ -151,9 +87,11 @@ function render(data,canvas){
         if(v.color==""){
             v.color="cyan"
         }
-        v.color="cyan"
         //console.log(v.coords)
-        renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,canvas))
+        // if(renderMeta.V[v.ptr]==undefined){
+            renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,canvas))
+        // }
+
     }
     for(var i=0;i<data.V.length;i++){
         let v = data.V[i];
@@ -183,7 +121,6 @@ const nodeDrag = (ev)=>{
         //console.log(group.left, group.top)
         // let p = ev.transform.target
         for(var i=0;i<group.edges.length;i++){
-            console.log(group.edges[i].left, group.edges[i].top)
             group.edges[i].set({'x1':group.left+ radroot, 'y1':group.top+ radroot})
             group.node.x = group.left;
             group.node.y = canvas.height - group.top;
@@ -202,11 +139,11 @@ const nodeDrag = (ev)=>{
 function filterForServer(renderMeta){
     let V = renderMeta.V
     let toReturn = {};
-    toReturn.V = {};
+    toReturn.V = [];
     // console.log(Object.keys(V))
     for(let v of Object.keys(V)){
         // console.log(V[v])
-        toReturn.V[v] = {x:V[v].x, y:V[v].y};
+        toReturn.V.push({x:V[v].x, y:V[v].y});
     }
     toReturn.ptrs = Object.keys(V);
     return toReturn;

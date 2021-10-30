@@ -179,14 +179,16 @@ string ServerSocket::awaitSignal(){
             }
             ByteReceived = 0;
             printf("\n");
+            printf("Here");
             return string(recvbuff);
         }
-        else if ( ByteReceived == 0 ){
-                    printf("Server: Connection closed!\n");
-                    // continue;
+        else if(ByteReceived == 0 ){
+                printf("Server: Connection closed!\n");
+                return string("EXIT");
         }
         else{
             printf("Server: recv() failed with error code: %d\n", WSAGetLastError());
+            return string("EXIT");
         }
         return string(resp);
         // Clean up all the send/recv communication, get ready for new one
@@ -249,4 +251,3 @@ void ServerSocket::closeConnection(){
         printf("Server: WSACleanup() is OK...\n");
     }
 }
-
