@@ -41,7 +41,7 @@ function setStatus(status){
 function resetCanvas(canvas){
     let renderMeta = {
         radius:canvas.renderMeta.radius,
-        radroot:Math.SQRT1_2*this.radius,
+        radroot:Math.SQRT1_2*canvas.renderMeta.radius,
         V:{},
         E:{},
     }
@@ -60,6 +60,8 @@ function main(){
     let radroot = Math.SQRT1_2*radius;
     const canvas = initCanvas("canvas");
     canvas.on('object:moving', nodeDrag);
+    canvas.on('mouse:over', displayData);
+    canvas.on('mouse:out', hideData);
     // console.log(canvas)
     let renderMeta = {
         radius:radius,

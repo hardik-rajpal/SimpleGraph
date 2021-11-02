@@ -11,14 +11,14 @@
   </head>
   <body>
     <a id="a"></a>
-    <h5 id="status"></h5>
-    <button onclick="syncData()">Sync</button>
+    <p id="status" style="display: inline;"></p><button onclick="syncData()" style="display: inline;">Sync</button>
     Export: <button onclick="exportJSON()">JSON</button> <button onclick="exportIMG()">Image</button><button onclick="exportMinTXT()">List</button>
-      <canvas id="canvas"></canvas>
-    <form id="col">
+    <form id="col" style="display: inline;">
       <input type="file" id="snapshots">
       <button type="submit">Submit</button>
     </form>
+    
+    <canvas id="canvas" style="margin: 20px;"></canvas>
     <!-- <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> -->
       <script src="fabric.min.js"></script>
       <script src="fabric.js"></script>

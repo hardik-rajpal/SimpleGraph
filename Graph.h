@@ -107,7 +107,7 @@ class SimpleGraph{
     /*✅*/bool deleteNode(Node *n1);
     /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
-
+    
     //getters.
     /*✅*/string getAdjList();
     /*✅*/Node *getNodeByLabel(string label);

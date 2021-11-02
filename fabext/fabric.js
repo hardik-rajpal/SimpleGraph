@@ -1,17 +1,21 @@
 const initCanvas = (id)=>{
     return new fabric.Canvas(id, {
-        width:500,
-        height:500,
+        width:700,
+        height:650,
         backgroundColor:'#eef'
     })
 }
 
 class VNode{
-    constructor(x, y, label, color,canvas){
+    constructor(x, y, label, color,weight,canvas){
         let radius = canvas.renderMeta.radius
         let radroot = Math.SQRT1_2*radius;
         this.x = x
         this.y = y
+        this.radroot = radroot
+        this.label = label
+        this.weight = weight
+        this.color = color
         this.shape = new fabric.Circle({
             left:x,
             top:(canvas.height - y),
@@ -20,12 +24,13 @@ class VNode{
             fill:color,
             stroke:'#666',
         })
-        this.text = new fabric.Text(label, {
+        this.text = new fabric.Text(label.substr(0, 3), {
             left:x +radroot,
             top:(canvas.height - y+radroot/2),
-            fontSize:20
+            fontSize:15,
         })
         this.group = new fabric.Group([this.shape, this.text])
+        
         this.group.hasControls = false;
         this.group.edges=[]
         this.group.edges2=[]
@@ -33,15 +38,53 @@ class VNode{
         //console.log(canvas.add)
         canvas.add(this.group)
     }
+    textdata(){
+        let data = "Label:"+this.label+"\nWeight:"+this.weight+"\n(x="+parseInt(this.x).toString()+",y="+parseInt(this.y).toString()+")\n";
+        return data;
+    }
     updateNode(data){
         this.shape.fill = data.color
         this.shape.x = data.x;this.x = data.x;
         this.shape.y = this.shape.canvas.height - data.y; this.y = data.y;
         this.text.text = data.label
-        this.shape.cav
-        console.log(this.text.text)
-        console.log(data)
+        // console.log(this.text.text)
+        // console.log(data)
         this.shape.canvas.renderAll()
+    }
+    showData(){
+        this.datarect = new fabric.Rect({
+            left:this.x+2*this.radroot,
+            top:(this.group.canvas.height - this.y)+2*this.radroot,
+            width:100,
+            height:100,
+            fill:'#fffdd0',
+            hasBorders:true,
+            strokeWidth:1,
+            stroke:'#000000'
+        })
+        
+        this.datatext = new fabric.Text(this.textdata(),{
+            left:this.x +2*this.radroot,
+            top:(this.group.canvas.height - this.y)+2*this.radroot,
+            width:100,
+            height:100,
+            fontSize:15,
+            fontWeight:'bold',
+            fill:'darkgreen',
+        })
+        this.group.datashape = new fabric.Group([this.datarect, this.datatext],{
+            evented:false,
+            selectable:false
+        });
+        
+        this.group.canvas.add(this.group.datashape)
+        console.log("Called!")
+        this.group.canvas.renderAll()
+        
+    }
+    hideData(){
+        this.group.canvas.remove(this.group.datashape)
+        this.group.canvas.renderAll()
     }
 }
 class Edge{
@@ -71,6 +114,16 @@ class Edge{
         // canvas.sendBackwards(this.group)
     }
 }
+function newrandCoords(canvas, miny,len_V){
+    let w,h;
+    let padf = 0.05;
+    w = canvas.width;h = canvas.height;
+    let dh = (1-padf)*h/len_V;
+    let x,y;
+    x = (canvas.width*(1-padf))*Math.random();
+    y = Math.min(miny + dh, h*(1-padf));
+    return {x:x, y:y}
+}
 function randCoords(canvas){
     return {x:(canvas.width)/3+(canvas.width/2)*Math.random(), y:(canvas.height/3) + (canvas.height/2)*Math.random()}
 }
@@ -82,14 +135,15 @@ function render(data,canvas){
         //console.log(data.V[i])
         let v = data.V[i]
         if(v.coords.x==0 &&v.coords.y==0){
-            v.coords = randCoords(canvas)
+            v.coords = newrandCoords(canvas, data.V[Math.max(i-1,0)].coords.y, data.V.length);
+            // v.coords = randCoords(canvas)
         }
         if(v.color==""){
             v.color="cyan"
         }
         //console.log(v.coords)
         // if(renderMeta.V[v.ptr]==undefined){
-            renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,canvas))
+            renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,v.weight,canvas))
         // }
 
     }
@@ -118,8 +172,7 @@ const nodeDrag = (ev)=>{
         let renderMeta = ev.target.canvas.renderMeta
         let radius = renderMeta.radius
         let radroot = radius*Math.SQRT1_2
-        //console.log(group.left, group.top)
-        // let p = ev.transform.target
+        group.node.hideData()
         for(var i=0;i<group.edges.length;i++){
             group.edges[i].set({'x1':group.left+ radroot, 'y1':group.top+ radroot})
             group.node.x = group.left;
@@ -135,6 +188,28 @@ const nodeDrag = (ev)=>{
             
         }
         ev.target.canvas.renderAll()
+}
+const displayData = (ev)=>{
+    console.log(ev)
+    let group = ev.target
+    if(!ev.target){
+        return;
+    }
+    if(group.edges){
+        group.node.showData()
+    }
+
+}
+const hideData = (ev)=>{
+    
+    let group = ev.target
+    if(!ev.target){
+        return;
+    }
+    if(group.edges){
+        group.node.hideData()        
+    }
+
 }
 function filterForServer(renderMeta){
     let V = renderMeta.V

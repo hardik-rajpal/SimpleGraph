@@ -20,6 +20,7 @@ int main(int argc, char *argv[]){
     myg.getNodeByLabel("1")->color = "red";
     cout<<myg.getAdjList();
     server.sendData(myg.serialize());
+    server.awaitRecParse(myg);
     // server.awaitRecParse(myg);
     lbls = {"2.1", "2.3", "2.4"};
     myg.addBranch(myg.getNodeByLabel("2"), lbls, {});

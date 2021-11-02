@@ -14,7 +14,7 @@ app.commandLine.appendArgument('--ignore-certificate-errors-spki-list');
 app.on('ready', function(){
     mainWindow = new BrowserWindow({
         width:800,
-        height:600,
+        height:800,
         title:'Add File',
         webPreferences:{
             nodeIntegration:true,
