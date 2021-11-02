@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
     server.sendData(myg.serialize());
     server.awaitRecParse(myg);
     // server.awaitRecParse(myg);
-    lbls = {"2.1", "2.3", "2.4"};
+    lbls = {"2.1", "2.3", "2.5"};
     myg.addBranch(myg.getNodeByLabel("2"), lbls, {});
     server.sendDataARP(myg.serialize(), myg);
     // server.awaitRecParse(myg);

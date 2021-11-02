@@ -30,7 +30,6 @@ class VNode{
             fontSize:15,
         })
         this.group = new fabric.Group([this.shape, this.text])
-        
         this.group.hasControls = false;
         this.group.edges=[]
         this.group.edges2=[]
@@ -56,7 +55,7 @@ class VNode{
             left:this.x+2*this.radroot,
             top:(this.group.canvas.height - this.y)+2*this.radroot,
             width:100,
-            height:100,
+            height:60,
             fill:'#fffdd0',
             hasBorders:true,
             strokeWidth:1,
