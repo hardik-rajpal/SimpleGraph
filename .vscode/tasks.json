@@ -7,7 +7,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "bfsanim.cpp",
+                "dfsanim.cpp",
                 "Graph.cpp",
                 "Server.cpp",
                 "-l",

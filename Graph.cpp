@@ -470,15 +470,10 @@ int SimpleGraph::getdistanceBetween(Node *n1, Node *n2){
 
 SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops){
     int colors[MAXV], dist[MAXV];
+    
     for(int i=0;i<V.size();i++){
         colors[i] = 2;//white
-        cout<<i<<" ";
-        try{
-            cout<<V[i]->label<<" "<<V[i]->color<<"\n";
-        }
-catch(exception e){
-    cout<<e.what();
-}
+        // cout<<i<<" ";
         if(colornodes){V[i]->color = colorops[2];}
     }
     queue<Node*> q;
@@ -493,7 +488,7 @@ catch(exception e){
     dist[index] = 0;
     while(!q.empty()){
         u = q.front(); q.pop();
-        cout<<u->label<<"\n";
+        // cout<<u->label<<"\n";
         i_u = indexof(V,u);
         for(int i=0;i<u->outlist.size();i++){
             index = indexof(V,u->outlist[i]->end);
@@ -513,7 +508,55 @@ catch(exception e){
     }
     return bfstree;
 }
+SimpleGraph *SimpleGraph::dfs(Node *s, bool colornodes, vector<string> colorops){
+    int colors[MAXV], arr[MAXV], dep[MAXV];
+    int t = 0;
+    for(int i=0;i<V.size();i++){
+        arr[i] = -1;
+        colors[i] = 2;
+        if(colornodes){V[i]->color = colorops[2];}
+    }
+    stack<Node*> q;
+    Node*u;
+    SimpleGraph*dfstree = new SimpleGraph;
+    int index = indexof(V,s), i_u;
+    q.push(s);
+    dfstree->addNode(s->label);
+    if(colornodes){s->color = colorops[1];}
+    bool newdepth = false;
+    while(!q.empty()){
+        u = q.top();
+        i_u = indexof(V, u);
+        colors[i_u]=1;
+        if(colornodes){u->color = colorops[1];}
+        if(autorender){
+            syncGraph();
+        }
+        if(arr[i_u]==-1){arr[i_u] = t;t++;}
+        
+        for(int i=0;i<u->outlist.size();i++){
+            index = indexof(V, u->outlist[i]->end);
+            if(colors[index]==2){
+                dfstree->addBranch(dfstree->getNodeByLabel(u->label), {u->outlist[i]->end->label},{});
+                u->outlist[i]->color = "green";u->outlist[i]->conjugate->color = "green";
+                q.push(u->outlist[i]->end);
+                newdepth = true;
+                break;
+            }
+        }
+        cout<<newdepth;
+        if(newdepth){newdepth = false; continue;}
+        cout<<u->label<<" "<<u->color<<"\n";
+        colors[i_u] = 0;
+        if(colornodes){u->color = colorops[0];}
+        if(autorender){syncGraph();}
+        dep[i_u] = t;t++;
+        // u->label = u->label+":A:"+to_string(arr[i_u])+"; D:"+to_string(dep[i_u]);
+        q.pop();
+    }
 
+    return dfstree;
+}
 vector<vector<Node*>> SimpleGraph:: getCliques(){
     vector<vector<Node*>> cliques;
     int sumV = 0, i=0;
@@ -528,6 +571,7 @@ vector<vector<Node*>> SimpleGraph:: getCliques(){
     }
     return cliques;
 }
+
 //Assigns new ServerSocket objecto to this->server, listens for the renderer application,
 //returns server ptr
 void SimpleGraph::syncGraph(bool pausemain){

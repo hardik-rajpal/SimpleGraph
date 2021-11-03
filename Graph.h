@@ -4,6 +4,7 @@
 
 3. Style mainWindow.html up.
 
+4. Maybe go cross platform?
 */
 #ifndef GRAPH_H
 #define GRAPH_H
@@ -107,7 +108,7 @@ class SimpleGraph{
     
     //search methods.
     /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"black", "gray", "white"});//return a bfs tree
-    SimpleGraph dfs(Node *s);//return a dfs tree
+    SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"black", "gray", "white"});//return a dfs tree
     vector<Node*> generalSearch(Node *s, function<Node(vector<Node>)> selector);//return a vector of nodes
     
     //subgraphs.

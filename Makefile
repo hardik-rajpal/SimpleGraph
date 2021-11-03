@@ -7,6 +7,9 @@ graph: mainpath.cpp Graph.cpp
 bfs: bfsanim.cpp Graph.cpp Server.cpp
 	echo #define SERVERUSED > config.h
 	g++ bfsanim.cpp Graph.cpp Server.cpp -lws2_32 -o bfs
+dfs:  dfsanim.cpp Graph.cpp Server.cpp
+	echo #define SERVERUSED > config.h
+	g++ dfsanim.cpp Graph.cpp Server.cpp -lws2_32 -o dfs
 nodemod:
 	cd fabext
 	npm i
