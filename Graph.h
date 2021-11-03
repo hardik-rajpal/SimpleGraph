@@ -22,6 +22,8 @@ TODO:
 #define MAXE 4950 //100C2
 #define literal(expr) #expr
 #define MAXBUF 10000
+#define SERVERUSED
+#undef SERVERUSED
 using namespace std;
 string ptrtostr(void* ptr);
 string quotestring(string tbq);

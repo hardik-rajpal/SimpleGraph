@@ -1,6 +1,8 @@
 #include<bits/stdc++.h>
 #include"Graph.h"
+#include"config.h"
 using namespace std;
+
 string ptrtostr(void* ptr){
     stringstream ss;
     ss<<ptr;
@@ -66,11 +68,9 @@ Node* SimpleGraph::addNode(string label){
     n = new Node(label);
     V.push_back(n);
     nv++;
-    #ifdef SERVERUSED
     if(autorender){
         syncGraph();
     }
-    #endif
     return V[V.size()-1];
 }
 SimpleGraph::SimpleGraph(){};
@@ -491,3 +491,38 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes){
 }
 //Assigns new ServerSocket objecto to this->server, listens for the renderer application,
 //returns server ptr
+void SimpleGraph::syncGraph(bool pausemain){
+    cout<<"Called";
+    #ifdef SERVERUSED
+    // cout<<SERVERUSED<<" ";
+    if(server!=NULL){
+        if(pausemain){
+            server->sendDataARP(this->serialize(), *this);
+        }
+        else{
+            server->sendData(this->serialize());
+            this->appendRendData(server->awaitSignal());
+        }
+    }
+    else{
+        cout<<"You need to call initServer(port, host) before sync!\n";
+    }
+    #endif
+}
+#ifdef SERVERUSED
+ServerSocket* SimpleGraph::initServer(int port, string host){
+    server = new ServerSocket(port, host);
+    server->listenForClient();
+    return server;
+}
+ServerSocket* SimpleGraph::setAutoRender(bool state){
+    if(server!=NULL){
+        autorender = true;
+    }
+    else{
+        cout<<"AutoRender can be enabled only after calling initServer(port, host)!\n";
+    }
+    return server;
+
+}
+#endif

@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #include"Graph.h"
-
+#include"config.h"
 using namespace std;
 string labelmaker(queue<int> q){
     // return to_string(q.front());
@@ -11,6 +11,7 @@ string labelmaker(queue<int> q){
 int main(int argc, char *argv[]){
     string adjlist = "1:2,3\n2:1\n3:1";
     SimpleGraph myg = SimpleGraph(adjlist);
+
     // myg.initServer();
     // myg.setAutoRender(true);
     vector<string> lbls = {"4", "5", "6"};
@@ -24,5 +25,6 @@ int main(int argc, char *argv[]){
     myg.connectNodes(myg.getNodeByLabel("2.5"), myg.getNodeByLabel("6"));
     // myg.syncGraph(true);
     cout<<myg.bfs(myg.getNodeByLabel("1"))->getAdjList();
+
     // myg.syncGraph(true);
 }
