@@ -112,7 +112,7 @@ class SimpleGraph{
     void syncGraph(bool pausemain=false);
     
     //search methods.
-    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false);//return a bfs tree
+    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"black", "gray", "white"});//return a bfs tree
     SimpleGraph dfs(Node *s);//return a dfs tree
     vector<Node*> generalSearch(Node *s, function<Node(vector<Node>)> selector);//return a vector of nodes
     

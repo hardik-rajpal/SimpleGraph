@@ -455,8 +455,7 @@ int SimpleGraph::getdistanceBetween(Node *n1, Node *n2){
     return getshortestpathbetween(n1, n2).size();
 }
 
-SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes){
-    vector<string> colorops = {"black", "gray","white"};
+SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops){
     int colors[MAXV], dist[MAXV];
     for(int i=0;i<V.size();i++){
         colors[i] = 2;//white
@@ -480,12 +479,15 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes){
                 bfstree->addBranch(bfstree->getNodeByLabel(u->label), {u->outlist[i]->end->label}, {});
                 q.push(u->outlist[i]->end);
                 colors[index]=1;
-                if(colornodes){V[index]->color = colorops[1];}
+                if(colornodes){V[index]->color = colorops[1];u->outlist[i]->color = "green";u->outlist[i]->conjugate->color = "green"; }
                 dist[index] = dist[i_u]+1;
             }
         }
         colors[i_u] = 0;//black
         if(colornodes){V[i_u]->color = colorops[0];}
+        if(autorender){
+            syncGraph();
+        }
     }
     return bfstree;
 }
