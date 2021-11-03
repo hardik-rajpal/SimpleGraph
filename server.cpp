@@ -3,6 +3,7 @@
 #include <winsock2.h>
 #include <stdio.h>
 #include<string>
+#define SERVERUSED 1
 using namespace std;
 ServerSocket::ServerSocket(int port, string addr){
     Port = port;
@@ -250,4 +251,66 @@ void ServerSocket::closeConnection(){
     else{
         printf("Server: WSACleanup() is OK...\n");
     }
+}
+
+
+/*✅*/void ServerSocket::sendDataARP(string msg, SimpleGraph &g){
+    sendData(msg);
+    awaitRecParse(g);
+}
+/*✅*/string ServerSocket::awaitRecParse(SimpleGraph &g){
+    sendData("paused");
+    while(true){
+        string resp = awaitSignal();
+        if(resp=="EXIT"){
+            closeConnection();
+            cout<<"\nError fsr\n";
+            return "EXIT";
+        }
+        if(resp.length()>20){
+            g.appendRendData(resp);
+        }
+        else if(resp=="play"){
+            return resp;
+        }
+        else{
+            g.parseCommand(resp);
+        }
+    }
+        
+    return "OK";
+}
+
+ServerSocket* SimpleGraph::initServer(int port, string host){
+    server = new ServerSocket(port, host);
+    server->listenForClient();
+    return server;
+}
+ServerSocket* SimpleGraph::setAutoRender(bool state){
+    if(server!=NULL){
+        autorender = true;
+    }
+    else{
+        cout<<"AutoRender can be enabled only after calling initServer(port, host)!\n";
+    }
+    return server;
+
+}
+void SimpleGraph::syncGraph(bool pausemain){
+    cout<<"Called";
+    // #ifdef SERVERUSED
+    // cout<<SERVERUSED<<" ";
+    if(server!=NULL){
+        if(pausemain){
+            server->sendDataARP(this->serialize(), *this);
+        }
+        else{
+            server->sendData(this->serialize());
+            this->appendRendData(server->awaitSignal());
+        }
+    }
+    else{
+        cout<<"You need to call initServer(port, host) before sync!\n";
+    }
+    // #endif
 }

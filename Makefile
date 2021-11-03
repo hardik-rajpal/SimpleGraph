@@ -1,7 +1,7 @@
-graphws: mainpath.cpp Graph.cpp server.cpp
-	g++ mainpath.cpp Graph.cpp server.cpp -lws2_32 -o gs
-graph: main.cpp Graph.cpp
-	g++ main.cpp Graph.cpp -o g
+graphws: mainpath.cpp Graph.cpp Server.cpp
+	g++ mainpath.cpp Server.cpp Graph.cpp  -lws2_32 -o gs
+graph: mainpath.cpp Graph.cpp
+	g++ mainpath.cpp Graph.cpp -o g
 nodemod:
 	cd fabext
 	npm i

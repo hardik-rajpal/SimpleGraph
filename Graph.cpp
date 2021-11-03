@@ -60,36 +60,17 @@ vector<vector<string>> parseLists(string data, int level){
         lists.push_back(list);
     }
     return lists;
-    // int dtl = 0;
-    // int j=0;
-    // vector<string> datastr = {};
-    // vector<string> keys;
-    // vector<int> bracepos;
-    // string xdata;
-    // for(int i=0;i<data.length();i++){
-    //     if(data[i]=='{'){
-    //         dtl+=1;
-    //         bracepos.push_back(i);
-    //     }
-    //     if(data[i]=='}' && i<data.length()-50){
-    //         if(dtl==level){
-    //             j = bracepos[bracepos.size()-1];
-    //             xdata = data.substr(j, 1+i-j);
-    //             xdata = xdata.substr(1, xdata.length()-2);
-    //             cout<<xdata<<" added\n";
-    //             datastr.push_back(xdata);
-    //         }
-    //         dtl-=1;
-    //     }
-    // }
-    // datastr.push_back("Hi");
-    // return datastr;
 }
 Node* SimpleGraph::addNode(string label){
     Node *n;
     n = new Node(label);
     V.push_back(n);
     nv++;
+    #ifdef SERVERUSED
+    if(autorender){
+        syncGraph();
+    }
+    #endif
     return V[V.size()-1];
 }
 SimpleGraph::SimpleGraph(){};
@@ -474,7 +455,7 @@ int SimpleGraph::getdistanceBetween(Node *n1, Node *n2){
     return getshortestpathbetween(n1, n2).size();
 }
 
-SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes=false){
+SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes){
     vector<string> colorops = {"black", "gray","white"};
     int colors[MAXV], dist[MAXV];
     for(int i=0;i<V.size();i++){
@@ -508,3 +489,5 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes=false){
     }
     return bfstree;
 }
+//Assigns new ServerSocket objecto to this->server, listens for the renderer application,
+//returns server ptr
