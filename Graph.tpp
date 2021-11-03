@@ -10,4 +10,22 @@ void SimpleGraph::assignVertices(vector<T> vertices, function<string(T)> labelma
     }
     head = V[0];
 }
+template<class T>
+bool contains(vector<T> list, T item){
+    for(int i=0;i<list.size();i++){
+        if(list[i]==item){
+            return true;
+        }
+    }
+    return false;
+}
+template<class T>
+int indexof(vector<T> list, T item){
+    for(int i=0;i<list.size();i++){
+        if(list[i]==item){
+            return i;
+        }
+    }
+    return -1;
+}
 #endif

@@ -1,5 +1,5 @@
-graphws: main.cpp Graph.cpp server.cpp
-	g++ main.cpp Graph.cpp server.cpp -lws2_32 -o gs
+graphws: mainpath.cpp Graph.cpp server.cpp
+	g++ mainpath.cpp Graph.cpp server.cpp -lws2_32 -o gs
 graph: main.cpp Graph.cpp
 	g++ main.cpp Graph.cpp -o g
 nodemod:

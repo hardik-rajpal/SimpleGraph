@@ -1,11 +1,14 @@
 /*
 TODO:
-Don't delete Edge class.
-Restructure Graph functions to use OutEdge instead of Edge class.
-Write serializer for OutEdge
-Write client socket in fabric.js
+1. Integrate socket communication into SimpleGraph but ensure
+   flexibility of inclusion.
+    Use if(render==true) {communicate} statements and check if compilation is possible.
+    Else maybe use inheritance?
+    Or an if statement within serverSocket member functions?
 
+2. Implement cpp functionality completely.
 
+3. Style mainWindow.html up.
 
 */
 #ifndef GRAPH_H
@@ -24,6 +27,10 @@ string quotestring(string tbq);
 vector<string> split(string str, string sep);
 vector<vector<string>> parseLists(string data, int level);
 vector<int> toCoords(string kvpair);
+template<class T>
+bool contains(vector<T> list, T item);
+template<class T>
+int indexof(vector<T> list, T item);
 // struct Neighbour{
 //     Node*n;
 //     Edge*e;
@@ -88,7 +95,7 @@ class SimpleGraph{
     /*✅*/SimpleGraph(string adjlist);//constructor using adjlist in string.
     SimpleGraph(string notation, bool usenotation);//constructor using mathematical notation.
     //search methods.
-    SimpleGraph bfs(Node *s);//return a bfs tree
+    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false);//return a bfs tree
     SimpleGraph dfs(Node *s);//return a dfs tree
     vector<Node*> generalSearch(Node *s, function<Node(vector<Node>)> selector);//return a vector of nodes
     
@@ -99,6 +106,8 @@ class SimpleGraph{
     //Edit graph
     /*✅*/template<class T>
     void assignVertices(vector<T> vertices, function<string(T)> labelmaker);
+    template<class T>
+    void extractGraph(T graphobj, function<vector<Node*>(T)> nodemaker);
     //add overload with addBranchby label
     //assumes root is a valid pointer in the graph.
     /*✅*/Node *addBranch(Node* root, vector<string> vlabels, vector<string> elabels);//add a series of nodes at root.
@@ -107,23 +116,27 @@ class SimpleGraph{
     /*✅*/bool deleteNode(Node *n1);
     /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
-    
+    Node* addNode(string label, vector<int> coords, int weight, string color);
+
     //getters.
     /*✅*/string getAdjList();
     /*✅*/Node *getNodeByLabel(string label);
     /*✅*/bool areConnected(Node*n1, Node*n2);
-    vector<Node*> getpathbetween(Node *n1, Node*n2);
-    int getdistanceBetween(Node *n1, Node *n2);
     /*✅*/HalfEdge *getEdgeByNodes(Node*n1, Node*n2);
+    /*✅*/vector<Node*> getpathbetween(Node *n1, Node*n2, vector<Node*> toexclude);
+    /*✅*/vector<Node*> getshortestpathbetween(Node *n1, Node*n2);
+    /*✅*/int getdistanceBetween(Node *n1, Node *n2);
     
     //export all edit graph operations for animation program.
     /*✅*/string exportShots();
     /*✅*/string serialize();
     /*✅*/void takeShot();
-    void appendRendData(string data);
-    void parseCommand(string cmd);
+    /*✅*/void appendRendData(string data);
+    /*✅*/void parseCommand(string cmd);
 };
-class ServerSocket{
+
+/*Integrate an object of this into SimpleGraph*/
+/*✅*/class ServerSocket{
      public:
      WSADATA            wsaData;
      SOCKET             ListeningSocket, NewConnection;
@@ -132,20 +145,20 @@ class ServerSocket{
      // Receiving part
      char          recvbuff[MAXBUF], sendbuff[MAXBUF];
      int                ByteReceived, BytesSent,i, nlen, SelectTiming;
-    ServerSocket(int port, string addr);
-    int recvTimeOutTCP(SOCKET socket, long sec, long usec);
-    void listenForClient();
-    string awaitSignal();
-    void sendData(string msg);
-    void closeConnection();
+    /*✅*/ServerSocket(int port, string addr);
+    /*✅*/int recvTimeOutTCP(SOCKET socket, long sec, long usec);
+    /*✅*/void listenForClient();
+    /*✅*/string awaitSignal();
+    /*✅*/void sendData(string msg);
+    /*✅*/void closeConnection();
 
 
     /*Graph specific functions here*/
-    void sendDataARP(string msg, SimpleGraph &g){
+    /*✅*/void sendDataARP(string msg, SimpleGraph &g){
         sendData(msg);
         awaitRecParse(g);
     }
-    string awaitRecParse(SimpleGraph &g){
+    /*✅*/string awaitRecParse(SimpleGraph &g){
         sendData("paused");
         while(true){
             string resp = awaitSignal();

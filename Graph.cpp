@@ -396,7 +396,6 @@ string HalfEdge::serialize(){
     return d;
 }
 void SimpleGraph::appendRendData(string data){
-    cout<<"Hi";
     cout<<"\n"<<data<<"\n";
     vector<vector<string>> strdata = parseLists(data, 3);
     vector<vector<int>> coords;
@@ -430,4 +429,82 @@ void SimpleGraph::parseCommand(string cmd){
         outf.write(output.c_str(), output.length());
         outf.close();
     }
+}
+
+vector<Node*> SimpleGraph::getpathbetween(Node *n1, Node*n2, vector<Node*> toexclude){
+    vector<Node*> path = {n1}, temp;
+    bool found = false;
+    for(int i=0;i<n1->outlist.size();i++){
+        if(n1->outlist[i]->end==n2){
+            found = true;
+            path.push_back(n2);
+        }
+    }
+    toexclude.push_back(n1);
+    if(!found){
+        for(int i=0;i<n1->outlist.size();i++){
+            temp = path;
+            if(contains<Node*>(toexclude, n1->outlist[i]->end)){
+                continue;
+            }
+            else{
+                temp = getpathbetween(n1->outlist[i]->end, n2, toexclude);
+                if(temp[temp.size()-1]==n2){
+                    for(int j=0;j<temp.size();j++){
+                        path.push_back(temp[j]);
+                    }
+                    found = true;
+                    break;
+                }
+            }
+        }
+    }
+    if(!found){
+        path = {};
+    }
+    return path;
+
+}
+vector<Node*> SimpleGraph::getshortestpathbetween(Node* n1, Node* n2){
+    SimpleGraph*bfstree = bfs(n1);
+    vector<Node*> sp = bfstree->getpathbetween(bfstree->getNodeByLabel(n1->label), bfstree->getNodeByLabel(n2->label), {});
+    return sp;
+}
+int SimpleGraph::getdistanceBetween(Node *n1, Node *n2){
+    return getshortestpathbetween(n1, n2).size();
+}
+
+SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes=false){
+    vector<string> colorops = {"black", "gray","white"};
+    int colors[MAXV], dist[MAXV];
+    for(int i=0;i<V.size();i++){
+        colors[i] = 2;//white
+        if(colornodes){V[i]->color = colorops[2];}
+    }
+    queue<Node*> q;
+    Node* u;
+    SimpleGraph *bfstree = new SimpleGraph;
+    int index=indexof(V,s), i_u;
+    q.push(s);
+    bfstree->addNode(s->label);
+    colors[index]=1;//gray
+    if(colornodes){s->color = colorops[1];}
+    dist[index] = 0;
+    while(!q.empty()){
+        u = q.front(); q.pop();
+        i_u = indexof(V,u);
+        for(int i=0;i<u->outlist.size();i++){
+            index = indexof(V,u->outlist[i]->end);
+            if(colors[index]==2){
+                bfstree->addBranch(bfstree->getNodeByLabel(u->label), {u->outlist[i]->end->label}, {});
+                q.push(u->outlist[i]->end);
+                colors[index]=1;
+                if(colornodes){V[index]->color = colorops[1];}
+                dist[index] = dist[i_u]+1;
+            }
+        }
+        colors[i_u] = 0;//black
+        if(colornodes){V[i_u]->color = colorops[0];}
+    }
+    return bfstree;
 }
