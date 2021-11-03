@@ -6,7 +6,7 @@
 #include<string>
 #include"Graph.h"
 using namespace std;
-#define MAXBUF 10000
+#define MAXBUF 1000000
 class SimpleGraph;
 /*✅*/class ServerSocket{
      public:

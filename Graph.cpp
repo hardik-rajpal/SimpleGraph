@@ -459,12 +459,20 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops)
     int colors[MAXV], dist[MAXV];
     for(int i=0;i<V.size();i++){
         colors[i] = 2;//white
+        cout<<i<<" ";
+        try{
+            cout<<V[i]->label<<" "<<V[i]->color<<"\n";
+        }
+catch(exception e){
+    cout<<e.what();
+}
         if(colornodes){V[i]->color = colorops[2];}
     }
     queue<Node*> q;
     Node* u;
     SimpleGraph *bfstree = new SimpleGraph;
     int index=indexof(V,s), i_u;
+    
     q.push(s);
     bfstree->addNode(s->label);
     colors[index]=1;//gray
@@ -472,6 +480,7 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops)
     dist[index] = 0;
     while(!q.empty()){
         u = q.front(); q.pop();
+        cout<<u->label<<"\n";
         i_u = indexof(V,u);
         for(int i=0;i<u->outlist.size();i++){
             index = indexof(V,u->outlist[i]->end);
@@ -490,6 +499,21 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops)
         }
     }
     return bfstree;
+}
+
+vector<vector<Node*>> SimpleGraph:: getCliques(){
+    vector<vector<Node*>> cliques;
+    int sumV = 0, i=0;
+    while(sumV<nv){
+        cliques.push_back({});
+        SimpleGraph*bfstree = bfs(V[i],false);
+        for(auto x:bfstree->V){
+            cliques[cliques.size()-1].push_back(getNodeByLabel(x->label));
+        }
+        sumV+=bfstree->V.size();
+        i = rand()%nv;
+    }
+    return cliques;
 }
 //Assigns new ServerSocket objecto to this->server, listens for the renderer application,
 //returns server ptr

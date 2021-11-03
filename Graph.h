@@ -21,7 +21,6 @@ TODO:
 #define MAXV 100
 #define MAXE 4950 //100C2
 #define literal(expr) #expr
-#define MAXBUF 10000
 #define SERVERUSED
 #undef SERVERUSED
 using namespace std;
@@ -46,7 +45,7 @@ class Node{
     string label="";
     int coords[2]={0, 0};//coordinates for animation program;
     int weight=1;//equivalent to radius for animation program;
-    string color="";
+    string color="cyan";
     // vector<Neighbour> adjlist2= {};
     vector<HalfEdge*> inlist = {};
     //use outlist for simplegraph
@@ -118,7 +117,7 @@ class SimpleGraph{
     
     //subgraphs.
     /*✅*/SimpleGraph getInducedSubgraph(vector<Node*> vToExclude);//return induced subgraphs by deleteing given vertices.
-    vector<SimpleGraph> getConnectedComponents();//return connected components
+    vector<vector<Node*>> getCliques();//return connected components
 
     //Edit graph
     /*✅*/template<class T>

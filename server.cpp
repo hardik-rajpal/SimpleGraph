@@ -174,9 +174,9 @@ string ServerSocket::awaitSignal(){
             // Print the string only, discard other
             // remaining 'rubbish' in the 1024 buffer size
             recvbuff[ByteReceived] = '\0';
-            for(i=0;i < ByteReceived;i++){
-                    printf("%c", recvbuff[i]);
-            }
+            // for(i=0;i < ByteReceived;i++){
+            //         printf("%c", recvbuff[i]);
+            // }
             ByteReceived = 0;
             printf("\n");
             printf("Here");
@@ -215,7 +215,7 @@ else
     getsockname(NewConnection, (SOCKADDR *)&SenderInfo, &nlen);
     printf("Server: Sender IP(s) used: %s\n", inet_ntoa(SenderInfo.sin_addr));
     printf("Server: Sender port used: %d\n", htons(SenderInfo.sin_port));
-    printf("Server: Those bytes represent: \"%s\"\n", sendbuff);
+    // printf("Server: Those bytes represent: \"%s\"\n", sendbuff);
 }
 }
 

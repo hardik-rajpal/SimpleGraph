@@ -96,7 +96,7 @@ function main(){
             return;
         }
         parsedata = JSON.parse(recon)
-        
+        console.log(parsedata);
         resetCanvas(canvas);
         render(parsedata,canvas);
         

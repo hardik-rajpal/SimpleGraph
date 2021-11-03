@@ -96,6 +96,7 @@ class Edge{
         // this.text = new fabric.Text(label,{
         //     fontSize:20
         // })
+        console.log(n1);
         this.line = new fabric.Line([n1.group.left + radroot, n1.group.top + radroot, n2.group.left+radroot, n2.group.top + radroot],{
             fill:color,
             stroke:color,
@@ -154,6 +155,9 @@ function render(data,canvas){
                 if(v.outlist[j].color==""){
                     v.outlist[j].color = "red"
                 }
+                console.log(renderMeta.V[v.ptr])
+                console.log(v.outlist[j].end)
+                console.log(renderMeta.V)
                 renderMeta.E[v.outlist[j].ptr] = new Edge(renderMeta.V[v.ptr],renderMeta.V[v.outlist[j].end],v.outlist[j].label,v.outlist[j].color,canvas); 
             }
             else{
