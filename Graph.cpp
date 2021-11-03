@@ -73,6 +73,19 @@ Node* SimpleGraph::addNode(string label){
     }
     return V[V.size()-1];
 }
+Node* SimpleGraph::addNode(string label, vector<int> coords, int weight, string color){
+    Node *n;
+    n = new Node(label);
+    n->coords[0] = coords[0]; n->coords[1] = coords[1];
+    n->weight = weight;
+    n->color = color;
+    V.push_back(n);
+    nv++;
+    if(autorender){
+        syncGraph();
+    }
+    return V[V.size()-1];
+}
 SimpleGraph::SimpleGraph(){};
 SimpleGraph::SimpleGraph(vector<string> labels){
     for(int i=0;i<labels.size();i++){

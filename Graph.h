@@ -1,10 +1,4 @@
 /*
-TODO:
-1. Integrate socket communication into SimpleGraph but ensure
-   flexibility of inclusion.
-    Use if(render==true) {communicate} statements and check if compilation is possible.
-    Else maybe use inheritance?
-    Or an if statement within serverSocket member functions?
 
 2. Implement cpp functionality completely.
 
@@ -24,6 +18,7 @@ TODO:
 #define SERVERUSED
 #undef SERVERUSED
 using namespace std;
+//auxiliary functions.
 string ptrtostr(void* ptr);
 string quotestring(string tbq);
 vector<string> split(string str, string sep);
@@ -106,9 +101,9 @@ class SimpleGraph{
     /*✅*/SimpleGraph(string adjlist);//constructor using adjlist in string.
     SimpleGraph(string notation, bool usenotation);//constructor using mathematical notation.
     
-    ServerSocket* initServer(int port=7171, string host="127.0.0.1");
-    ServerSocket* setAutoRender(bool state);
-    void syncGraph(bool pausemain=false);
+    /*✅*/ServerSocket* initServer(int port=7171, string host="127.0.0.1");
+    /*✅*/ServerSocket* setAutoRender(bool state);
+    /*✅*/void syncGraph(bool pausemain=false);
     
     //search methods.
     /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"black", "gray", "white"});//return a bfs tree
@@ -117,7 +112,7 @@ class SimpleGraph{
     
     //subgraphs.
     /*✅*/SimpleGraph getInducedSubgraph(vector<Node*> vToExclude);//return induced subgraphs by deleteing given vertices.
-    vector<vector<Node*>> getCliques();//return connected components
+    /*✅*/vector<vector<Node*>> getCliques();//return connected components
 
     //Edit graph
     /*✅*/template<class T>
@@ -132,7 +127,7 @@ class SimpleGraph{
     /*✅*/bool deleteNode(Node *n1);
     /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
-    Node* addNode(string label, vector<int> coords, int weight, string color);
+    /*✅*/Node* addNode(string label, vector<int> coords, int weight, string color);
 
     //getters.
     /*✅*/string getAdjList();
