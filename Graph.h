@@ -89,7 +89,8 @@ class SimpleGraph{
     //These commands can be interpreted by the animation program.
     vector<Node*> V={};//Vector of vertices.
     Node* head = NULL;//pointer to head for animation purposes
-    
+    static const map<string,function<void(vector<int>, SimpleGraph*)>> makers;
+    static const map<string, int> validvals;
     //Renderer integration
     bool autorender=false;
     ServerSocket *server = NULL;
@@ -101,15 +102,15 @@ class SimpleGraph{
     /*✅*/SimpleGraph(vector<string> labels);//constructor with number of vertices
     /*✅*/SimpleGraph(bool adjmat[MAXV][MAXV], vector<string> labels);//constructor using adjacency matrix.
     /*✅*/SimpleGraph(string adjlist);//constructor using adjlist in string.
-    SimpleGraph(string notation, bool usenotation);//constructor using mathematical notation.
+    SimpleGraph(string graphsymbol, vector<int> vals);//constructor using mathematical notation.
     
     /*✅*/ServerSocket* initServer(int port=7171, string host="127.0.0.1");
     /*✅*/ServerSocket* setAutoRender(bool state);
     /*✅*/void syncGraph(bool pausemain=false);
     
     //search methods.
-    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"black", "gray", "white"});//return a bfs tree
-    SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"black", "gray", "white"});//return a dfs tree
+    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"green", "blue", "white"});//return a bfs tree
+    SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"green", "blue", "white"});//return a dfs tree
     vector<Node*> generalSearch(Node *s, function<Node(vector<Node>)> selector);//return a vector of nodes
     
     //subgraphs.

@@ -16,3 +16,6 @@ nodemod:
 render: fabext/client.js fabext/fabric.js fabext/main.js fabext/mainWindow.html
 	cd fabext
 	npm start
+test: testing.cpp Graph.cpp
+	echo #define SERVERUSED > config.h
+	g++ testing.cpp Graph.cpp Server.cpp -l ws2_32 -o t

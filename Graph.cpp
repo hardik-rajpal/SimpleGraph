@@ -558,6 +558,7 @@ SimpleGraph *SimpleGraph::dfs(Node *s, bool colornodes, vector<string> colorops)
 
     return dfstree;
 }
+
 vector<vector<Node*>> SimpleGraph:: getCliques(){
     vector<vector<Node*>> cliques;
     int sumV = 0, i=0;
@@ -572,7 +573,21 @@ vector<vector<Node*>> SimpleGraph:: getCliques(){
     }
     return cliques;
 }
+SimpleGraph::SimpleGraph(string s, vector<int> vals){
+    if((validvals.count(s)==0)){
+        cout<<"Invalid Symbol!\n";
+        return;
+    }
+    else{
+        if(validvals.at(s)!=vals.size()){
+            cout<<"Invalid number vector!\n";
+        }
+        else{
+            makers.at(s)(vals, this);
+        }
+    }
 
+}
 //Assigns new ServerSocket objecto to this->server, listens for the renderer application,
 //returns server ptr
 void SimpleGraph::syncGraph(bool pausemain){
