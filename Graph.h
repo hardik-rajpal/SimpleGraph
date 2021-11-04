@@ -39,6 +39,7 @@ class HalfEdge;
 class Node{
     public:
     string label="";
+    string metadata="";
     int coords[2]={0, 0};//coordinates for animation program;
     int weight=1;//equivalent to radius for animation program;
     string color="cyan";

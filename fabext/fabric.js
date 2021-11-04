@@ -7,7 +7,7 @@ const initCanvas = (id)=>{
 }
 
 class VNode{
-    constructor(x, y, label, color,weight,canvas){
+    constructor(x, y, label, color,weight,metadata,canvas){
         let radius = canvas.renderMeta.radius
         let radroot = Math.SQRT1_2*radius;
         this.x = x
@@ -16,6 +16,8 @@ class VNode{
         this.label = label
         this.weight = weight
         this.color = color
+        this.metadata = metadata
+        // console.log(metadata)
         this.shape = new fabric.Circle({
             left:x,
             top:(canvas.height - y),
@@ -38,7 +40,7 @@ class VNode{
         canvas.add(this.group)
     }
     textdata(){
-        let data = "Label:"+this.label+"\nWeight:"+this.weight+"\n(x="+parseInt(this.x).toString()+",y="+parseInt(this.y).toString()+")\n";
+        let data = "Label:"+this.label+"\nWeight:"+this.weight+"\n(x="+parseInt(this.x).toString()+",y="+parseInt(this.y).toString()+")\n" + "Meta:"+this.metadata;
         return data;
     }
     updateNode(data){
@@ -51,26 +53,27 @@ class VNode{
         this.shape.canvas.renderAll()
     }
     showData(){
+        this.datatext = new fabric.Text(this.textdata(),{
+            left:this.x +2*this.radroot,
+            top:(this.group.canvas.height - this.y)+2*this.radroot,
+            width:150,
+            height:100,
+            fontSize:15,
+            fontWeight:'bold',
+            fill:'darkgreen',
+        })
         this.datarect = new fabric.Rect({
             left:this.x+2*this.radroot,
             top:(this.group.canvas.height - this.y)+2*this.radroot,
-            width:100,
-            height:60,
+            width:150,
+            height:80,
             fill:'#fffdd0',
             hasBorders:true,
             strokeWidth:1,
             stroke:'#000000'
         })
         
-        this.datatext = new fabric.Text(this.textdata(),{
-            left:this.x +2*this.radroot,
-            top:(this.group.canvas.height - this.y)+2*this.radroot,
-            width:100,
-            height:100,
-            fontSize:15,
-            fontWeight:'bold',
-            fill:'darkgreen',
-        })
+
         this.group.datashape = new fabric.Group([this.datarect, this.datatext],{
             evented:false,
             selectable:false
@@ -143,7 +146,7 @@ function render(data,canvas){
         }
         //console.log(v.coords)
         // if(renderMeta.V[v.ptr]==undefined){
-            renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,v.weight,canvas))
+            renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,v.weight,v.meta,canvas))
         // }
 
     }

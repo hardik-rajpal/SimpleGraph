@@ -346,6 +346,7 @@ string Node::serialize(){
         data = data +  quotestring("ptr") +" : "+ quotestring(temp) + ",\n";
         data = data + quotestring("color") + " : " + quotestring(this->color) + ",\n";
         data = data + quotestring("label") + " : " + quotestring(this->label) + ",\n";
+        data = data + quotestring("meta") + " : " + quotestring(this->metadata) + ",\n";
         data = data + quotestring("weight") + ": " + to_string(this->weight) + ",\n";
         data = data + quotestring("coords") + ": {\n";
         data = data + quotestring("x") + ": "+ to_string(coords[0])+",\n";
@@ -551,7 +552,7 @@ SimpleGraph *SimpleGraph::dfs(Node *s, bool colornodes, vector<string> colorops)
         if(colornodes){u->color = colorops[0];}
         if(autorender){syncGraph();}
         dep[i_u] = t;t++;
-        // u->label = u->label+":A:"+to_string(arr[i_u])+"; D:"+to_string(dep[i_u]);
+        u->metadata = u->metadata+"A:"+to_string(arr[i_u])+"; D:"+to_string(dep[i_u]);
         q.pop();
     }
 
