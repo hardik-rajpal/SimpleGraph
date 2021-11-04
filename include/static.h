@@ -5,7 +5,7 @@
 #define CCX CW/2
 #define CCY CH/2
 #include<bits/stdc++.h>
-#include"Graph.h"
+#include"../include/Graph.h"
 using namespace std;
 void getCycle(vector<int> vals, SimpleGraph* g){
     vector<int> coords;

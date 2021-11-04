@@ -1,8 +1,7 @@
 #include<bits/stdc++.h>
-#include"Graph.h"
-#include"config.h"
+#include"../include/Graph.h"
+#include"../include/config.h"
 using namespace std;
-
 string ptrtostr(void* ptr){
     stringstream ss;
     ss<<ptr;
@@ -10,7 +9,6 @@ string ptrtostr(void* ptr){
     ss>>temp;
     return temp;
 }
-
 vector<string> split(string str, string sep){
     vector<string> parts;
     int j = 0;
@@ -108,7 +106,6 @@ SimpleGraph::SimpleGraph(bool adjmat[MAXV][MAXV], vector<string> labels){
     }
     head = V[0];
 }
-//Uncompleted method.
 SimpleGraph::SimpleGraph(string adjlist){
     /*
     Format: No spaces at end/start, \n at end of line.
@@ -132,16 +129,10 @@ SimpleGraph::SimpleGraph(string adjlist){
             return;
         }
         neighlabels = split((split(lists[i], ":"))[1], ",");
-        // cout<<"***";
-        // for(auto x:neighlabels){
-        //     cout<<":"<<x<<":";
-        // }
-        // cout<<"***\n";
         for(int i=0;i<neighlabels.size();i++){
             connectNodes(currNode, getNodeByLabel(neighlabels[i]));
         }
     }
-
 }
 Node* SimpleGraph::getNodeByLabel(string label){
     for(int i=0;i<V.size(); i++){
@@ -151,8 +142,6 @@ Node* SimpleGraph::getNodeByLabel(string label){
     }
     return NULL;
 }
-
-
 int SimpleGraph::addEdgesByRelation(function<bool(string, string)> relation){
     for(int i=0;i<V.size();i++){
         for(int j=0;j<i;j++){
@@ -165,13 +154,6 @@ int SimpleGraph::addEdgesByRelation(function<bool(string, string)> relation){
 }
 string SimpleGraph::getAdjList(){
     string alstr = "";
-    // cout<<V.size()<<"\n";
-    // for(int i=0;i<V.size();i++){
-    //     cout<<V[i]->adjlist.size()<<" ";
-    // }
-    // cout<<"\n";
-    
-    
     for(int i=0;i<nv;i++){
         alstr = alstr + V[i]->label + ":";
         if(V[i]->outlist.size()>0){
@@ -336,7 +318,6 @@ string SimpleGraph::serialize(){
 string quotestring(string tbq){
     return "\""+tbq+"\"";
 }
-
 string Node::serialize(){
         string data = "{ ";
         string temp;
@@ -555,10 +536,8 @@ SimpleGraph *SimpleGraph::dfs(Node *s, bool colornodes, vector<string> colorops)
         u->metadata = u->metadata+"A:"+to_string(arr[i_u])+"; D:"+to_string(dep[i_u]);
         q.pop();
     }
-
     return dfstree;
 }
-
 vector<vector<Node*>> SimpleGraph:: getCliques(){
     vector<vector<Node*>> cliques;
     int sumV = 0, i=0;
@@ -588,8 +567,6 @@ SimpleGraph::SimpleGraph(string s, vector<int> vals){
     }
 
 }
-//Assigns new ServerSocket objecto to this->server, listens for the renderer application,
-//returns server ptr
 void SimpleGraph::syncGraph(bool pausemain){
     cout<<"Called";
     #ifdef SERVERUSED
@@ -622,6 +599,5 @@ ServerSocket* SimpleGraph::setAutoRender(bool state){
         cout<<"AutoRender can be enabled only after calling initServer(port, host)!\n";
     }
     return server;
-
 }
 #endif

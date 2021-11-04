@@ -1,5 +1,5 @@
 
-#include"Graph.h"
+#include"../include/Graph.h"
 #include <winsock2.h>
 #include <stdio.h>
 #include<string>

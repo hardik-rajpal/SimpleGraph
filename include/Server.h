@@ -4,7 +4,7 @@
 #include <winsock2.h>
 #include <stdio.h>
 #include<string>
-#include"Graph.h"
+#include"../include/Graph.h"
 using namespace std;
 #define MAXBUF 1000000
 class SimpleGraph;

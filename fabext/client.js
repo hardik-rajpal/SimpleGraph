@@ -9,7 +9,6 @@ function synclooper(){
         syncData();
         setTimeout(()=>{synclooper()}, 3000);
     }
-
 }
 function exportIMG(){
     let img = global.canvas.toDataURL("image/png");

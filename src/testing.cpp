@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
-#include"Graph.h"
-#include"static.h"
+#include"../include/Graph.h"
+#include"../include/static.h"
 
 using namespace std;
 // vector<string> getCoords(string data){
