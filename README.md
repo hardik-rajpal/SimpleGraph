@@ -11,7 +11,7 @@ via local socket server (c++) and client (js) objects.
 The demo suggested by Prof. Raman was an animation of a bfs. That is not ready
 yet.
 
-Supported platforms: Windows 10 64bit.
+Supported platforms: Windows 10 (64bit).
 
 Graph.h: Contains list of functionality (with few definitions) and classes.
 

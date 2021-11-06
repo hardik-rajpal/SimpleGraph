@@ -11,7 +11,6 @@
 #include<bits/stdc++.h>
 #include <winsock2.h>
 #include <stdio.h>
-#include<string>
 #include"Server.h"
 
 #define MAXV 100
@@ -79,9 +78,6 @@ class HalfEdge{
 };
 
 
-
-
-
 class SimpleGraph{
     public:
     //undirected, uniweight graph, with no self loops
@@ -103,7 +99,7 @@ class SimpleGraph{
     /*✅*/SimpleGraph(vector<string> labels);//constructor with number of vertices
     /*✅*/SimpleGraph(bool adjmat[MAXV][MAXV], vector<string> labels);//constructor using adjacency matrix.
     /*✅*/SimpleGraph(string adjlist);//constructor using adjlist in string.
-    SimpleGraph(string graphsymbol, vector<int> vals);//constructor using mathematical notation.
+    /*✅*/SimpleGraph(string graphsymbol, vector<int> vals);//constructor using mathematical notation.
     
     /*✅*/ServerSocket* initServer(int port=7171, string host="127.0.0.1");
     /*✅*/ServerSocket* setAutoRender(bool state);
@@ -111,8 +107,7 @@ class SimpleGraph{
     
     //search methods.
     /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"green", "blue", "white"});//return a bfs tree
-    SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"green", "blue", "white"});//return a dfs tree
-    vector<Node*> generalSearch(Node *s, function<Node(vector<Node>)> selector);//return a vector of nodes
+    /*✅*/SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"green", "blue", "white"});//return a dfs tree
     
     //subgraphs.
     /*✅*/SimpleGraph getInducedSubgraph(vector<Node*> vToExclude);//return induced subgraphs by deleteing given vertices.
