@@ -62,6 +62,13 @@ vector<vector<string>> parseLists(string data, int level){
     }
     return lists;
 }
+vector<int> rotateXY(int x, int y, int ang_deg_anti){
+    vector<int> ans;
+    double ratio = 3.1415/180;
+    ans.push_back(x*cos(ang_deg_anti*ratio) + y*sin(ang_deg_anti*ratio));
+    ans.push_back(-x*sin(ang_deg_anti*ratio) + y*cos(ang_deg_anti*ratio));
+    return ans;
+}
 Node* SimpleGraph::addNode(string label){
     Node *n;
     n = new Node(label);
@@ -561,11 +568,12 @@ SimpleGraph::SimpleGraph(string s, vector<int> vals){
     }
 
 }
-void SimpleGraph::addGraph(SimpleGraph *myg, bool duplicate){
+void SimpleGraph::addGraph(SimpleGraph *myg, string labelprefix,string labelsuffix,bool duplicate){
     Node *t, *u;
     vector<Node*> news;
     if(!duplicate){
         for(auto x:myg->V){
+            x->label = labelprefix + x->label + labelsuffix;
             V.push_back(x);
             nv++;
             RENDER
@@ -574,7 +582,7 @@ void SimpleGraph::addGraph(SimpleGraph *myg, bool duplicate){
     else{
         for(int i=0;i<myg->V.size();i++){
             t = myg->V[i];
-            news.push_back(addNode(t->label, {t->coords[0], t->coords[1]}, t->weight, t->color));
+            news.push_back(addNode(labelprefix + t->label + labelsuffix, {t->coords[0], t->coords[1]}, t->weight, t->color));
         }
         for(int i=0;i<myg->V.size();i++){
             t = myg->V[i];
@@ -587,6 +595,28 @@ void SimpleGraph::addGraph(SimpleGraph *myg, bool duplicate){
         }
     }
 }
+void SimpleGraph::setCenter(int x, int y){
+    center = {x, y};
+}
+void SimpleGraph::translate(int x, int y){
+    for(int i=0;i<V.size();i++){
+        V[i]->coords[0]+=x;V[i]->coords[1]+=y;
+    }
+    center[0] +=x;
+    center[1] +=y;
+}
+void SimpleGraph::rotate(int angle_deg_anti){
+    vector<int> ans;
+    int dx, dy;
+    for(int i=0;i<V.size();i++){
+        dx =V[i]->coords[0]- center[0]; dy = V[i]->coords[1] - center[1];
+        ans = rotateXY(dx,dy, angle_deg_anti);
+        V[i]->coords[0]=center[0] + ans[0];V[i]->coords[1]=center[1]+ans[1];
+    }
+}
+void SimpleGraph::setRenderDelay(int delay){
+    renderDelay = delay;
+}
 void SimpleGraph::syncGraph(bool pausemain){
     cout<<"Called";
     #ifdef SERVERUSED
@@ -598,6 +628,7 @@ void SimpleGraph::syncGraph(bool pausemain){
         else{
             server->sendData(this->serialize());
             this->appendRendData(server->awaitSignal());
+            Sleep(renderDelay);
         }
     }
     else{

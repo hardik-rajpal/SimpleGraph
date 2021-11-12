@@ -90,8 +90,9 @@ class SimpleGraph{
     static const map<string, int> validvals;
     //Renderer integration
     bool autorender=false;
+    int renderDelay = 0;
+    vector<int> center = {200, 200};
     ServerSocket *server = NULL;
-
     
     
     //constructors
@@ -103,6 +104,7 @@ class SimpleGraph{
     
     /*✅*/ServerSocket* initServer(int port=7171, string host="127.0.0.1");
     /*✅*/ServerSocket* setAutoRender(bool state);
+    /*✅*/void setRenderDelay(int delay);
     /*✅*/void syncGraph(bool pausemain=false);
     
     //search methods.
@@ -127,7 +129,7 @@ class SimpleGraph{
     /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
     /*✅*/Node* addNode(string label, vector<int> coords, int weight, string color);
-    void addGraph(SimpleGraph *myg, bool duplicate=false);
+    void addGraph(SimpleGraph *myg, string labelprefix="",string labelsuffix="",bool duplicate=false);
     //getters.
     /*✅*/string getAdjList();
     /*✅*/Node *getNodeByLabel(string label);
@@ -137,6 +139,10 @@ class SimpleGraph{
     /*✅*/vector<Node*> getshortestpathbetween(Node *n1, Node*n2);
     /*✅*/int getdistanceBetween(Node *n1, Node *n2);
     
+    void setCenter(int x, int y);
+    void translate(int x, int y);
+    void rotate(int angle_anticlockwise);
+
     //export all edit graph operations for animation program.
     /*✅*/string exportShots();
     /*✅*/string serialize();

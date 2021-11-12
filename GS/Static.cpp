@@ -1,13 +1,11 @@
-#ifndef STATIC_HFILE
-#define STATIC_HFILE
+#ifndef STATIC_H
+#define STATIC_H
 #define CW 700
 #define CH 650
 #define CCX CW/2
 #define CCY CH/2
 #include<bits/stdc++.h>
-#ifndef GRAPH_H
 #include"../include/Graph.h"
-#endif
 using namespace std;
 void getCycle(vector<int> vals, SimpleGraph* g){
     vector<int> coords;
@@ -16,7 +14,7 @@ void getCycle(vector<int> vals, SimpleGraph* g){
     int  x, y;
     double theta = 0;
     double dtheta = (360/(1.0*n))*(3.1415/180);
-    
+    g->setCenter(CCX, CCY);
     for(int i=0;i<n;i++){
         x = CCX + (int)rad*cos(theta + i*dtheta);
         y = CCY + (int)rad*sin(theta + i*dtheta);
@@ -37,7 +35,7 @@ void getComplete(vector<int> vals, SimpleGraph *g){
     int x, y;
     double theta = 0;
     double dtheta = (360/(1.0*n))*(3.1415/180);
-    
+    g->setCenter(CCX, CCY);
     for(int i=0;i<n;i++){
         x = CCX + (int)rad*cos(theta + i*dtheta);
         y = CCY + (int)rad*sin(theta + i*dtheta);
@@ -55,6 +53,7 @@ void getCompleteBipartite(vector<int> vals, SimpleGraph*g){
     int n = vals[0];int m = vals[1];int dy = vals[2];int dx = vals[3];
     int x = CCX - dx/2; int y = CCY - (n/2)*dy;
     vector<int> coords;
+    g->setCenter(CCX, CCY);
     for(int i=0;i<n;i++){
         coords = {x, y};
         g->addNode("A"+to_string(i), coords, 1, "");
@@ -81,6 +80,7 @@ void getWheel(vector<int> vals, SimpleGraph* g){
     int x, y;
     double theta = 0;
     double dtheta = (360/(1.0*n))*(3.1415/180);
+    g->setCenter(CCX, CCY);
     for(int i=0;i<n;i++){
         x = CCX + (int)rad*cos(theta + i*dtheta);
         y = CCY + (int)rad*sin(theta + i*dtheta);
@@ -97,7 +97,29 @@ void getWheel(vector<int> vals, SimpleGraph* g){
     g->connectNodes(g->getNodeByLabel(to_string(n-1)), g->getNodeByLabel(to_string(n)));
     return;
 }
+void getStar(vector<int>  vals, SimpleGraph* g){
+    g->setCenter(CCX, CCY);
+    vector<int> coords;
+    int n = vals[0];
+    int rad = vals[1];
+    int x, y;
+    double theta = 0;
+    double dtheta = (360/(1.0*n))*(3.1415/180);
+    for(int i=0;i<n;i++){
+        x = CCX + (int)rad*cos(theta + i*dtheta);
+        y = CCY + (int)rad*sin(theta + i*dtheta);
+        coords = {x, y};
+        g->addNode(to_string(i), coords, 1, "");
+    }
+    coords = {CCX, CCY};
+    g->addNode(to_string(n), coords, 1, "");
+    for(int i=0;i<n;i++){
+        g->connectNodes(g->getNodeByLabel(to_string(n)), g->getNodeByLabel(to_string(i)));
+    }
+    return;
+}
 void getPath(vector<int> vals, SimpleGraph* g){
+    g->setCenter(CCX, CCY);
     int n = vals[0]; int angle = vals[1];int sep = vals[2];
     int x, y;vector<int> coords;
     x = CCX - (n/2)*sep*cos(angle);y = CCY - (n/2)*sep*sin(angle);
@@ -112,6 +134,7 @@ void getPath(vector<int> vals, SimpleGraph* g){
     return;
 }
 void getCircularLadder(vector<int> vals, SimpleGraph*g){
+    g->setCenter(CCX, CCY);
     vector<int> coords;
     int n = vals[0];
     int rad = vals[1];
@@ -152,6 +175,7 @@ const map<string,int> SimpleGraph::validvals={
     {"C",2},
     {"KB", 4},
     {"W", 2},
+    {"ST", 2},
     {"P", 3},
     {"CL", 3}
 };
@@ -160,6 +184,7 @@ const map<string,function<void(vector<int>, SimpleGraph*)>> SimpleGraph::makers=
     {"C", getCycle},
     {"KB", getCompleteBipartite},
     {"W", getWheel},
+    {"ST", getStar},
     {"P", getPath},
     {"CL", getCircularLadder}
 };

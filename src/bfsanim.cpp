@@ -1,7 +1,5 @@
 #include<bits/stdc++.h>
 #include"../include/Graph.h"
-#include"../include/config.h"
-#include"../include/static.h"
 using namespace std;
 int main(int argc, char*argv[]){
     srand(0);
