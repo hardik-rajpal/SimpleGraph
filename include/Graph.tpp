@@ -11,6 +11,11 @@ void SimpleGraph::assignVertices(vector<T> vertices, function<string(T)> labelma
     head = V[0];
 }
 template<class T>
+void SimpleGraph::extractGraph(T graphobj, function<vector<Node*>(T)> nodemaker){
+    V = nodemaker(graphobj);
+    nv = V.size();
+}
+template<class T>
 bool contains(vector<T> list, T item){
     for(int i=0;i<list.size();i++){
         if(list[i]==item){
@@ -28,4 +33,5 @@ int indexof(vector<T> list, T item){
     }
     return -1;
 }
+
 #endif

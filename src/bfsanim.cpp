@@ -3,6 +3,7 @@
 using namespace std;
 int main(int argc, char*argv[]){
     srand(0);
+    int numvert = 20;
     vector<string> labels, duplabels;int n = 20;int t=0;
     char c = 'A';
     for(int i=0;i<n;i++){
@@ -36,6 +37,7 @@ int main(int argc, char*argv[]){
     for(int i=0;i<20;i++){
         myg.connectNodes(myg.getNodeByLabel(duplabels[rand()%20]), myg.getNodeByLabel(duplabels[rand()%20]));
     }
+    myg.assignCoords(myg.rc::BFSTREE);
     myg.syncGraph(true);
     myg.setAutoRender(true);
     cout<<myg.bfs(myg.getNodeByLabel("A"), true, {"green", "blue", "white"})->getAdjList();

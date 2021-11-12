@@ -80,7 +80,7 @@ Node* SimpleGraph::addNode(string label){
 Node* SimpleGraph::addNode(string label, vector<int> coords, int weight, string color){
     Node *n;
     n = new Node(label);
-    n->coords[0] = coords[0]; n->coords[1] = coords[1];
+    n->coords = coords;
     n->weight = weight;
     n->color = color;
     V.push_back(n);
@@ -388,8 +388,7 @@ void SimpleGraph::appendRendData(string data){
     for(int i=0;i<strdata[1].size();i++){
         for(int j=0;j<V.size();j++){
             if(quotestring(ptrtostr((void*)(V[j])))==strdata[1][i]){
-                V[j]->coords[0] = coords[i][0];
-                V[j]->coords[1] = coords[i][1];
+                V[j]->coords = coords[i];
             }
         }
     }
@@ -457,7 +456,6 @@ int SimpleGraph::getdistanceBetween(Node *n1, Node *n2){
 
 SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops){
     int colors[MAXV], dist[MAXV];
-    
     for(int i=0;i<V.size();i++){
         colors[i] = 2;//white
         // cout<<i<<" ";
@@ -490,7 +488,10 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops)
         colors[i_u] = 0;//black
         if(colornodes){V[i_u]->color = colorops[0];}
         RENDER
+        V[i_u]->metadata = "L:"+to_string(dist[i_u]);
+        bfstree->height = max(bfstree->height,dist[i_u]);
     }
+
     return bfstree;
 }
 SimpleGraph *SimpleGraph::dfs(Node *s, bool colornodes, vector<string> colorops){
@@ -611,12 +612,13 @@ void SimpleGraph::rotate(int angle_deg_anti){
     for(int i=0;i<V.size();i++){
         dx =V[i]->coords[0]- center[0]; dy = V[i]->coords[1] - center[1];
         ans = rotateXY(dx,dy, angle_deg_anti);
-        V[i]->coords[0]=center[0] + ans[0];V[i]->coords[1]=center[1]+ans[1];
+        V[i]->coords={center[0] + ans[0],center[1]+ans[1]};
     }
 }
 void SimpleGraph::setRenderDelay(int delay){
     renderDelay = delay;
 }
+
 void SimpleGraph::syncGraph(bool pausemain){
     cout<<"Called";
     #ifdef SERVERUSED

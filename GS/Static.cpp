@@ -188,4 +188,38 @@ const map<string,function<void(vector<int>, SimpleGraph*)>> SimpleGraph::makers=
     {"P", getPath},
     {"CL", getCircularLadder}
 };
+void SimpleGraph::assignCoords(int config){
+    if(config==rc::RAND){
+        for(int i=0;i<V.size();i++){
+            V[i]->coords = {int(CW*0.05)+rand()%(int(CW*0.9)), int(CH*0.05)+rand()%(int(CH*0.9))};
+        }
+    }
+    else if(config==rc::BFSTREE){
+        Node *trnode; string hdata, hdatachild;
+        vector<Node*> unsetnodes;
+        int x, y, sepx=40, sepy=70, ht;
+        SimpleGraph *tr = bfs(V[0], false);
+        V[0]->coords = {CCX, sepy};
+        
+        for(int i=0;i<V.size();i++){
+            unsetnodes = {};
+            hdata = V[i]->metadata;
+            hdata = hdata.substr(2, hdata.length()-2);
+            cout<<"hdata?"<<hdata<<"\n";
+            ht = stoi(hdata);
+            for(int j=0;j<V[i]->outlist.size();j++){
+                hdatachild = V[i]->outlist[j]->end->metadata;
+                hdatachild = hdatachild.substr(2, hdatachild.length()-2);
+                if(stoi(hdata)+1==stoi(hdatachild)){
+                    unsetnodes.push_back(V[i]->outlist[j]->end);
+                }
+            }
+            x = V[i]->coords[0] - sepx*(unsetnodes.size()/2);
+            for(int j=0;j<unsetnodes.size();j++){
+                unsetnodes[j]->coords = {x + sepx*j,sepy*(ht+2)};
+            }
+        }
+        cout<<"Hi done rend";
+    }
+}
 #endif

@@ -40,7 +40,7 @@ class Node{
     public:
     string label="";
     string metadata="";
-    int coords[2]={0, 0};//coordinates for animation program;
+    vector<int> coords = {0, 0};//coordinates for animation program;
     int weight=1;//equivalent to radius for animation program;
     string color="cyan";
     // vector<Neighbour> adjlist2= {};
@@ -91,7 +91,9 @@ class SimpleGraph{
     //Renderer integration
     bool autorender=false;
     int renderDelay = 0;
+    enum rc{BFSTREE, DFSTREE, RAND};
     vector<int> center = {200, 200};
+    int height=0;
     ServerSocket *server = NULL;
     
     
@@ -118,7 +120,7 @@ class SimpleGraph{
     //Edit graph
     /*✅*/template<class T>
     void assignVertices(vector<T> vertices, function<string(T)> labelmaker);
-    template<class T>
+    /*✅*/template<class T>
     void extractGraph(T graphobj, function<vector<Node*>(T)> nodemaker);
     //add overload with addBranchby label
     //assumes root is a valid pointer in the graph.
@@ -129,7 +131,7 @@ class SimpleGraph{
     /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
     /*✅*/Node* addNode(string label, vector<int> coords, int weight, string color);
-    void addGraph(SimpleGraph *myg, string labelprefix="",string labelsuffix="",bool duplicate=false);
+    /*✅*/void addGraph(SimpleGraph *myg, string labelprefix="",string labelsuffix="",bool duplicate=false);
     //getters.
     /*✅*/string getAdjList();
     /*✅*/Node *getNodeByLabel(string label);
@@ -139,10 +141,10 @@ class SimpleGraph{
     /*✅*/vector<Node*> getshortestpathbetween(Node *n1, Node*n2);
     /*✅*/int getdistanceBetween(Node *n1, Node *n2);
     
-    void setCenter(int x, int y);
-    void translate(int x, int y);
-    void rotate(int angle_anticlockwise);
-
+    /*✅*/void setCenter(int x, int y);
+    /*✅*/void translate(int x, int y);
+    /*✅*/void rotate(int angle_anticlockwise);
+    void assignCoords(int CONFIG);
     //export all edit graph operations for animation program.
     /*✅*/string exportShots();
     /*✅*/string serialize();
