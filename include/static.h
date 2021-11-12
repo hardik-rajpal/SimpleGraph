@@ -1,11 +1,13 @@
-#ifndef STATIC_H
-#define STATIC_H
+#ifndef STATIC_HFILE
+#define STATIC_HFILE
 #define CW 700
 #define CH 650
 #define CCX CW/2
 #define CCY CH/2
 #include<bits/stdc++.h>
+#ifndef GRAPH_H
 #include"../include/Graph.h"
+#endif
 using namespace std;
 void getCycle(vector<int> vals, SimpleGraph* g){
     vector<int> coords;

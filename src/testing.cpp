@@ -7,14 +7,16 @@ using namespace std;
 //
 // }
 int main(){
-    SimpleGraph myg;
+    SimpleGraph myg,mygp;
     // myg.initServer();
     // myg.setAutoRender(true);
     // myg = SimpleGraph("C", {20, 200});
     // myg = SimpleGraph("K", {15, 200});
-    myg = SimpleGraph("KB", {5, 4, 60, 100});
-    // myg = SimpleGraph("W", {20, 200});
-    // myg = SimpleGraph("P", {10,45, 50});
+    // myg = SimpleGraph("KB", {5, 4, 60, 100});
+    myg = SimpleGraph("W", {20, 200});
+
+    mygp = SimpleGraph("P", {10,0, 50});
+    myg.addGraph(&mygp, true);
     // myg = SimpleGraph("CL", {20, 200, 300});
     myg.initServer();
     myg.syncGraph(true);

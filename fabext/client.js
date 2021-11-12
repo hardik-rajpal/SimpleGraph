@@ -87,7 +87,6 @@ function main(){
     
     
     client.on('data', function(data){
-
         setStatus("Rec.");
         recon = String.fromCharCode.apply(null,data.toJSON().data)
         if(recon=="paused"){
@@ -98,7 +97,6 @@ function main(){
         console.log(parsedata);
         resetCanvas(canvas);
         render(parsedata,canvas);
-        
         let Vdata = filterForServer(canvas.renderMeta)
         let dat = JSON.stringify(Vdata)
         console.log(dat)

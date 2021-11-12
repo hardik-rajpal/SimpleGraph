@@ -127,7 +127,7 @@ class SimpleGraph{
     /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
     /*✅*/Node* addNode(string label, vector<int> coords, int weight, string color);
-
+    void addGraph(SimpleGraph *myg, bool duplicate=false);
     //getters.
     /*✅*/string getAdjList();
     /*✅*/Node *getNodeByLabel(string label);

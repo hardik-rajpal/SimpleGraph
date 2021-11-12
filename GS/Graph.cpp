@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 #include"../include/Graph.h"
 #include"../include/config.h"
+#define  RENDER if(autorender){syncGraph();}
 using namespace std;
 string ptrtostr(void* ptr){
     stringstream ss;
@@ -66,9 +67,7 @@ Node* SimpleGraph::addNode(string label){
     n = new Node(label);
     V.push_back(n);
     nv++;
-    if(autorender){
-        syncGraph();
-    }
+    RENDER
     return V[V.size()-1];
 }
 Node* SimpleGraph::addNode(string label, vector<int> coords, int weight, string color){
@@ -79,9 +78,7 @@ Node* SimpleGraph::addNode(string label, vector<int> coords, int weight, string 
     n->color = color;
     V.push_back(n);
     nv++;
-    if(autorender){
-        syncGraph();
-    }
+    RENDER
     return V[V.size()-1];
 }
 SimpleGraph::SimpleGraph(){};
@@ -197,6 +194,7 @@ HalfEdge *SimpleGraph::connectNodes(Node*n1, Node*n2){
             V[i]->outlist.push_back(e2);
         }
     }
+    RENDER
     return e1;
 }
 Node *SimpleGraph::addBranch(Node *root, vector<string> vlabels, vector<string> elabels){
@@ -484,9 +482,7 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops)
         }
         colors[i_u] = 0;//black
         if(colornodes){V[i_u]->color = colorops[0];}
-        if(autorender){
-            syncGraph();
-        }
+        RENDER
     }
     return bfstree;
 }
@@ -511,9 +507,7 @@ SimpleGraph *SimpleGraph::dfs(Node *s, bool colornodes, vector<string> colorops)
         i_u = indexof(V, u);
         colors[i_u]=1;
         if(colornodes){u->color = colorops[1];}
-        if(autorender){
-            syncGraph();
-        }
+        RENDER
         if(arr[i_u]==-1){arr[i_u] = t;t++;}
         
         for(int i=0;i<u->outlist.size();i++){
@@ -531,7 +525,7 @@ SimpleGraph *SimpleGraph::dfs(Node *s, bool colornodes, vector<string> colorops)
         cout<<u->label<<" "<<u->color<<"\n";
         colors[i_u] = 0;
         if(colornodes){u->color = colorops[0];}
-        if(autorender){syncGraph();}
+        RENDER
         dep[i_u] = t;t++;
         u->metadata = u->metadata+"A:"+to_string(arr[i_u])+"; D:"+to_string(dep[i_u]);
         q.pop();
@@ -566,6 +560,32 @@ SimpleGraph::SimpleGraph(string s, vector<int> vals){
         }
     }
 
+}
+void SimpleGraph::addGraph(SimpleGraph *myg, bool duplicate){
+    Node *t, *u;
+    vector<Node*> news;
+    if(!duplicate){
+        for(auto x:myg->V){
+            V.push_back(x);
+            nv++;
+            RENDER
+        }
+    }
+    else{
+        for(int i=0;i<myg->V.size();i++){
+            t = myg->V[i];
+            news.push_back(addNode(t->label, {t->coords[0], t->coords[1]}, t->weight, t->color));
+        }
+        for(int i=0;i<myg->V.size();i++){
+            t = myg->V[i];
+            for(int j=0;j<i;j++){
+                u = myg->V[j];
+                if(myg->areConnected(t, u)){
+                    connectNodes(news[i], news[j]);
+                }
+            }
+        }
+    }
 }
 void SimpleGraph::syncGraph(bool pausemain){
     cout<<"Called";
