@@ -191,7 +191,7 @@ const map<string,function<void(vector<int>, SimpleGraph*)>> SimpleGraph::makers=
 void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     string hdata, hdatachild;
     vector<Node*> unsetnodes;
-    int x, y, sepx=40, sepy=70, ht;
+    int x, y, sepx=40, sepy=CH/(bfstree->height+1), ht;
     SimpleGraph *tr = bfstree;
     cout<<"At node: "<<v->label<<"\n";
     unsetnodes = {};
@@ -212,21 +212,25 @@ void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     }
     int l = unsetnodes.size();
     if(l>1){
-
         sepx = int(0.8*spread/(l-1));
         cout<<"numchil: "<<l<<",sep"<<sepx<<"\n";
     }
     else if(l==1){
         sepx = 30;//doesn't matter
     }
-    x = int(main->getNodeByLabel(v->label)->coords[0] - sepx*(l/2));
+    if(l%2==1){
+    x = int(main->getNodeByLabel(v->label)->coords[0] - int(sepx*((l-1)/2.0)));
+    }
+    else{
+    x = int(main->getNodeByLabel(v->label)->coords[0] - int(sepx*((l-1)/2.0)));
+    }
+
     cout<<"first x: "<<x<<"\n";
     for(int j=0;j<unsetnodes.size();j++){
         unsetnodes[j]->coords = {x + sepx*j,sepy*(ht+2)};
         cout<<"passing node: "<<unsetnodes[j]->label<<"\n";
         spreadDFS(tr->getNodeByLabel(unsetnodes[j]->label), int(spread/l), main, tr);
     }
-    // cout<<"Hi done rend";
 }
 void SimpleGraph::assignCoords(int config){
     if(config==rc::RAND){
@@ -235,8 +239,8 @@ void SimpleGraph::assignCoords(int config){
         }
     }
     else if(config==rc::BFSTREE){
-        int sepy=70;
-        int mas = int(0.8*CW);//max allowed spread;
+        int sepy=50;
+        int mas = int(0.85*CW);//max allowed spread;
         SimpleGraph *tr = bfs(V[0], false);
         V[0]->coords = {CCX, sepy};
         spreadDFS(tr->V[0], mas, this, tr);
