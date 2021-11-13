@@ -188,6 +188,75 @@ const map<string,function<void(vector<int>, SimpleGraph*)>> SimpleGraph::makers=
     {"P", getPath},
     {"CL", getCircularLadder}
 };
+int maxBranchWidth(Node*n){
+    string hdata = n->metadata;
+    hdata = hdata.substr(2, hdata.length()-2);
+    // cout<<"hdata? "<<hdata<<"\n";
+    int ht = stoi(hdata);
+    int wn = n->outlist.size()-1;
+    for(int j=0;j<n->outlist.size()-1;j++){
+        hdata = n->outlist[j]->end->metadata;
+        hdata = hdata.substr(2, hdata.length()-2);
+        if(stoi(hdata)==ht+1){
+            wn = max(wn, maxBranchWidth(n->outlist[j]->end));
+        }
+    }
+    return wn;
+    
+}
+void spreadDFSBW(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
+    string hdata, hdatachild;
+    vector<Node*> unsetnodes;vector<int> bws;
+    int x, y, sepx=40, sepy=CH/(bfstree->height+1), ht;
+    SimpleGraph *tr = bfstree;
+    cout<<"At node: "<<v->label<<"\n";
+    hdata = v->metadata;
+    hdata = hdata.substr(2, hdata.length()-2);
+    cout<<"hdata? "<<hdata<<"\n";
+    ht = stoi(hdata);
+    cout<<v->label<<"has kids: ";
+    for(int j=0;j<v->outlist.size();j++){
+        cout<<v->outlist[j]->end->label<<", ";
+        hdatachild = bfstree->getNodeByLabel(v->outlist[j]->end->label)->metadata;
+        cout<<"heights of comrades"<<hdatachild<<" ";
+        hdatachild = hdatachild.substr(2, hdatachild.length()-2);
+        if(stoi(hdata)+1==stoi(hdatachild)){
+            cout<<"adding to unset: "<<v->outlist[j]->end->label<<"\n";
+            unsetnodes.push_back(main->getNodeByLabel(v->outlist[j]->end->label));
+        }else{/*predecessor node cout<<tr->V[i]->outlist[j]->end->label<<"\n";*/}
+    }
+    int l = unsetnodes.size();
+    int totbws=0, itemp;
+    for(int j=0;j<l;j++){
+        itemp = maxBranchWidth(unsetnodes[j]);
+        bws.push_back(itemp);
+        totbws +=itemp;
+    }
+    bws.push_back(spread);
+    totbws = max(totbws, 1);
+    // if(l%2==1){
+    x = int(main->getNodeByLabel(v->label)->coords[0] - int(spread*(1/2.0)) + int(spread*(1.0*bws[0]/(2.0*totbws))));
+    // }
+    // else{
+    // x = int(main->getNodeByLabel(v->label)->coords[0] - int(sepx*((l-1)/2.0)));
+    // }
+
+    cout<<"first x: "<<x<<"\n";
+    if(unsetnodes.size()>0){
+        unsetnodes[0]->coords = {x,sepy*(ht+2)};
+        cout<<"passing node: "<<unsetnodes[0]->label<<"\n";
+        spreadDFSBW(tr->getNodeByLabel(unsetnodes[0]->label), spread*bws[0]/(1.0*totbws), main, tr);
+    }
+    int cumulx = x;
+    for(int j= 1;j<unsetnodes.size();j++){
+        sepx = spread*(bws[j-1] + bws[j])/(2.0*totbws);
+        cout<<"sep btwn"<<unsetnodes[j-1]->label<<" "<<unsetnodes[j]->label<<" "<<sepx<<"\n";
+        cumulx +=sepx;
+        unsetnodes[j]->coords = {cumulx,sepy*(ht+2)};
+        cout<<"passing node: "<<unsetnodes[j]->label<<"\n";
+        spreadDFSBW(tr->getNodeByLabel(unsetnodes[j]->label), spread*bws[j]/(1.0*totbws), main, tr);
+    }
+}
 void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     string hdata, hdatachild;
     vector<Node*> unsetnodes;
@@ -240,10 +309,10 @@ void SimpleGraph::assignCoords(int config){
     }
     else if(config==rc::BFSTREE){
         int sepy=50;
-        int mas = int(0.85*CW);//max allowed spread;
+        int mas = int(0.99*CW);//max allowed spread;
         SimpleGraph *tr = bfs(V[0], false);
         V[0]->coords = {CCX, sepy};
-        spreadDFS(tr->V[0], mas, this, tr);
+        spreadDFSBW(tr->V[0], mas, this, tr);
     }
 }
 #endif

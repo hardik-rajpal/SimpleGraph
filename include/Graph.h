@@ -83,7 +83,7 @@ class SimpleGraph{
     //Renderer integration
     bool autorender=false;
     int renderDelay = 0;
-    enum rc{BFSTREE, DFSTREE, RAND};
+    enum rc{BFSTREE, RAND};
     vector<int> center = {200, 200};
     int height=0;
     ServerSocket *server = NULL;
@@ -127,6 +127,8 @@ class SimpleGraph{
     //getters.
     /*✅*/string getAdjList();
     /*✅*/Node *getNodeByLabel(string label);
+    template<typename T>
+    /*✅*/vector<Node*>getNodesIf(function<bool(Node*, T)> predicate, T t);
     /*✅*/bool areConnected(Node*n1, Node*n2);
     /*✅*/HalfEdge *getEdgeByNodes(Node*n1, Node*n2);
     /*✅*/vector<Node*> getpathbetween(Node *n1, Node*n2, vector<Node*> toexclude);

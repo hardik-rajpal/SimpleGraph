@@ -3,7 +3,7 @@
 using namespace std;
 int main(int argc, char*argv[]){
     srand(0);
-    int numvert = 100;
+    int numvert = 20;
     vector<string> labels, duplabels;int n = numvert;int t=0;
     for(int i=0;i<n;i++){
         labels.push_back(to_string(i));
