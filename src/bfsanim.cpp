@@ -4,42 +4,40 @@ using namespace std;
 int main(int argc, char*argv[]){
     srand(0);
     int numvert = 20;
-    vector<string> labels, duplabels;int n = 20;int t=0;
-    char c = 'A';
+    vector<string> labels, duplabels;int n = numvert;int t=0;
     for(int i=0;i<n;i++){
-        labels.push_back(string(1, c));
-        c++;
+        labels.push_back(to_string(i));
     }
     duplabels = vector<string>(labels);
     SimpleGraph myg;
     myg.initServer();
-    myg.addNode("A");
+    myg.addNode("0");
     labels[0] = "";
     Node* holder;
     n--;
     while(n>0){
         while(labels[t]==""){
-            t = rand()%20;
+            t = rand()%numvert;
         }
         n--;
         holder = myg.addNode(labels[t]);
         labels[t] = "";
-        t = rand()%20;
+        t = rand()%numvert;
         while(!(labels[t]=="" && holder->label!=labels[t])){
-            t = rand()%20;
+            t = rand()%numvert;
         }
         // cout<<"Labels: "<<<<labels[t]<<"\n";
         myg.connectNodes(holder, myg.getNodeByLabel(duplabels[t]));
     }
     while(myg.getCliques().size()>1){
-        myg.connectNodes(myg.getNodeByLabel(duplabels[rand()%20]), myg.getNodeByLabel(duplabels[rand()%20]));
+        myg.connectNodes(myg.getNodeByLabel(duplabels[rand()%numvert]), myg.getNodeByLabel(duplabels[rand()%numvert]));
     }
-    for(int i=0;i<20;i++){
-        myg.connectNodes(myg.getNodeByLabel(duplabels[rand()%20]), myg.getNodeByLabel(duplabels[rand()%20]));
+    for(int i=0;i<numvert;i++){
+        myg.connectNodes(myg.getNodeByLabel(duplabels[rand()%numvert]), myg.getNodeByLabel(duplabels[rand()%numvert]));
     }
     myg.assignCoords(myg.rc::BFSTREE);
     myg.syncGraph(true);
     myg.setAutoRender(true);
-    cout<<myg.bfs(myg.getNodeByLabel("A"), true, {"green", "blue", "white"})->getAdjList();
+    cout<<myg.bfs(myg.getNodeByLabel("0"), true, {"green", "blue", "white"})->getAdjList();
     myg.syncGraph(true);
 }

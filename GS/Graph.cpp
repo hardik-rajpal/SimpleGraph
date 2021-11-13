@@ -467,10 +467,11 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops)
     int index=indexof(V,s), i_u;
     
     q.push(s);
-    bfstree->addNode(s->label);
     colors[index]=1;//gray
     if(colornodes){s->color = colorops[1];}
     dist[index] = 0;
+    bfstree->addNode(s->label);
+    bfstree->getNodeByLabel(s->label)->metadata = "L:"+to_string(dist[index]);
     while(!q.empty()){
         u = q.front(); q.pop();
         // cout<<u->label<<"\n";
@@ -489,6 +490,7 @@ SimpleGraph *SimpleGraph::bfs(Node *s, bool colornodes, vector<string> colorops)
         if(colornodes){V[i_u]->color = colorops[0];}
         RENDER
         V[i_u]->metadata = "L:"+to_string(dist[i_u]);
+        bfstree->getNodeByLabel(V[i_u]->label)->metadata = "L:"+to_string(dist[i_u]);
         bfstree->height = max(bfstree->height,dist[i_u]);
     }
 
