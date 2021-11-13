@@ -22,3 +22,6 @@ test: src/testing.cpp GS/Graph.cpp GS/Server.cpp GS/Static.cpp
 final: src/final.cpp GS/Graph.cpp GS/Server.cpp GS/Static.cpp
 	echo #define SERVERUSED > ./include/config.h
 	g++ -I'./include' src/final.cpp GS/Graph.cpp GS/Static.cpp GS/Server.cpp -l ws2_32  -o build/f
+extract: src/extract.cpp GS/Graph.cpp GS/Server.cpp GS/Static.cpp
+	echo #define SERVERUSED > ./include/config.h
+	g++ -I'./include' src/extract.cpp GS/Graph.cpp GS/Static.cpp GS/Server.cpp -l ws2_32  -o build/e

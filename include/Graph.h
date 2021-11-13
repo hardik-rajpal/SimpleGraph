@@ -1,11 +1,3 @@
-/*
-
-2. Implement cpp functionality completely.
-
-3. Style mainWindow.html up.
-
-4. Maybe go cross platform?
-*/
 #ifndef GRAPH_H
 #define GRAPH_H
 #include<bits/stdc++.h>
