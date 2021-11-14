@@ -82,7 +82,7 @@ function main(){
         connect(PORT, HOST);
     }
     catch(error){
-        setStatus("Disconnected<button onclick=\"connect(7171,'127.0.0.1')\">Reconnect</button>");
+        setStatus('Disconnected<button class="btn btn-primary btn-sm" onclick=\"connect(7171,\'127.0.0.1\')\">Reconnect</button>');
         return;
     }
     
@@ -91,7 +91,7 @@ function main(){
         setStatus("Rec.");
         recon = String.fromCharCode.apply(null,data.toJSON().data)
         if(recon=="paused"){
-            setStatus("Connected:Paused <button onclick=\"syncData();sendCommand('play')\">Play</button>");
+            setStatus("Connected:Paused <button class=\"btn btn-primary btn-sm\" onclick=\"syncData();sendCommand('play')\">Play</button>");
             return;
         }
         parsedata = JSON.parse(recon)
@@ -106,7 +106,7 @@ function main(){
     })
     client.on('error', (er)=>{
         client.destroy();
-        setStatus("Disconnected<button onclick=\"connect(7171,'127.0.0.1')\">Reconnect</button>");
+        setStatus("Disconnected<button class=\"btn btn-primary btn-sm\" onclick=\"connect(7171,'127.0.0.1')\">Reconnect</button>");
     })
     global.client = client
     // setTimeout(()=>{

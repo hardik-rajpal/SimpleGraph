@@ -6,20 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+    <link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Hello, world!</title>
   </head>
   <body>
+    <script src="https://kit.fontawesome.com/2940e29c54.js" crossorigin="anonymous"></script>
     <a id="a"></a>
-    <p id="status" style="display: inline;"></p><button onclick="syncData()" style="display: inline;">Sync</button>
-    Export: <button onclick="exportJSON()">JSON</button> <button onclick="exportIMG()">Image</button><button onclick="exportMinTXT()">List</button>
+    <p id="status" style="display: inline;"></p><button class="btn btn-primary btn-sm" onclick="syncData()" style="display: inline;">Sync</button>
+    Export: <button class="btn btn-primary btn-sm" onclick="exportJSON()">JSON</button> <button class="btn btn-primary btn-sm" onclick="exportIMG()">Image</button><button class="btn btn-primary btn-sm" onclick="exportMinTXT()">List</button>
     <form id="col" style="display: inline;">
-      <input type="file" id="snapshots">
-      <button type="submit">Submit</button>
+      <input type="file" id="snapshots" style="margin-right: -30px;">
+      <button type="submit" class="btn btn-primary btn-sm">Submit</button>
     </form>
     
     <canvas id="canvas" style="margin: 20px;"></canvas>
-    <!-- <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script> -->
       <script src="fabric.min.js"></script>
       <script src="fabric.js"></script>
       <script src="client.js"></script>
