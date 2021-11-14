@@ -29,7 +29,7 @@ class VNode{
         this.text = new fabric.Text(label.substr(0, 3), {
             left:x +radroot/2,
             top:(canvas.height - y+radroot/2),
-            fontSize:10,
+            fontSize:7.5,
         })
         this.group = new fabric.Group([this.shape, this.text])
         this.group.hasControls = false;
@@ -85,8 +85,16 @@ class VNode{
         
     }
     hideData(){
-        this.group.canvas.remove(this.group.datashape)
-        this.group.canvas.renderAll()
+        // if(this.group.datashape!=undefined){
+        try{
+            //try catch block because of asynchronicity of js events
+            this.group.canvas.remove(this.group.datashape)
+            this.group.canvas.renderAll()
+        }    
+        catch(e){
+
+        }
+        // }
     }
 }
 class Edge{
@@ -103,7 +111,7 @@ class Edge{
         this.line = new fabric.Line([n1.group.left + radroot, n1.group.top + radroot, n2.group.left+radroot, n2.group.top + radroot],{
             fill:color,
             stroke:color,
-            strokeWidth:5,
+            strokeWidth:1.5,
             evented:false,
             selectable:false
         })
@@ -164,6 +172,7 @@ function render(data,canvas){
         }
         else{
             canvas.remove(renderMeta.V[v.ptr].group);
+            renderMeta.V[v.ptr].hideData();
             renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,v.weight,v.meta,canvas))
         }
 

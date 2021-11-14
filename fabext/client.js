@@ -56,7 +56,7 @@ function connect(PORT,HOST){
     })
 }
 function main(){
-    let radius = 10;
+    let radius = 7.5;
     let radroot = Math.SQRT1_2*radius;
     const canvas = initCanvas("canvas");
     canvas.on('object:moving', nodeDrag);
