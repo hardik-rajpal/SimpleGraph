@@ -83,7 +83,7 @@ class SimpleGraph{
     //Renderer integration
     bool autorender=false;
     int renderDelay = 0;
-    enum rc{BFSTREE, RAND};
+    enum rc{BFSFILL, RAND, BFSBW};
     vector<int> center = {200, 200};
     int height=0;
     ServerSocket *server = NULL;
