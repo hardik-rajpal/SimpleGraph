@@ -32,6 +32,7 @@ class Node{
     public:
     string label="";
     string metadata="";
+    string lastSerialization = "";
     vector<int> coords = {0, 0};//coordinates for animation program;
     int weight=1;//equivalent to radius for animation program;
     string color="cyan";

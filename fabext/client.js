@@ -49,9 +49,10 @@ function resetCanvas(canvas){
     canvas.backgroundColor = '#eef';
 }
 function connect(PORT,HOST){
-    client.connect(PORT, HOST, function(){
+    global.client.connect(PORT, HOST, function(){
         setStatus("Connected");
         console.log("Connected Host");
+        resetCanvas(global.canvas);
     })
 }
 function main(){
@@ -95,11 +96,11 @@ function main(){
         }
         parsedata = JSON.parse(recon)
         console.log(parsedata);
-        resetCanvas(canvas);
+        // resetCanvas(canvas);
         render(parsedata,canvas);
         let Vdata = filterForServer(canvas.renderMeta)
         let dat = JSON.stringify(Vdata)
-        console.log(dat)
+        // console.log(dat)
         client.write(dat)
         setStatus("Connected");
     })

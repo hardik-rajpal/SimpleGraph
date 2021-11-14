@@ -80,7 +80,7 @@ class VNode{
         });
         
         this.group.canvas.add(this.group.datashape)
-        console.log("Called!")
+        // console.log("Called!")
         this.group.canvas.renderAll()
         
     }
@@ -99,7 +99,7 @@ class Edge{
         // this.text = new fabric.Text(label,{
         //     fontSize:20
         // })
-        console.log(n1);
+        // console.log(n1);
         this.line = new fabric.Line([n1.group.left + radroot, n1.group.top + radroot, n2.group.left+radroot, n2.group.top + radroot],{
             fill:color,
             stroke:color,
@@ -130,26 +130,45 @@ function newrandCoords(canvas, miny,len_V){
 function randCoords(canvas){
     return {x:(canvas.width)/3+(canvas.width/2)*Math.random(), y:(canvas.height/3) + (canvas.height/2)*Math.random()}
 }
+function clearEdges(renderMeta, V, canvas){
+    E = renderMeta.E;
+    for(var i=0;i<V.length;i++){
+        let v = V[i];
+        for(var j=0;j<v.outlist.length;j++){
+            if(E[v.outlist[j].ptr]!=undefined){
+                canvas.remove(E[v.outlist[j].ptr].line)
+                delete E[v.outlist[j].ptr]
+            }
+            else if(E[v.outlist[j].conjugate]!=undefined){
+                canvas.remove(E[v.outlist[j].conjugate].line)
+                delete E[v.outlist[j].conjugate]
+            }
+        }
+    }
+
+}
 function render(data,canvas){
     canvas.backgroundColor = "#eef";
-    //console.log(renderMeta.canvas)
     let renderMeta = canvas.renderMeta
     for(var i=0;i<data.V.length;i++){
-        //console.log(data.V[i])
         let v = data.V[i]
         if(v.coords.x==0 &&v.coords.y==0){
             v.coords = newrandCoords(canvas, data.V[Math.max(i-1,0)].coords.y, data.V.length);
-            // v.coords = randCoords(canvas)
         }
         if(v.color==""){
             v.color="cyan"
         }
         //console.log(v.coords)
-        // if(renderMeta.V[v.ptr]==undefined){
+        if(renderMeta.V[v.ptr]==undefined){
             renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,v.weight,v.meta,canvas))
-        // }
+        }
+        else{
+            canvas.remove(renderMeta.V[v.ptr].group);
+            renderMeta.V[v.ptr] = (new VNode(v.coords.x, v.coords.y, v.label, v.color,v.weight,v.meta,canvas))
+        }
 
     }
+    clearEdges(renderMeta, data.V, canvas);
     for(var i=0;i<data.V.length;i++){
         let v = data.V[i];
         for(var j = 0;j<v.outlist.length;j++){
@@ -158,9 +177,6 @@ function render(data,canvas){
                 if(v.outlist[j].color==""){
                     v.outlist[j].color = "red"
                 }
-                console.log(renderMeta.V[v.ptr])
-                console.log(v.outlist[j].end)
-                console.log(renderMeta.V)
                 renderMeta.E[v.outlist[j].ptr] = new Edge(renderMeta.V[v.ptr],renderMeta.V[v.outlist[j].end],v.outlist[j].label,v.outlist[j].color,canvas); 
             }
             else{
@@ -196,7 +212,7 @@ const nodeDrag = (ev)=>{
         ev.target.canvas.renderAll()
 }
 const displayData = (ev)=>{
-    console.log(ev)
+    // console.log(ev)
     let group = ev.target
     if(!ev.target){
         return;

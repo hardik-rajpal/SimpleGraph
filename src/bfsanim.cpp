@@ -3,7 +3,7 @@
 using namespace std;
 int main(int argc, char*argv[]){
     srand(0);
-    int numvert = 100;
+    int numvert = 20;
     vector<string> labels, duplabels;int n = numvert;int t=0;
     for(int i=0;i<n;i++){
         labels.push_back(to_string(i));
@@ -11,6 +11,7 @@ int main(int argc, char*argv[]){
     duplabels = vector<string>(labels);
     SimpleGraph myg;
     myg.initServer();
+
     myg.addNode("0");
     labels[0] = "";
     Node* holder;
@@ -35,6 +36,7 @@ int main(int argc, char*argv[]){
     for(int i=0;i<numvert/5;i++){
         myg.connectNodes(myg.getNodeByLabel(duplabels[rand()%numvert]), myg.getNodeByLabel(duplabels[rand()%numvert]));
     }
+    myg.setAutoRender(true);
     myg.assignCoords(myg.rc::BFSBW);
     myg.syncGraph(true);
     myg.setAutoRender(true);

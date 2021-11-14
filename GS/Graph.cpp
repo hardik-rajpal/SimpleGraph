@@ -305,16 +305,16 @@ SimpleGraph SimpleGraph::getInducedSubgraph(vector<Node*> vToExclude){
 //recursize serialize function
 
 string SimpleGraph::serialize(){
-    string temp;
-    ostringstream ss;
-    ss<<(this->head);
-    temp = ss.str();
-
+    string temp, temp2;
     string data = "{ \"H\":";
-    data = data + quotestring(temp) + ",\n";
+    data = data + quotestring(ptrtostr(this->head)) + ",\n";
     data = data + "\"V\": [\n";
     for(int i=0;i<nv-1;i++){
-        data = data + V[i]->serialize() + ",\n";       
+        temp = V[i]->lastSerialization;
+        temp2 = V[i]->serialize();
+        if(temp!=temp2){
+            data = data + temp2 + ",\n";
+        }
     }
     data = data + V[nv-1]->serialize() + "\n]\n";       
     data = data + "\n}";
@@ -348,7 +348,7 @@ string Node::serialize(){
         }
         data = data + "\n]";
         data = data + "\n}";
-        
+        lastSerialization = data;
         return data;
     }
 void SimpleGraph::takeShot(){
