@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include"Server.h"
 
-#define MAXV 100
-#define MAXE 4950 //100C2
+#define MAXV 1000
+#define MAXE 499500 //1000C2
 #define literal(expr) #expr
 #define SERVERUSED
 #undef SERVERUSED

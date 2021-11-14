@@ -325,8 +325,8 @@ void SimpleGraph::assignCoords(int config){
             htemp = heightFromMeta(tr->V[i]);
             if(htemp>currh || i==tr->V.size()-1){
                 y = max(sepy*(currh), 50);
-                sepx = int(0.85*CW)/(max(numnodes-1, 1));
-                
+                sepx = int(0.9*CW)/(max(numnodes-1, 1));
+                if(i==nv-1){sepx = int(0.9*CW/max(numnodes-1, 1));}
                 for(int j=0;j<numnodes||(i==nv-1&&j<=numnodes);j++){
                     getNodeByLabel(tr->V[i-numnodes+j]->label)->coords = {xmin + sepx*j, y};
                     // if(i==nv-1){}

@@ -56,7 +56,7 @@ function connect(PORT,HOST){
     })
 }
 function main(){
-    let radius = 15;
+    let radius = 10;
     let radroot = Math.SQRT1_2*radius;
     const canvas = initCanvas("canvas");
     canvas.on('object:moving', nodeDrag);
@@ -94,6 +94,7 @@ function main(){
             setStatus("Connected:Paused <button class=\"btn btn-primary btn-sm\" onclick=\"syncData();sendCommand('play')\">Play</button>");
             return;
         }
+        console.log(recon)
         parsedata = JSON.parse(recon)
         console.log(parsedata);
         // resetCanvas(canvas);

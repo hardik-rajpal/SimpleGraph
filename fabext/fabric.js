@@ -21,15 +21,15 @@ class VNode{
         this.shape = new fabric.Circle({
             left:x,
             top:(canvas.height - y),
-            strokeWidth:5,
+            strokeWidth:1,
             radius:radius,
             fill:color,
             stroke:'#666',
         })
         this.text = new fabric.Text(label.substr(0, 3), {
-            left:x +radroot,
+            left:x +radroot/2,
             top:(canvas.height - y+radroot/2),
-            fontSize:15,
+            fontSize:10,
         })
         this.group = new fabric.Group([this.shape, this.text])
         this.group.hasControls = false;
