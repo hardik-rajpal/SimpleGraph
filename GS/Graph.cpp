@@ -627,10 +627,11 @@ void SimpleGraph::syncGraph(bool pausemain){
     // cout<<SERVERUSED<<" ";
     if(server!=NULL){
         if(pausemain){
-            server->sendDataARP(this->serialize(), *this);
+            //subscript with zero to allow broken transmission
+            server->sendDataARP(this->serialize()+"0", *this);
         }
         else{
-            server->sendData(this->serialize());
+            server->sendData(this->serialize() +"0");
             this->appendRendData(server->awaitSignal());
             Sleep(renderDelay);
         }

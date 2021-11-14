@@ -321,20 +321,18 @@ void SimpleGraph::assignCoords(int config){
         int currh = 0, numnodes=0, y, htemp, sepx, xmin=0;
         sepy = CH/(tr->height);
         for(int i=0;i<tr->V.size();i++){
-            cout<<(tr->V[i]->label)<<" ";
-            htemp = heightFromMeta(tr->V[i]);
-            if(htemp>currh || i==tr->V.size()-1){
-                y = max(sepy*(currh), 50);
-                sepx = int(0.9*CW)/(max(numnodes-1, 1));
-                if(i==nv-1){sepx = int(0.9*CW/max(numnodes-1, 1));}
-                for(int j=0;j<numnodes||(i==nv-1&&j<=numnodes);j++){
-                    getNodeByLabel(tr->V[i-numnodes+j]->label)->coords = {xmin + sepx*j, y};
-                    // if(i==nv-1){}
-                }
-                numnodes = 1;currh+=1;
-                continue;
-            }
             numnodes++;
+            htemp = heightFromMeta(tr->V[min(i+1, nv-1)]);
+            if(htemp>currh || i==nv-1){
+                y = max(sepy*currh, 50);
+                sepx = int(0.9*CW)/max(numnodes-1, 1);
+                for(int j=i-numnodes+1;j<i+1;j++){
+                    getNodeByLabel(tr->V[j]->label)->coords = {xmin + sepx*(j-(i-numnodes+1)), y};
+                }
+                numnodes=0;
+                currh++;
+            }
+
         }
     }
     else if(config==rc::BFSBW){

@@ -78,6 +78,7 @@ function main(){
     const PORT = 7171;
     var client = new net.Socket();
     global.client = client;
+    global.datarec = ""
     try{
         connect(PORT, HOST);
     }
@@ -94,15 +95,20 @@ function main(){
             setStatus("Connected:Paused <button class=\"btn btn-primary btn-sm\" onclick=\"syncData();sendCommand('play')\">Play</button>");
             return;
         }
-        console.log(recon)
-        parsedata = JSON.parse(recon)
-        console.log(parsedata);
-        // resetCanvas(canvas);
-        render(parsedata,canvas);
-        let Vdata = filterForServer(canvas.renderMeta)
-        let dat = JSON.stringify(Vdata)
-        // console.log(dat)
-        client.write(dat)
+        global.datarec +=recon
+        console.log(global.datarec.substr(0,global.datarec.length-1))
+        if(global.datarec[global.datarec.length-1]=='0'){
+
+            parsedata = JSON.parse(global.datarec.substr(0,global.datarec.length-1))
+            console.log(parsedata);
+            // resetCanvas(canvas);
+            render(parsedata,canvas);
+            global.datarec = ""
+            let Vdata = filterForServer(canvas.renderMeta)
+            let dat = JSON.stringify(Vdata)
+            // console.log(dat)
+            client.write(dat)
+        }
         setStatus("Connected");
     })
     client.on('error', (er)=>{
