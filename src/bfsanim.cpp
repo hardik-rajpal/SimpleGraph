@@ -11,7 +11,7 @@ int main(int argc, char*argv[]){
     duplabels = vector<string>(labels);
     SimpleGraph myg;
     myg.initServer();
-
+    
     myg.addNode("0");
     labels[0] = "";
     Node* holder;

@@ -21,7 +21,7 @@ int main(){
     myg.syncGraph(true);
     myg.setAutoRender(true);
     myg.setRenderDelay(500);
-    // myg.dfs(myg.getNodeByLabel("R4"), true);
-    myg.bfs(myg.getNodeByLabel("5"), true);
+    myg.dfs(myg.getNodeByLabel("R4"), true);
+    // myg.bfs(myg.getNodeByLabel("5"), true);
     myg.syncGraph(true);
 }

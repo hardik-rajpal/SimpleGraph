@@ -139,7 +139,8 @@ class SimpleGraph{
     /*✅*/void setCenter(int x, int y);
     /*✅*/void translate(int x, int y);
     /*✅*/void rotate(int angle_anticlockwise);
-    void assignCoords(int CONFIG);
+    /*✅*/void assignCoords(int CONFIG);
+    
     //export all edit graph operations for animation program.
     /*✅*/string exportShots();
     /*✅*/string serialize();
