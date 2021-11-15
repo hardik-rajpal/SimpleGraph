@@ -10,6 +10,9 @@ bfs: src/bfsanim.cpp GS/Graph.cpp GS/Server.cpp
 dfs:  src/dfsanim.cpp GS/Graph.cpp GS/Server.cpp
 	echo #define SERVERUSED > ./include/config.h
 	g++ src/dfsanim.cpp GS/Graph.cpp GS/Static.cpp GS/Server.cpp -lws2_32 -o build/dfs
+col:  src/collatz.cpp GS/Graph.cpp GS/Server.cpp
+	echo #define SERVERUSED > ./include/config.h
+	g++ src/collatz.cpp GS/Graph.cpp GS/Static.cpp GS/Server.cpp -lws2_32 -o build/col
 nodemod:
 	cd fabext
 	npm i

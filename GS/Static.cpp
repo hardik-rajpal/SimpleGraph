@@ -214,11 +214,11 @@ void spreadDFSBW(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     hdata = hdata.substr(2, hdata.length()-2);
     cout<<"hdata? "<<hdata<<"\n";
     ht = stoi(hdata);
-    cout<<v->label<<"has kids: ";
+    // cout<<v->label<<"has kids: ";
     for(int j=0;j<v->outlist.size();j++){
         cout<<v->outlist[j]->end->label<<", ";
         hdatachild = bfstree->getNodeByLabel(v->outlist[j]->end->label)->metadata;
-        cout<<"heights of comrades"<<hdatachild<<" ";
+        // cout<<"heights of comrades"<<hdatachild<<" ";
         hdatachild = hdatachild.substr(2, hdatachild.length()-2);
         if(stoi(hdata)+1==stoi(hdatachild)){
             cout<<"adding to unset: "<<v->outlist[j]->end->label<<"\n";
@@ -306,7 +306,7 @@ int heightFromMeta(Node *n){
     hdata = hdata.substr(2, hdata.length()-2);
     return stoi(hdata);
 }
-void SimpleGraph::assignCoords(int config){
+void SimpleGraph::assignCoords(int config, Node* bfsroot){
     if(config==rc::RAND){
         for(int i=0;i<V.size();i++){
             V[i]->coords = {int(CW*0.05)+rand()%(int(CW*0.9)), int(CH*0.05)+rand()%(int(CH*0.9))};
@@ -315,7 +315,7 @@ void SimpleGraph::assignCoords(int config){
     else if(config==rc::BFSFILL){
         int sepy=50;
         int mas = int(0.99*CW);//max allowed spread;
-        SimpleGraph *tr = bfs(V[0], false);
+        SimpleGraph *tr = bfs(bfsroot, false);
         V[0]->coords = {CCX, sepy};
         // spreadDFSBW(tr->V[0], mas, this, tr);
         int currh = 0, numnodes=0, y, htemp, sepx, xmin=0;
@@ -337,8 +337,8 @@ void SimpleGraph::assignCoords(int config){
     }
     else if(config==rc::BFSBW){
         int sepy=50;
-        int mas = int(0.99*CW);//max allowed spread;
-        SimpleGraph *tr = bfs(V[0], false);
+        int mas = int(0.90*CW);//max allowed spread;
+        SimpleGraph *tr = bfs(bfsroot, false);
         V[0]->coords = {CCX, sepy};
         spreadDFSBW(tr->V[0], mas, this, tr);
     }

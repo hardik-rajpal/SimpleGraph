@@ -37,7 +37,7 @@ int main(int argc, char*argv[]){
         myg.connectNodes(myg.getNodeByLabel(duplabels[rand()%numvert]), myg.getNodeByLabel(duplabels[rand()%numvert]));
     }
     // myg.setAutoRender(true);
-    myg.assignCoords(myg.rc::BFSFILL);
+    myg.assignCoords(myg.rc::BFSFILL, myg.getNodeByLabel("0"));
     myg.syncGraph(true);
     myg.setAutoRender(true);
     cout<<myg.bfs(myg.getNodeByLabel("0"), true, {"#50C878", "#6698FF", "white"})->getAdjList();
