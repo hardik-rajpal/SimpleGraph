@@ -31,7 +31,7 @@ int main(int argc, char * argv[]){
     g = SimpleGraph(labels);
     g.addEdgesByRelation(collatzNums);
     g = g.getInducedSubgraph(g.getNodesIf<SimpleGraph*>(isolatedNode, &g));
-    g.assignCoords(g.rc::BFSBW, g.getNodeByLabel("1"));
+    g.assignCoords(g.rc::BFSFILLBW, g.getNodeByLabel("1"));
     g.initServer();
     g.syncGraph(true);
 }
