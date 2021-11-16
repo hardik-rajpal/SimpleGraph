@@ -4,6 +4,7 @@ const initCanvas = (id)=>{
         height:650,
         backgroundColor:'#eef'
     })
+
 }
 
 class VNode{

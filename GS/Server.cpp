@@ -231,7 +231,7 @@ void ServerSocket::closeConnection(){
     }
     // Well, if there is no more connection in 15 seconds,
     // just exit this listening loop...
-    if( recvTimeOutTCP(ListeningSocket, 15, 0) == 0){
+    if( recvTimeOutTCP(ListeningSocket, 2, 0) == 0){
         printf("\nServer: The listening socket is timeout...\n");
         return;
     }

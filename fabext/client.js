@@ -95,6 +95,17 @@ function main(){
             setStatus("Connected:Paused <button class=\"btn btn-primary btn-sm\" onclick=\"syncData();sendCommand('play')\">Play</button>");
             return;
         }
+        else if(recon.startsWith("DIM:")){
+            console.log(recon)
+            dims = recon.split("DIM:")[1].split("x");
+            global.canvas.setHeight(Number.parseInt(dims[1]));
+            global.canvas.setWidth(Number.parseInt(dims[0])); 
+            global.canvas.renderAll()
+            console.log(global.canvas.height)
+            console.log(global.canvas.width)
+            sendCommand("play");
+            return;
+        }
         global.datarec +=recon
         console.log(global.datarec.substr(0,global.datarec.length-1))
         if(global.datarec[global.datarec.length-1]=='0'){

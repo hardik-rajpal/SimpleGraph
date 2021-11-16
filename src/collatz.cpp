@@ -29,9 +29,12 @@ int main(int argc, char * argv[]){
     }
     SimpleGraph g;
     g = SimpleGraph(labels);
+
     g.addEdgesByRelation(collatzNums);
     g = g.getInducedSubgraph(g.getNodesIf<SimpleGraph*>(isolatedNode, &g));
+    g.setCanvasDimensions(1400, 1300);
     g.assignCoords(g.rc::BFSFILLBW, g.getNodeByLabel("1"));
     g.initServer();
+    g.syncGraph(true);
     g.syncGraph(true);
 }

@@ -641,10 +641,15 @@ void SimpleGraph::syncGraph(bool pausemain){
     }
     #endif
 }
+void SimpleGraph::setCanvasDimensions(int width, int height){
+    canvasWidth = width;
+    canvasHeight = height;
+}
 #ifdef SERVERUSED
 ServerSocket* SimpleGraph::initServer(int port, string host){
     server = new ServerSocket(port, host);
     server->listenForClient();
+    server->sendDataARP("DIM:"+to_string(canvasWidth)+"x" + to_string(canvasHeight), *this);
     return server;
 }
 ServerSocket* SimpleGraph::setAutoRender(bool state){

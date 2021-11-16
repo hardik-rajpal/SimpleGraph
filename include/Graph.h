@@ -87,6 +87,8 @@ class SimpleGraph{
     enum rc{BFSFILL, RAND, BFSBW, BFSFILLBW};
     vector<int> center = {200, 200};
     int height=0;
+    int canvasWidth = 700;
+    int canvasHeight = 650;
     ServerSocket *server = NULL;
     
     
@@ -101,7 +103,7 @@ class SimpleGraph{
     /*✅*/ServerSocket* setAutoRender(bool state);
     /*✅*/void setRenderDelay(int delay);
     /*✅*/void syncGraph(bool pausemain=false);
-    
+    void setCanvasDimensions(int width=700, int height=650);
     //search methods.
     /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"green", "blue", "white"});//return a bfs tree
     /*✅*/SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"green", "blue", "white"});//return a dfs tree

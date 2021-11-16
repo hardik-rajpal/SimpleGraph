@@ -1,13 +1,11 @@
 #ifndef STATIC_H
 #define STATIC_H
-#define CW 700
-#define CH 650
-#define CCX CW/2
-#define CCY CH/2
 #include<bits/stdc++.h>
 #include"../include/Graph.h"
 using namespace std;
 void getCycle(vector<int> vals, SimpleGraph* g){
+    int CW, CH, CCX, CCY;
+    CW = g->canvasWidth; CH = g->canvasHeight; CCX = CW/2; CCY = CH/2;
     vector<int> coords;
     int n = vals[0];
     int rad = vals[1];
@@ -28,7 +26,8 @@ void getCycle(vector<int> vals, SimpleGraph* g){
     return;
 }
 void getComplete(vector<int> vals, SimpleGraph *g){
-    vector<Node*> V;
+    int CW, CH, CCX, CCY;
+    CW = g->canvasWidth; CH = g->canvasHeight; CCX = CW/2; CCY = CH/2;vector<Node*> V;
     vector<int> coords;
     int n = vals[0];
     int rad = vals[1];
@@ -50,6 +49,8 @@ void getComplete(vector<int> vals, SimpleGraph *g){
     return;
 }
 void getCompleteBipartite(vector<int> vals, SimpleGraph*g){
+    int CW, CH, CCX, CCY;
+    CW = g->canvasWidth; CH = g->canvasHeight; CCX = CW/2; CCY = CH/2;
     int n = vals[0];int m = vals[1];int dy = vals[2];int dx = vals[3];
     int x = CCX - dx/2; int y = CCY - (n/2)*dy;
     vector<int> coords;
@@ -74,6 +75,8 @@ void getCompleteBipartite(vector<int> vals, SimpleGraph*g){
     return;
 }
 void getWheel(vector<int> vals, SimpleGraph* g){
+    int CW, CH, CCX, CCY;
+    CW = g->canvasWidth; CH = g->canvasHeight; CCX = CW/2; CCY = CH/2;
     vector<int> coords;
     int n = vals[0];
     int rad = vals[1];
@@ -98,6 +101,8 @@ void getWheel(vector<int> vals, SimpleGraph* g){
     return;
 }
 void getStar(vector<int>  vals, SimpleGraph* g){
+    int CW, CH, CCX, CCY;
+    CW = g->canvasWidth; CH = g->canvasHeight; CCX = CW/2; CCY = CH/2;
     g->setCenter(CCX, CCY);
     vector<int> coords;
     int n = vals[0];
@@ -119,6 +124,8 @@ void getStar(vector<int>  vals, SimpleGraph* g){
     return;
 }
 void getPath(vector<int> vals, SimpleGraph* g){
+    int CW, CH, CCX, CCY;
+    CW = g->canvasWidth; CH = g->canvasHeight; CCX = CW/2; CCY = CH/2;
     g->setCenter(CCX, CCY);
     int n = vals[0]; int angle = vals[1];int sep = vals[2];
     int x, y;vector<int> coords;
@@ -134,6 +141,8 @@ void getPath(vector<int> vals, SimpleGraph* g){
     return;
 }
 void getCircularLadder(vector<int> vals, SimpleGraph*g){
+    int CW, CH, CCX, CCY;
+    CW = g->canvasWidth; CH = g->canvasHeight; CCX = CW/2; CCY = CH/2;
     g->setCenter(CCX, CCY);
     vector<int> coords;
     int n = vals[0];
@@ -203,13 +212,6 @@ int maxBranchWidth(Node*n){
     }
     return wn;
 }
-int nextBranchWidth(Node*n){
-    string hdata = n->metadata;
-    hdata = hdata.substr(2, hdata.length()-2);
-    int ht = stoi(hdata);
-    int wn = n->outlist.size()-1;
-    return wn;
-}
 int heightFromMeta(Node *n){
     string hdata = n->metadata;
     hdata = hdata.substr(2, hdata.length()-2);
@@ -220,6 +222,8 @@ bool heightis(Node* n, int h){
     return (heightFromMeta(n)==h);
 }
 void spreadDFSBW(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
+    int CW, CH, CCX, CCY;
+    CW = main->canvasWidth; CH = main->canvasHeight; CCX = CW/2; CCY = CH/2;
     string hdata, hdatachild;
     vector<Node*> unsetnodes;vector<int> bws;
     int x, y, sepx=40, sepy=CH/(bfstree->height+1), ht;
@@ -278,6 +282,8 @@ void spreadDFSBW(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     }
 }
 void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
+    int CW, CH, CCX, CCY;
+    CW = main->canvasWidth; CH = main->canvasHeight; CCX = CW/2; CCY = CH/2;
     string hdata, hdatachild;
     vector<Node*> unsetnodes;
     int x, y, sepx=40, sepy=CH/(bfstree->height+1), ht;
@@ -322,6 +328,8 @@ void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     }
 }
 void SimpleGraph::assignCoords(int config, Node* bfsroot){
+    int CW, CH, CCX, CCY;
+    CW = canvasWidth; CH = canvasHeight; CCX = CW/2; CCY = CH/2;
     if(config==rc::RAND){
         for(int i=0;i<V.size();i++){
             V[i]->coords = {int(CW*0.05)+rand()%(int(CW*0.9)), int(CH*0.05)+rand()%(int(CH*0.9))};
