@@ -1,3 +1,4 @@
+// const ipcRenderer = require('electron');
 function includeJs(jsFilePath) {
     var js = document.createElement("script");
     js.type = "text/javascript";
@@ -10,6 +11,7 @@ function synclooper(){
         setTimeout(()=>{synclooper()}, 3000);
     }
 }
+
 function setPort(port){
     global.PORT = Number.parseInt(port)
 }
@@ -52,6 +54,8 @@ function resetCanvas(canvas){
     canvas.backgroundColor = '#eef';
 }
 function connect(HOST){
+    console.log(global.PORT)
+    console.log("Connecting ")
     global.client.connect(global.PORT, HOST, function(){
         setStatus("Connected");
         console.log("Connected Host");
@@ -59,6 +63,7 @@ function connect(HOST){
     })
 }
 function main(){
+    
     let radius = 7.5;
     let radroot = Math.SQRT1_2*radius;
     const canvas = initCanvas("canvas");
@@ -79,7 +84,8 @@ function main(){
     const net = require('net');
     const HOST = '127.0.0.1';
     const PORT = 7171;
-    global.PORT = PORT;
+    // global.PORT = 7171;
+    console.log(global.PORT)
     var client = new net.Socket();
     global.client = client;
     global.datarec = ""
@@ -87,7 +93,7 @@ function main(){
         connect(PORT, HOST);
     }
     catch(error){
-        setStatus('Disconnected<button class="btn btn-primary btn-sm" onclick=\"connect(\'127.0.0.1\')\">Reconnect</button>');
+        setStatus('Disconnected<button id="reconnect" class="btn btn-primary btn-sm" onclick=\"connect(\'127.0.0.1\')\">Reconnect</button>');
         return;
     }
     
@@ -128,12 +134,8 @@ function main(){
     })
     client.on('error', (er)=>{
         client.destroy();
-        setStatus("Disconnected<button class=\"btn btn-primary btn-sm\" onclick=\"connect('127.0.0.1')\">Reconnect</button>");
+        setStatus("Disconnected<button id=\"reconnect\" class=\"btn btn-primary btn-sm\" onclick=\"connect('127.0.0.1')\">Reconnect</button>");
     })
     global.client = client
-    // setTimeout(()=>{
-    //     synclooper();
-    // }, 3000)
 }
-main()
 

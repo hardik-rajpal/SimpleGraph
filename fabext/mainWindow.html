@@ -14,9 +14,9 @@
   <body>
 
     <script src="https://kit.fontawesome.com/2940e29c54.js" crossorigin="anonymous"></script>
-    Port:<input type="text" value="7171" style="width: 50px;" onchange="setPort(this.value)">
+    Port:<input id="port" type="text" value="7171" style="width: 50px;" onchange="setPort(this.value)">
     <a id="a"></a>
-    <p id="status" style="display: inline;"></p><button class="btn btn-primary btn-sm" onclick="syncData()" style="display: inline;">Sync</button>
+    <p id="status" style="display: inline;">Disconnected<button id="reconnect" class="btn btn-primary btn-sm" onclick="connect('127.0.0.1')">Reconnect</button></p><button class="btn btn-primary btn-sm" onclick="syncData()" style="display: inline;">Sync</button>
     <br>
     Export: <button class="btn btn-primary btn-sm" onclick="exportJSON()">JSON</button> <button class="btn btn-primary btn-sm" onclick="exportIMG()">Image</button><button class="btn btn-primary btn-sm" onclick="exportMinTXT()">List</button>
     Import:
@@ -32,6 +32,16 @@
       <script src="fabric.js"></script>
       <script src="client.js"></script>
     <script>
+      const {ipcRenderer} = require('electron')
+      ipcRenderer.send("portreq", "");
+      ipcRenderer.on("port", (ev, data)=>{
+        console.log(data);
+        // if(Number.parseInt(''))
+        document.querySelector('#port').value = data;
+        setPort(data);
+        console.log(global.PORT)
+        main();
+      })
       document.querySelector('#col').addEventListener('submit', submitFile);
       function submitFile(e){
         e.preventDefault();

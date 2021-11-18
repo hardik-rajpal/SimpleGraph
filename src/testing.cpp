@@ -1,15 +1,9 @@
 #include<bits/stdc++.h>
-#include"../include/Graph.h"
 using namespace std;
 int main(){
-    cout<<system("dir;cd 'build'; dir;dfs.exe")<<"\n";
-    // SimpleGraph myg;
-    // myg = SimpleGraph("ST", {5, 200});
-    // myg.initServer();
-    // myg.syncGraph(true);
-    // cout<<"synced";
-    // myg.assignCoords(myg.rc::BFSFILL);
-    // myg.setAutoRender(true);
-    // myg.syncGraph(true);
-    // cout<<(SimpleGraph::makers.begin()->second)({})[0]->label;
+    // system("nmake render");
+    // system(".\\fabext\\simgra-win32-x64\\simgra.exe dmyarg 7171");
+    system(" node .\\fabext\\threader.js");
+    // system("");
+    // system("dir");
 }
