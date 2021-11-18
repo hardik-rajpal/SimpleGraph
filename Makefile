@@ -1,16 +1,10 @@
-graphws: mainpath.cpp Graph.cpp Server.cpp
-	echo #define SERVERUSED > config.h
-	g++ mainpath.cpp GS/Server.cpp GS/Static.cpp GS/Graph.cpp  -lws2_32 -o gs
-graph: mainpath.cpp Graph.cpp
-	echo #define SERVERNOTUSED > config.h
-	g++ mainpath.cpp GS/Graph.cpp GS/Static.cpp -o g
-bfs: src/bfsanim.cpp GS/Graph.cpp GS/Server.cpp
+bfs: src/bfsanim.cpp GS/Graph.cpp GS/Server.cpp GS/Static.cpp
 	echo #define SERVERUSED > ./include/config.h
 	g++ src/bfsanim.cpp GS/Graph.cpp GS/Static.cpp GS/Server.cpp -lws2_32 -o build/bfs
-dfs:  src/dfsanim.cpp GS/Graph.cpp GS/Server.cpp
+dfs:  src/dfsanim.cpp GS/Graph.cpp GS/Server.cpp GS/Static.cpp
 	echo #define SERVERUSED > ./include/config.h
 	g++ src/dfsanim.cpp GS/Graph.cpp GS/Static.cpp GS/Server.cpp -lws2_32 -o build/dfs
-col:  src/collatz.cpp GS/Graph.cpp GS/Server.cpp
+col:  src/collatz.cpp GS/Graph.cpp GS/Server.cpp GS/Static.cpp
 	echo #define SERVERUSED > ./include/config.h
 	g++ src/collatz.cpp GS/Graph.cpp GS/Static.cpp GS/Server.cpp -lws2_32 -o build/col
 nodemod:

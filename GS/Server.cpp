@@ -276,25 +276,5 @@ void ServerSocket::closeConnection(){
             g.parseCommand(resp);
         }
     }
-        
     return "OK";
 }
-
-// void SimpleGraph::syncGraph(bool pausemain){
-//     cout<<"Called";
-//     // #ifdef SERVERUSED
-//     // cout<<SERVERUSED<<" ";
-//     if(server!=NULL){
-//         if(pausemain){
-//             server->sendDataARP(this->serialize(), *this);
-//         }
-//         else{
-//             server->sendData(this->serialize());
-//             this->appendRendData(server->awaitSignal());
-//         }
-//     }
-//     else{
-//         cout<<"You need to call initServer(port, host) before sync!\n";
-//     }
-//     // #endif
-// }

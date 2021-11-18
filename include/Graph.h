@@ -4,30 +4,43 @@
 #include <winsock2.h>
 #include <stdio.h>
 #include"Server.h"
-
 #define MAXV 1000
 #define MAXE 499500 //1000C2
-#define literal(expr) #expr
-#define SERVERUSED
-#undef SERVERUSED
 using namespace std;
+
+// classes
+class Node;
+class HalfEdge;
+class SimpleGraph;
+
+
 //auxiliary functions.
 string ptrtostr(void* ptr);
 string quotestring(string tbq);
 vector<string> split(string str, string sep);
 vector<vector<string>> parseLists(string data, int level);
 vector<int> toCoords(string kvpair);
+vector<int> rotateXY(int x, int y, int ang_deg_anti);
 template<class T>
 bool contains(vector<T> list, T item);
 template<class T>
 int indexof(vector<T> list, T item);
-
-
-
+void getCycle(vector<int> vals, SimpleGraph *g);
+void getComplete(vector<int> vals, SimpleGraph *g);
+void getCompleteBipartite(vector<int> vals, SimpleGraph *g);
+void getWheel(vector<int> vals, SimpleGraph *g);
+void getStar(vector<int> vals, SimpleGraph *g);
+void getPath(vector<int> vals, SimpleGraph *g);
+void getCircularLadder(vector<int> vals, SimpleGraph *g);
+int heightFromMeta(Node *n);
+int maxBranchWidth(Node *n);
+bool heightis(Node *n, int h);
+void spreadDFSBW(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree);
+void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree);
 /*Integrate an object of this into SimpleGraph*/
 
 
-class HalfEdge;
+
 class Node{
     public:
     string label="";
@@ -45,18 +58,7 @@ class Node{
     }
     string serialize();
 };
-class Edge{
-    public:
-    Node* n1;
-    Node* n2;
-    int weight;
-    string label;
-    string color;
-    Edge(Node *_n1, Node *_n2){
-        n1 = _n1; n2 = _n2;
-    }
-    string serialize();
-};
+
 class HalfEdge{
     public:
     Node* end;
@@ -75,7 +77,6 @@ class SimpleGraph{
     public:
     //undirected, uniweight graph, with no self loops
     int nv=0, ne=0;//number of vertices and edges
-    string snapshots="[ \n";//string holding list of commands executed on Simplegraph.
     //These commands can be interpreted by the animation program.
     vector<Node*> V={};//Vector of vertices.
     Node* head = NULL;//pointer to head for animation purposes
@@ -99,56 +100,60 @@ class SimpleGraph{
     /*✅*/SimpleGraph(string adjlist);//constructor using adjlist in string.
     /*✅*/SimpleGraph(string graphsymbol, vector<int> vals);//constructor using mathematical notation.
     
-    /*✅*/ServerSocket* initServer(int port=7171, string host="127.0.0.1");
-    /*✅*/ServerSocket* setAutoRender(bool state);
-    /*✅*/void setRenderDelay(int delay);
-    /*✅*/void syncGraph(bool pausemain=false);
-    void setCanvasDimensions(int width=700, int height=650);
-    //search methods.
-    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"green", "blue", "white"});//return a bfs tree
-    /*✅*/SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"green", "blue", "white"});//return a dfs tree
-    
-    //subgraphs.
-    /*✅*/SimpleGraph getInducedSubgraph(vector<Node*> vToExclude);//return induced subgraphs by deleteing given vertices.
-    /*✅*/vector<vector<Node*>> getCliques();//return connected components
-
-    //Edit graph
-    /*✅*/template<class T>
-    void assignVertices(vector<T> vertices, function<string(T)> labelmaker);
-    /*✅*/template<class T>
-    void extractGraph(T graphobj, function<vector<Node*>(T)> nodemaker);
-    //add overload with addBranchby label
-    //assumes root is a valid pointer in the graph.
-    /*✅*/Node *addBranch(Node* root, vector<string> vlabels, vector<string> elabels);//add a series of nodes at root.
-    /*✅*/int addEdgesByRelation(function<bool(string, string)> relation);//check each pair of nodes for relation between labels and add edge if true.
-    /*✅*/HalfEdge *connectNodes(Node*n1, Node*n2);//connect nodes.
-    /*✅*/bool deleteNode(Node *n1);
-    /*✅*/bool disconnectNodes(Node *n1, Node*n2);
     /*✅*/Node* addNode(string label);
     /*✅*/Node* addNode(string label, vector<int> coords, int weight, string color);
+    /*✅*/bool deleteNode(Node *n1);
+
+    /*✅*/HalfEdge *connectNodes(Node*n1, Node*n2);//connect nodes.
+    /*✅*/HalfEdge *connectNodes(string l1, string l2);//connect nodes.
+    /*✅*/int addEdgesByRelation(function<bool(string, string)> relation);//check each pair of nodes for relation between labels and add edge if true.
+    /*✅*/Node *addBranch(Node* root, vector<string> vlabels, vector<string> elabels);//add a series of nodes at root.
     /*✅*/void addGraph(SimpleGraph *myg, string labelprefix="",string labelsuffix="",bool duplicate=false);
+    /*✅*/bool disconnectNodes(Node *n1, Node*n2);
+
+
     //getters.
     /*✅*/string getAdjList();
     /*✅*/Node *getNodeByLabel(string label);
     template<typename T>
     /*✅*/vector<Node*>getNodesIf(function<bool(Node*, T)> predicate, T t);
-    /*✅*/bool areConnected(Node*n1, Node*n2);
+    /*✅*/bool areAdjacent(Node*n1, Node*n2);
     /*✅*/HalfEdge *getEdgeByNodes(Node*n1, Node*n2);
+    //subgraphs.
+    /*✅*/SimpleGraph getInducedSubgraph(vector<Node*> vToExclude);//return induced subgraphs by deleteing given vertices.
+    /*✅*/vector<vector<Node*>> getCliques();//return connected components
+    
+    //distance and path functions
     /*✅*/vector<Node*> getpathbetween(Node *n1, Node*n2, vector<Node*> toexclude);
     /*✅*/vector<Node*> getshortestpathbetween(Node *n1, Node*n2);
-    /*✅*/int getdistanceBetween(Node *n1, Node *n2);
-    
+    /*✅*/int getDistanceBetween(Node *n1, Node *n2);
+    //search methods.
+    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"green", "blue", "white"});//return a bfs tree
+    /*✅*/SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"green", "blue", "white"});//return a dfs tree
+
+    /*✅*/template<class T>
+    void assignVertices(vector<T> vertices, function<string(T)> labelmaker);
+    /*✅*/template<class T>
+    void extractGraph(T graphobj, function<vector<Node*>(T)> nodemaker);
+
+    //canvas/geometry related methods
     /*✅*/void setCenter(int x, int y);
     /*✅*/void translate(int x, int y);
     /*✅*/void rotate(int angle_anticlockwise);
+    /*✅*/void setCanvasDimensions(int width=700, int height=650);
     /*✅*/void assignCoords(int CONFIG, Node* bfsroot);
+    /*✅*/void setRenderDelay(int delay);
     
-    //export all edit graph operations for animation program.
-    /*✅*/string exportShots();
+    //methods to serialize/parse data
     /*✅*/string serialize();
-    /*✅*/void takeShot();
     /*✅*/void appendRendData(string data);
     /*✅*/void parseCommand(string cmd);
+    
+    //methods to connect to/sync with renderer
+    /*✅*/ServerSocket* initServer(int port=7171, string host="127.0.0.1");
+    /*✅*/ServerSocket* setAutoRender(bool state);
+    /*✅*/void syncGraph(bool pausemain=false);
+
 };
 
 #include"Graph.tpp"

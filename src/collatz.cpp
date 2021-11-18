@@ -34,7 +34,7 @@ int main(int argc, char * argv[]){
     g = g.getInducedSubgraph(g.getNodesIf<SimpleGraph*>(isolatedNode, &g));
     g.setCanvasDimensions(1400, 1300);
     g.assignCoords(g.rc::BFSFILLBW, g.getNodeByLabel("1"));
-    g.initServer();
+    g.initServer(7171);
     g.syncGraph(true);
     g.syncGraph(true);
 }

@@ -10,6 +10,9 @@ function synclooper(){
         setTimeout(()=>{synclooper()}, 3000);
     }
 }
+function setPort(port){
+    global.PORT = Number.parseInt(port)
+}
 function exportIMG(){
     let img = global.canvas.toDataURL("image/png");
     let a = document.getElementById("a");
@@ -48,8 +51,8 @@ function resetCanvas(canvas){
     canvas.clear();
     canvas.backgroundColor = '#eef';
 }
-function connect(PORT,HOST){
-    global.client.connect(PORT, HOST, function(){
+function connect(HOST){
+    global.client.connect(global.PORT, HOST, function(){
         setStatus("Connected");
         console.log("Connected Host");
         resetCanvas(global.canvas);
@@ -76,6 +79,7 @@ function main(){
     const net = require('net');
     const HOST = '127.0.0.1';
     const PORT = 7171;
+    global.PORT = PORT;
     var client = new net.Socket();
     global.client = client;
     global.datarec = ""
@@ -83,7 +87,7 @@ function main(){
         connect(PORT, HOST);
     }
     catch(error){
-        setStatus('Disconnected<button class="btn btn-primary btn-sm" onclick=\"connect(7171,\'127.0.0.1\')\">Reconnect</button>');
+        setStatus('Disconnected<button class="btn btn-primary btn-sm" onclick=\"connect(\'127.0.0.1\')\">Reconnect</button>');
         return;
     }
     
@@ -124,7 +128,7 @@ function main(){
     })
     client.on('error', (er)=>{
         client.destroy();
-        setStatus("Disconnected<button class=\"btn btn-primary btn-sm\" onclick=\"connect(7171,'127.0.0.1')\">Reconnect</button>");
+        setStatus("Disconnected<button class=\"btn btn-primary btn-sm\" onclick=\"connect('127.0.0.1')\">Reconnect</button>");
     })
     global.client = client
     // setTimeout(()=>{

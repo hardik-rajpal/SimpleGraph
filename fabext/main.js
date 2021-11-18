@@ -5,11 +5,6 @@ const path = require('path');
 const {app, BrowserWindow, Menu} = electron;
 let mainWindow;
 
-//listen for the app to be ready.
-// app.commandLine.appendArgument('--allow-insecure-localhost', 'true');
-
-// app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
-// app.commandLine.appendSwitch('ignore-ssl-errors', 'true');
 app.commandLine.appendArgument('--ignore-certificate-errors-spki-list');
 app.on('ready', function(){
     mainWindow = new BrowserWindow({
@@ -20,6 +15,7 @@ app.on('ready', function(){
             nodeIntegration:true,
             contextIsolation:false,
             webSecurity:false,
+            devTools:false,
             allowDisplayInsecureContent:true,
             allowRunningInsecureContent:true
         }

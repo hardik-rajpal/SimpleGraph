@@ -28,7 +28,7 @@ vector<Node*> extractor(graph g){
     return verts;
 }
 
-bool areconnected(string label1, string label2){
+bool areAdjacent(string label1, string label2){
     return (g.AM[stoi(label1)][stoi(label2)]==1)||(g.AM[stoi(label2)][stoi(label1)]==1);
 }
 int main(){
@@ -40,7 +40,7 @@ int main(){
     g.AM[1][2] = 1;
     SimpleGraph myg;
     myg.extractGraph<graph>(g, extractor);
-    myg.addEdgesByRelation(areconnected);
+    myg.addEdgesByRelation(areAdjacent);
     myg.initServer();
     myg.syncGraph(true);
 }
