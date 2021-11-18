@@ -6,5 +6,5 @@ setTimeout(()=>{
 process.chdir('.\\fabext');
 // console.log()
 setTimeout(()=>{
-    exec("node secthreader.js " + process.argv[2]);
+    exec("node thread2.js " + process.argv[2]);
 }, 0)

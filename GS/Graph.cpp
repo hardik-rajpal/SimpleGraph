@@ -591,7 +591,7 @@ ServerSocket* SimpleGraph::initServer(int port, string host){
     #ifdef SERVERUSED    
     server = new ServerSocket(port, host);
     // string portstr = to_string(port);
-    system((" node .\\fabext\\threader.js " + to_string(port)).c_str());
+    system((" node .\\fabext\\thread1.js " + to_string(port)).c_str());
     server->listenForClient();
     server->sendDataARP("DIM:"+to_string(canvasWidth)+"x" + to_string(canvasHeight), *this);
     #endif
