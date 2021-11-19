@@ -145,7 +145,7 @@ class SimpleGraph{
     /*✅*/void setRenderDelay(int delay);
     
     //methods to serialize/parse data
-    /*✅*/string serialize();
+    /*✅*/string serialize(string dtype="await");
     /*✅*/void appendRendData(string data);
     /*✅*/void parseCommand(string cmd);
     

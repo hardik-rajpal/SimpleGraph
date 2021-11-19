@@ -548,10 +548,11 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
     }
 }
 
-string SimpleGraph::serialize(){
+string SimpleGraph::serialize(string dtype){
     string temp, temp2;
     string data = "{ \"H\":";
     data = data + quotestring(ptrtostr(this->head)) + ",\n";
+    data = data +"\"dtype\": " + quotestring(dtype) + ",\n";
     data = data + "\"V\": [\n";
     for(int i=0;i<nv-1;i++){
         temp = V[i]->lastSerialization;
@@ -633,14 +634,14 @@ void SimpleGraph::syncGraph(bool pausemain){
         if(pausemain){
             //subscript with zero to allow broken transmission
             server->sendDataARP(this->serialize()+"0", *this);
-            cout<<"awaiting\n";
+            cout<<"awaiting";
         }
         else{
             assignCoords(rc::RAND, V[0], false);//root is irrelevant in rc::rand
             //assign coordinates to any node without
             // server->sendDataARP(this->serialize()+"0", *this);
-            server->sendData(this->serialize() +"0");
-            // this->appendRendData(server->awaitSignal());
+            server->sendData(this->serialize("run") +"0");
+            server->awaitSignal();
             Sleep(renderDelay);
         }
     }

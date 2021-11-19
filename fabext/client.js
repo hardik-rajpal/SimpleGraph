@@ -120,20 +120,19 @@ function main(){
         global.datarec +=recon
         // console.log(global.datarec.substr(0,global.datarec.length-1))
         if(global.datarec[global.datarec.length-1]=='0'){
-            console.log(global.datarec.substr(0, 5));
+            console.log(global.datarec.substr(0, 5));            
             parsedata = JSON.parse(global.datarec.substr(0,global.datarec.length-1))
             console.log(parsedata);
-            // resetCanvas(canvas);
             render(parsedata,canvas);
             canvas.renderMeta_lastsynced = {...canvas.renderMeta};
             global.datarec = ""
-            let Vdata = filterForServer(global.canvas)
-            let dat = JSON.stringify(Vdata)
-            if(Vdata.V.length==0){
-                // client.write("play")
+            if(parsedata.dtype!="run"){
+                let Vdata = filterForServer(global.canvas)
+                let dat = JSON.stringify(Vdata)
+                client.write(dat)
             }
             else{
-                client.write(dat)
+                client.write("run");//msg irrelevant. 
             }
 
         }
