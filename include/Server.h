@@ -6,7 +6,7 @@
 #include<string>
 #include"../include/Graph.h"
 using namespace std;
-#define MAXBUF 1000000
+#define MAXBUF 100000
 class SimpleGraph;
 /*✅*/class ServerSocket{
      public:
@@ -18,17 +18,18 @@ class SimpleGraph;
      char          recvbuff[MAXBUF], sendbuff[MAXBUF];
      int                ByteReceived, BytesSent,i, nlen, SelectTiming;
      bool showlogs = false;
-    /*✅*/ServerSocket(int port, string addr);
-    /*✅*/int recvTimeOutTCP(SOCKET socket, long sec, long usec);
-    /*✅*/void listenForClient();
-    /*✅*/string awaitSignal();
-    /*✅*/void sendData(string msg);
-    /*✅*/void closeConnection();
+    /*✅*/ServerSocket(int port, string addr);//constructor
+    /*✅*/int recvTimeOutTCP(SOCKET socket, long sec, long usec);//receive time out
+    /*✅*/void listenForClient();//wait for client to connect.
+    /*✅*/string awaitSignal();//wait for client to say something
+    /*✅*/void sendData(string msg);//send data to client
+    /*✅*/void closeConnection();//close connection with client
 
 
     /*Graph specific functions here*/
-    /*✅*/void sendDataARP(string msg, SimpleGraph &g);
-    /*✅*/string awaitRecParse(SimpleGraph &g);
+    /*✅*/void sendDataARP(string msg, SimpleGraph &g);//send data and wait until told to 'play'
+    //ARP stands for awaitReceiveParse
+    /*✅*/string awaitRecParse(SimpleGraph &g);//wait indefinitely until told to 'play'
 
 };
 #endif

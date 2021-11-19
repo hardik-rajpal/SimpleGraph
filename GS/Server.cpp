@@ -245,7 +245,9 @@ string ServerSocket::awaitSignal(){
 void ServerSocket::sendData(string msg){
 // Some info on the receiver side...
     strcpy(sendbuff,msg.c_str());
+    // cout<<msg<<" ";
     getsockname(NewConnection, (SOCKADDR *)&ServerAddr, (int *)sizeof(ServerAddr));
+    
     if(showlogs){
         printf("Server: Send IP(s) used: %s\n", inet_ntoa(ServerAddr.sin_addr));
         printf("Server: Receiver port used: %d\n", htons(ServerAddr.sin_port));
@@ -255,6 +257,7 @@ void ServerSocket::sendData(string msg){
         printf("%s, %d\n", inet_ntoa(ServerAddr.sin_addr), htons(ServerAddr.sin_port));
         // printf("%d\n", htons(ServerAddr.sin_port));
     }
+    
     // Sends some data to server/receiver...
     BytesSent = send(NewConnection, sendbuff, strlen(sendbuff), 0);
     if(BytesSent == SOCKET_ERROR)
@@ -336,13 +339,13 @@ void ServerSocket::closeConnection(){
 
 
 /*✅*/void ServerSocket::sendDataARP(string msg, SimpleGraph &g){
+    cout<<"Here\n";
     sendData(msg);
     awaitRecParse(g);
 }
 /*✅*/string ServerSocket::awaitRecParse(SimpleGraph &g){
     sendData("paused");
     while(true){
-        
         string resp = awaitSignal();
         // cout<<"Waiting response: ";
         // cout<<resp<<"\n";

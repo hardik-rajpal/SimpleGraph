@@ -22,19 +22,21 @@ bool isolatedNode(Node* n, SimpleGraph * g){
     return (g->getpathbetween(n, g->getNodeByLabel("1"), {}).size())==0;
 }
 int main(int argc, char * argv[]){
+    
     int numvert = atoi(argv[1]);
     vector<string> labels;
     for(int i=0;i<numvert;i++){
         labels.push_back(to_string(i+1));
+        // cout<<labels[i]<<" ";
     }
-    SimpleGraph g;
-    g = SimpleGraph(labels);
-
+    SimpleGraph  g = SimpleGraph(labels);
     g.addEdgesByRelation(collatzNums);
-    g = g.getInducedSubgraph(g.getNodesIf<SimpleGraph*>(isolatedNode, &g));
-    g.setCanvasDimensions(700, 650);
-    g.assignCoords(g.rc::BFSSYM, g.getNodeByLabel("1"));
-    g.initServer(7172);
-    g.syncGraph(true);
-    g.syncGraph(true);
+    SimpleGraph g2 = g.getInducedSubgraph(g.getNodesIf<SimpleGraph*>(isolatedNode, &g));
+    
+    g2.setCanvasDimensions(700, 650);
+    g2.assignCoords(g2.rc::BFSSYM, g2.getNodeByLabel("1"));
+    g2.initServer(7171)->showlogs = true;
+    Sleep(1000);
+    g2.syncGraph(true);
+    g2.syncGraph(true);
 }

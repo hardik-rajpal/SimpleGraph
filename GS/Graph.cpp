@@ -22,6 +22,7 @@ SimpleGraph::SimpleGraph(string s, vector<int> vals){
 SimpleGraph::SimpleGraph(vector<string> labels){
     for(int i=0;i<labels.size();i++){
         addNode(labels[i]);
+        // cout<<V[i]->label<<" is the new label\n";
     }
     head = V[0];
 }
@@ -282,12 +283,7 @@ HalfEdge *SimpleGraph::getEdgeByNodes(Node*n1, Node*n2){
     return NULL;
 }
 SimpleGraph SimpleGraph::getInducedSubgraph(vector<Node*> vToExclude){
-    SimpleGraph *subgraph = new SimpleGraph(this->getAdjList());string lab;
-    // cout<<subgraph->getAdjList();
-    for(int i=0;i<vToExclude.size();i++){
-        lab = vToExclude[i]->label;
-        // cout<<this->getNodeByLabel(lab)<<" "<<subgraph->getNodeByLabel(lab)<<"\n";
-    }
+    SimpleGraph *subgraph = new SimpleGraph(this->getAdjList());
     for(int i=0;i<V.size();i++){
         for(int j=0;j<vToExclude.size();j++){
             if(V[i]==vToExclude[j]){
@@ -295,8 +291,6 @@ SimpleGraph SimpleGraph::getInducedSubgraph(vector<Node*> vToExclude){
             }
         }
     }
-
-    // cout<<subgraph->V.size()<<" "<<this->V.size()<<"\n";
     return (*subgraph);
 }
 vector<vector<Node*>> SimpleGraph:: getCliques(){
@@ -494,7 +488,7 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
         int sepy=50;
         int mas = int((1-2*FOS)*CW);//max allowed spread;
         SimpleGraph *tr = bfs(bfsroot, false);
-        V[0]->coords = {CCX, sepy};
+        bfsroot->coords = {CCX, sepy};
         int currh = 0, numnodes=0, y, htemp, sepx, xmin=0;
         sepy = CH/(tr->height);
         for(int i=0;i<tr->V.size();i++){
@@ -550,14 +544,14 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
         int sepy=20;
         int mas = int((1-2*FOS)*CW);//max allowed spread;
         SimpleGraph *tr = bfs(bfsroot, false);
-        V[0]->coords = {CCX, 20};
+        bfsroot->coords = {CCX, 20};
         spreadDFSBW(tr->V[0], mas, this, tr);
     }
     else if(config==rc::BFSSYM){
         int sepy=20;
         int mas = int((1-2*EXFOS)*CW);//max allowed spread;
         SimpleGraph *tr = bfs(bfsroot, false);
-        V[0]->coords = {CCX, 20};
+        bfsroot->coords = {CCX, 20};
         spreadDFS(tr->V[0], mas, this, tr);
     }
 }
@@ -618,7 +612,7 @@ void SimpleGraph::parseCommand(string cmd){
 }
 
 ServerSocket* SimpleGraph::initServer(int port, string host){
-    #ifdef SERVERUSED    
+    #ifdef SERVERUSED
     server = new ServerSocket(port, host);
     // string portstr = to_string(port);
     system((" node .\\fabext\\thread1.js " + to_string(port)).c_str());
@@ -641,15 +635,16 @@ ServerSocket* SimpleGraph::setAutoRender(bool state){
     
 }
 void SimpleGraph::syncGraph(bool pausemain){
-    // cout<<"Called";
+    // cout<<"Called123";
     #ifdef SERVERUSED
     // cout<<SERVERUSED<<" ";
     if(server!=NULL){
         assignCoords(rc::RAND, V[0], false);//root is irrelevant in rc::rand
         //assign coordinates to any node without
         if(pausemain){
-
+            // cout<<"Gonna send msgs";
             //subscript with zero to allow broken transmission
+            // cout<<server<<"\n";
             server->sendDataARP(this->serialize()+"0", *this);
             // cout<<"awaiting";
         }

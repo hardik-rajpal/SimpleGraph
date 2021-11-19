@@ -19,6 +19,7 @@ int main(){
     myg.addBranch(myg.getNodeByLabel("2"), {"R1", "R2", "R3", "R4"}, {});
     // myg.assignCoords(myg.rc::BFSSYM, myg.getNodeByLabel("5"), false);
     myg.initServer();
+    Sleep(1000);
     myg.syncGraph(true);
     myg.setAutoRender(true);
     myg.setRenderDelay(100);
