@@ -1,30 +1,32 @@
 ############################
-DSA Project by Hardik Rajpal
+SimpleGraph: DSA Project by Hardik Rajpal
 ############################
 
 I have (with permission) done a project different from the two screensaver
 alternatives offered in the announcement. This is a data structure library
 for (undirected for now) Graphs in C++. It comes with an Electron-based
-renderer for graphs created using the library. The two programs communicate
-via local socket server (c++) and client (js) objects.
+renderer for graphs that are created using the library. The two programs
+communicate via local socket server (c++) and client (js) objects.
 
-The demo suggested by Prof. Raman was an animation of a bfs. That is not ready
-yet.
+The demo suggested by Prof. Raman was an animation of a bfs.
 
 Supported platforms: Windows 10 (64bit).
 
 Graph.h: Contains list of functionality (with few definitions) and classes.
 
-Graph.cpp: Contains implementation of SimpleGraph, Edge, Node and ServerSocket.
+Server.h: Contains list of functionality for ServerSocket class.
+
+config.h: Used to allow building with and without the server implementation.
+
+Graph.cpp: Contains implementation of SimpleGraph methods.
 
 Graph.tpp: Contains implementations of functions using c++ templates (they can't be
             implemented in regular .cpp files.)
 
-server.cpp:Contains implementation for ServerSocket.cpp using winsock2 API.
+Server.cpp:Contains implementation for ServerSocket.cpp using winsock2 API.
 
-main.cpp: Example program using the library.
-
-testing.cpp: Secondary testing file. (Not relevant to the project's demo).
+Static.cpp: Contains auxiliary functions like serializers and parsers, and
+            templates for standard graphs.
 
 Makefile: makefile for Windows.
 
@@ -34,6 +36,10 @@ Renderer in ./fabext:
 
     fabric.js: contains rendering functions and data structures.
 
+    thread1.js: This file is called by initServer() from c++. It calls thread2.js
+
+    thread2.js: This in turn launchs the renderer program.
+
     fabric.min.js: 3rd party canvas library file.
 
     main.js: main file for Electron application.
@@ -41,3 +47,14 @@ Renderer in ./fabext:
     mainWindow.html: Window design for Electron application.
 
     package.json and package-lock.json: node js configuration files.
+
+
+Setup (Windows 10, 64bit only):
+    RF = root folder contains fabext, GS, include, src, Makefile
+    In RF/fabext:
+        run: "npm i" in the terminal to install node packages.
+        run: "npm start" to test the renderer. If version-based errors arise, go SO.
+    Once the renderer is working, you can directlly use the makefile with "nmake."
+    If the renderer doesn't work, you can use the library by changing nmake commands to
+    echo SERVERNOTUSED > ./include/config.h
+    ...compilation command.

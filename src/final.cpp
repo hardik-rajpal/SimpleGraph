@@ -26,6 +26,7 @@ int main(){
     myg.syncGraph(true);
     dfstree->assignCoords(dfstree->rc::BFSSYM, dfstree->V[0]);
     dfstree->initServer(7172);
+    Sleep(1000);
     dfstree->syncGraph(true);   
     myg.syncGraph(true);
 }

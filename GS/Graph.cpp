@@ -472,7 +472,7 @@ void SimpleGraph::setCanvasDimensions(int width, int height){
     canvasHeight = height;
 }
 void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
-    cout<<"Hello?";
+    // cout<<"Hello?";
     int CW, CH, CCX, CCY;
     CW = canvasWidth; CH = canvasHeight; CCX = CW/2; CCY = CH/2;
     if(config==rc::RAND){
