@@ -2,7 +2,6 @@
 #include"../include/Graph.h"
 using namespace std;
 class graph{
-    
     public:
     int nv;
     int V[10];
@@ -32,6 +31,7 @@ bool areAdjacent(string label1, string label2){
     return (g.AM[stoi(label1)][stoi(label2)]==1)||(g.AM[stoi(label2)][stoi(label1)]==1);
 }
 int main(){
+    srand(0);
     g = graph(3);
     g.V[0] = 0;
     g.V[1] = 1;
@@ -41,6 +41,8 @@ int main(){
     SimpleGraph myg;
     myg.extractGraph<graph>(g, extractor);
     myg.addEdgesByRelation(areAdjacent);
+    cout<<myg.getAdjList();
+    // myg.assignCoords(myg.rc::BFSFILL, myg.getNodeByLabel("1"));
     myg.initServer();
     myg.syncGraph(true);
 }

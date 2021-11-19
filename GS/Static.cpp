@@ -1,7 +1,5 @@
 #include<bits/stdc++.h>
 #include"../include/Graph.h"
-#define FOS 0.05 //factor of safety
-#define EXFOS 0.1 //extra factor of safety
 using namespace std;
 string quotestring(string tbq){
     return "\""+tbq+"\"";
@@ -74,7 +72,7 @@ vector<vector<string>> parseLists(string data, int level){
 }
 vector<int> rotateXY(int x, int y, int ang_deg_anti){
     vector<int> ans;
-    double ratio = 3.1415/180;
+    double ratio = DEG2RAD;
     ans.push_back(x*cos(ang_deg_anti*ratio) + y*sin(ang_deg_anti*ratio));
     ans.push_back(-x*sin(ang_deg_anti*ratio) + y*cos(ang_deg_anti*ratio));
     return ans;
@@ -87,7 +85,7 @@ void getCycle(vector<int> vals, SimpleGraph* g){
     int rad = vals[1];
     int  x, y;
     double theta = 0;
-    double dtheta = (360/(1.0*n))*(3.1415/180);
+    double dtheta = (360/(1.0*n))*(DEG2RAD);
     g->setCenter(CCX, CCY);
     for(int i=0;i<n;i++){
         x = CCX + (int)rad*cos(theta + i*dtheta);
@@ -109,7 +107,7 @@ void getComplete(vector<int> vals, SimpleGraph *g){
     int rad = vals[1];
     int x, y;
     double theta = 0;
-    double dtheta = (360/(1.0*n))*(3.1415/180);
+    double dtheta = (360/(1.0*n))*(DEG2RAD);
     g->setCenter(CCX, CCY);
     for(int i=0;i<n;i++){
         x = CCX + (int)rad*cos(theta + i*dtheta);
@@ -158,7 +156,7 @@ void getWheel(vector<int> vals, SimpleGraph* g){
     int rad = vals[1];
     int x, y;
     double theta = 0;
-    double dtheta = (360/(1.0*n))*(3.1415/180);
+    double dtheta = (360/(1.0*n))*(DEG2RAD);
     g->setCenter(CCX, CCY);
     for(int i=0;i<n;i++){
         x = CCX + (int)rad*cos(theta + i*dtheta);
@@ -185,7 +183,7 @@ void getStar(vector<int>  vals, SimpleGraph* g){
     int rad = vals[1];
     int x, y;
     double theta = 0;
-    double dtheta = (360/(1.0*n))*(3.1415/180);
+    double dtheta = (360/(1.0*n))*(DEG2RAD);
     for(int i=0;i<n;i++){
         x = CCX + (int)rad*cos(theta + i*dtheta);
         y = CCY + (int)rad*sin(theta + i*dtheta);
@@ -226,7 +224,7 @@ void getCircularLadder(vector<int> vals, SimpleGraph*g){
     int radius2 = vals[2];
     int x, y;
     double theta = 0;
-    double dtheta = (360/(1.0*n))*(3.1415/180);
+    double dtheta = (360/(1.0*n))*(DEG2RAD);
     for(int i=0;i<n;i++){
         x = CCX + (int)rad*cos(theta + i*dtheta);
         y = CCY + (int)rad*sin(theta + i*dtheta);
@@ -346,7 +344,7 @@ void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     unsetnodes = {};
 
     ht = heightFromMeta(v);
-    cout<<v->label<<"has kids: ";
+    // cout<<v->label<<"has kids: ";
     for(int j=0;j<v->outlist.size();j++){
         if(ht+1==heightFromMeta(bfstree->getNodeByLabel(v->outlist[j]->end->label))){
             // cout<<"adding to unset: "<<v->outlist[j]->end->label<<"\n";
@@ -355,11 +353,11 @@ void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     }
     int l = unsetnodes.size();
     if(l>1){
-        sepx = int((1-2*EXFOS)*spread/(l-1));
-        cout<<"numchil: "<<l<<",sep"<<sepx<<"\n";
+        sepx = int((1.0-2*EXFOS)*spread/(l-1));
+        // cout<<"numchil: "<<l<<",sep"<<sepx<<"\n";
     }
     else if(l==1){
-        sepx = 30;//doesn't matter
+        sepx = 10;//doesn't matter
     }
     if(l%2==1){
     x = int(main->getNodeByLabel(v->label)->coords[0] - int(sepx*((l-1)/2.0)));
@@ -368,11 +366,10 @@ void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     x = int(main->getNodeByLabel(v->label)->coords[0] - int(sepx*((l-1)/2.0)));
     }
 
-    cout<<"first x: "<<x<<"\n";
+    // cout<<"first x: "<<x<<"\n";
     for(int j=0;j<unsetnodes.size();j++){
         unsetnodes[j]->coords = {x + sepx*j,sepy*(ht+2)};
-        cout<<"passing node: "<<unsetnodes[j]->label<<"\n";
-        spreadDFS(tr->getNodeByLabel(unsetnodes[j]->label), int(spread/l), main, tr);
+        spreadDFS(tr->getNodeByLabel(unsetnodes[j]->label), int((1-2*FOS)*spread/l), main, tr);
     }
 }
 

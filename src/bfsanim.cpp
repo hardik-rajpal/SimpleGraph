@@ -36,11 +36,18 @@ int main(int argc, char*argv[]){
     for(int i=0;i<numvert/5;i++){
         myg.connectNodes(myg.getNodeByLabel(duplabels[rand()%numvert]), myg.getNodeByLabel(duplabels[rand()%numvert]));
     }
-    // myg.setAutoRender(true);
+    myg.assignCoords(myg.rc::RAND, myg.getNodeByLabel("0"));
+    myg.syncGraph(true);
     myg.assignCoords(myg.rc::BFSFILL, myg.getNodeByLabel("0"));
+    myg.syncGraph(true);
+    myg.assignCoords(myg.rc::BFSBW, myg.getNodeByLabel("0"));
+    myg.syncGraph(true);
+    myg.assignCoords(myg.rc::BFSSYM, myg.getNodeByLabel("0"));
+    myg.syncGraph(true);
+    myg.assignCoords(myg.rc::BFSFILLBW, myg.getNodeByLabel("0"));
     myg.syncGraph(true);
     myg.setAutoRender(true);
     // myg.setRenderDelay(500);
-    myg.bfs(myg.getNodeByLabel("0"), true, {"#50C878", "#6698FF", "white"});
+    myg.bfs(myg.getNodeByLabel("0"), true);
     myg.syncGraph(true);
 }

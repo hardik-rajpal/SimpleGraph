@@ -68,7 +68,20 @@ SimpleGraph::SimpleGraph(string adjlist){
         }
     }
 }
-
+SimpleGraph::~SimpleGraph(){
+    // cout<<"Destroyed!";
+    for(int i=0;i<nv;i++){
+        for(int j=0;j<V[i]->outlist.size();j++){
+            delete V[i]->outlist[j];
+        }
+        delete V[i];
+    }
+    #ifdef SERVERUSED
+    if(server!=NULL){
+        server->closeConnection();
+    }
+    #endif
+}
 Node* SimpleGraph::addNode(string label){
     Node *n;
     setCoords = false;
@@ -466,13 +479,13 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
     if(config==rc::RAND){
         if(overwrite){
             for(int i=0;i<V.size();i++){
-                V[i]->coords = {int(CW*0.05)+rand()%(int(CW*0.9)), int(CH*0.05)+rand()%(int(CH*0.9))};
+                V[i]->coords = {int(CW*FOS)+rand()%(int(CW*(1-2*FOS))), int(CH*FOS)+rand()%(int(CH*(1-2*FOS)))};
             }
         }
         else{
             for(int i=0;i<V.size();i++){
                 if(V[i]->coords[0]==0 && V[i]->coords[1]==0){
-                    V[i]->coords = {int(CW*0.05)+rand()%(int(CW*0.9)), int(CH*0.05)+rand()%(int(CH*0.9))};
+                    V[i]->coords = {int(CW*FOS)+rand()%(int(CW*(1-2*FOS))), int(CH*FOS)+rand()%(int(CH*(1-2*FOS)))};
                 }
             }
         }
@@ -480,7 +493,7 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
     }
     else if(config==rc::BFSFILL){
         int sepy=50;
-        int mas = int(0.99*CW);//max allowed spread;
+        int mas = int((1-2*FOS)*CW);//max allowed spread;
         SimpleGraph *tr = bfs(bfsroot, false);
         V[0]->coords = {CCX, sepy};
         int currh = 0, numnodes=0, y, htemp, sepx, xmin=0;
@@ -490,7 +503,7 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
             htemp = heightFromMeta(tr->V[min(i+1, nv-1)]);
             if(htemp>currh || i==nv-1){
                 y = max(sepy*currh, 50);
-                sepx = int(0.9*CW)/max(numnodes-1, 1);
+                sepx = int((1-2*FOS)*CW)/max(numnodes-1, 1);
                 for(int j=i-numnodes+1;j<i+1;j++){
                     getNodeByLabel(tr->V[j]->label)->coords = {xmin + sepx*(j-(i-numnodes+1)), y};
                 }
@@ -502,17 +515,17 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
     }
     else if(config==rc::BFSFILLBW){
         int sepy=50;
-        int mas = int(0.8*CW);//max allowed spread;
+        int mas = int((1-2*FOS)*CW);//max allowed spread;
         SimpleGraph *tr = bfs(bfsroot, false);
         bfsroot->coords = {CCX, sepy};
         vector<int> bws;
-        int currh = 0, numnodes=0, y, htemp, sepx, xmin=int(0.1*CW), totbws;
+        int currh = 0, numnodes=0, y, htemp, sepx, xmin=int(FOS*CW), totbws;
         sepy = CH/(tr->height);
         for(int i=0;i<tr->V.size();i++){
             numnodes++;
             htemp = heightFromMeta(tr->V[min(i+1, nv-1)]);
             if(htemp>currh || i==nv-1){
-                xmin=int(0.1*CW);
+                xmin=int(FOS*CW);
                 bws.clear();totbws = 0;
                 y = max(sepy*currh, 20);
                 for(int j=i-numnodes+1;j<i+1;j++){
@@ -541,10 +554,17 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
     }
     else if(config==rc::BFSBW){
         int sepy=20;
-        int mas = int(0.90*CW);//max allowed spread;
+        int mas = int((1-2*FOS)*CW);//max allowed spread;
         SimpleGraph *tr = bfs(bfsroot, false);
         V[0]->coords = {CCX, 20};
         spreadDFSBW(tr->V[0], mas, this, tr);
+    }
+    else if(config==rc::BFSSYM){
+        int sepy=20;
+        int mas = int((1-2*EXFOS)*CW);//max allowed spread;
+        SimpleGraph *tr = bfs(bfsroot, false);
+        V[0]->coords = {CCX, 20};
+        spreadDFS(tr->V[0], mas, this, tr);
     }
 }
 
@@ -631,14 +651,15 @@ void SimpleGraph::syncGraph(bool pausemain){
     #ifdef SERVERUSED
     // cout<<SERVERUSED<<" ";
     if(server!=NULL){
+        assignCoords(rc::RAND, V[0], false);//root is irrelevant in rc::rand
+        //assign coordinates to any node without
         if(pausemain){
+
             //subscript with zero to allow broken transmission
             server->sendDataARP(this->serialize()+"0", *this);
             cout<<"awaiting";
         }
         else{
-            assignCoords(rc::RAND, V[0], false);//root is irrelevant in rc::rand
-            //assign coordinates to any node without
             server->sendData(this->serialize() +"0");
             server->awaitSignal();
             Sleep(renderDelay);

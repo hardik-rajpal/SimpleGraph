@@ -6,6 +6,9 @@
 #include"Server.h"
 #define MAXV 1000
 #define MAXE 499500 //1000C2
+#define FOS 0.05 //factor of safety
+#define EXFOS 0.1 //extra factor of safety
+#define DEG2RAD 3.1415/180
 using namespace std;
 
 // classes
@@ -85,7 +88,7 @@ class SimpleGraph{
     //Renderer integration
     bool autorender=false, setCoords = false;
     int renderDelay = 0;
-    enum rc{BFSFILL, RAND, BFSBW, BFSFILLBW};
+    enum rc{BFSFILL, RAND, BFSBW, BFSFILLBW, BFSSYM};
     vector<int> center = {200, 200};
     int height=0;
     int canvasWidth = 700;
@@ -99,7 +102,7 @@ class SimpleGraph{
     /*✅*/SimpleGraph(bool adjmat[MAXV][MAXV], vector<string> labels);//constructor using adjacency matrix.
     /*✅*/SimpleGraph(string adjlist);//constructor using adjlist in string.
     /*✅*/SimpleGraph(string graphsymbol, vector<int> vals);//constructor using mathematical notation.
-    
+    ~SimpleGraph();//destructor
     /*✅*/Node* addNode(string label);
     /*✅*/Node* addNode(string label, vector<int> coords, int weight, string color);
     /*✅*/bool deleteNode(Node *n1);
@@ -128,8 +131,8 @@ class SimpleGraph{
     /*✅*/vector<Node*> getshortestpathbetween(Node *n1, Node*n2);
     /*✅*/int getDistanceBetween(Node *n1, Node *n2);
     //search methods.
-    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"green", "blue", "white"});//return a bfs tree
-    /*✅*/SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"green", "blue", "white"});//return a dfs tree
+    /*✅*/SimpleGraph *bfs(Node *s, bool colornodes=false, vector<string> colorops={"#50C878", "#6698FF", "white"});//return a bfs tree
+    /*✅*/SimpleGraph *dfs(Node *s, bool colournodes=false, vector<string> colorops={"#50C878", "#6698FF", "white"});//return a dfs tree
 
     /*✅*/template<class T>
     void assignVertices(vector<T> vertices, function<string(T)> labelmaker);

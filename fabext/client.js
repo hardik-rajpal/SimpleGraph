@@ -124,6 +124,7 @@ function main(){
             parsedata = JSON.parse(global.datarec.substr(0,global.datarec.length-1))
             // console.log(parsedata);
             render(parsedata,canvas);
+            console.log(canvas.renderMeta)
             canvas.renderMeta_lastsynced = {...canvas.renderMeta};
             global.datarec = ""
             client.write("r");

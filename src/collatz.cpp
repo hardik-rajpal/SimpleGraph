@@ -32,8 +32,8 @@ int main(int argc, char * argv[]){
 
     g.addEdgesByRelation(collatzNums);
     g = g.getInducedSubgraph(g.getNodesIf<SimpleGraph*>(isolatedNode, &g));
-    g.setCanvasDimensions(1400, 1300);
-    g.assignCoords(g.rc::BFSFILLBW, g.getNodeByLabel("1"));
+    g.setCanvasDimensions(700, 650);
+    g.assignCoords(g.rc::BFSSYM, g.getNodeByLabel("1"));
     g.initServer(7172);
     g.syncGraph(true);
     g.syncGraph(true);
