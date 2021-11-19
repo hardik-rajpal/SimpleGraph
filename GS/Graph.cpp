@@ -639,8 +639,7 @@ void SimpleGraph::syncGraph(bool pausemain){
         else{
             assignCoords(rc::RAND, V[0], false);//root is irrelevant in rc::rand
             //assign coordinates to any node without
-            // server->sendDataARP(this->serialize()+"0", *this);
-            server->sendData(this->serialize("run") +"0");
+            server->sendData(this->serialize() +"0");
             server->awaitSignal();
             Sleep(renderDelay);
         }

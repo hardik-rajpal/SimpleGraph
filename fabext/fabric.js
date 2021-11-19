@@ -13,6 +13,7 @@ class VNode{
         let radroot = Math.SQRT1_2*radius;
         this.x = x
         this.y = y
+        this.changed = false;
         this.radroot = radroot
         this.label = label
         this.weight = weight
@@ -161,9 +162,9 @@ function render(data,canvas){
     let renderMeta = canvas.renderMeta
     for(var i=0;i<data.V.length;i++){
         let v = data.V[i]
-        if(v.coords.x==0 &&v.coords.y==0){
-            v.coords = newrandCoords(canvas, data.V[Math.max(i-1,0)].coords.y, data.V.length);
-        }
+        // if(v.coords.x==0 &&v.coords.y==0){
+        //     v.coords = newrandCoords(canvas, data.V[Math.max(i-1,0)].coords.y, data.V.length);
+        // }
         if(v.color==""){
             v.color="cyan"
         }
@@ -182,24 +183,17 @@ function render(data,canvas){
     for(var i=0;i<data.V.length;i++){
         let v = data.V[i];
         for(var j = 0;j<v.outlist.length;j++){
-            
             if(renderMeta.E[v.outlist[j].ptr]==undefined && renderMeta.E[v.outlist[j].conjugate]==undefined){
                 if(v.outlist[j].color==""){
                     v.outlist[j].color = "red"
                 }
                 renderMeta.E[v.outlist[j].ptr] = new Edge(renderMeta.V[v.ptr],renderMeta.V[v.outlist[j].end],v.outlist[j].label,v.outlist[j].color,canvas); 
-            }
-            else{
-    
-            }
-    
+            }   
         }
     }
 }
 const nodeDrag = (ev)=>{
         let group = ev.transform.target
-        //console.log(group.edges);
-        // //console.log()
         let canvas = ev.target.canvas
         let renderMeta = ev.target.canvas.renderMeta
         let radius = renderMeta.radius
@@ -219,7 +213,8 @@ const nodeDrag = (ev)=>{
             group.node.y = canvas.height - group.top;
             
         }
-        ev.target.canvas.renderAll()
+        group.node.changed = true;
+        canvas.renderAll()
 }
 const displayData = (ev)=>{
     // console.log(ev)
@@ -251,12 +246,12 @@ function filterForServer(canvas){
     let toReturn = {};
     toReturn.V = [];
     let keysToReturn = []
-    // console.log(Object.keys(V))
     for(let v of Object.keys(V)){
-        if(V[v]!=V_ls[v]){
+        if(V[v].changed){
             // console.log(V[v])
             toReturn.V.push({x:V[v].x, y:V[v].y});
             keysToReturn.push(v);
+            V[v].changed = false;
         }
     }
     toReturn.ptrs = keysToReturn;
