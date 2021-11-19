@@ -40,9 +40,8 @@ int main(){
     g.AM[1][2] = 1;
     SimpleGraph myg;
     myg.extractGraph<graph>(g, extractor);
-    myg.addEdgesByRelation(areAdjacent);
-    cout<<myg.getAdjList();
-    // myg.assignCoords(myg.rc::BFSFILL, myg.getNodeByLabel("1"));
     myg.initServer();
+    myg.addEdgesByRelation(areAdjacent);
+    Sleep(1000);
     myg.syncGraph(true);
 }

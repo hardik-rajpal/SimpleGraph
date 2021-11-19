@@ -84,7 +84,6 @@ SimpleGraph::~SimpleGraph(){
 }
 Node* SimpleGraph::addNode(string label){
     Node *n;
-    setCoords = false;
     n = new Node(label);
     V.push_back(n);
     nv++;
@@ -287,7 +286,7 @@ SimpleGraph SimpleGraph::getInducedSubgraph(vector<Node*> vToExclude){
     // cout<<subgraph->getAdjList();
     for(int i=0;i<vToExclude.size();i++){
         lab = vToExclude[i]->label;
-        cout<<this->getNodeByLabel(lab)<<" "<<subgraph->getNodeByLabel(lab)<<"\n";
+        // cout<<this->getNodeByLabel(lab)<<" "<<subgraph->getNodeByLabel(lab)<<"\n";
     }
     for(int i=0;i<V.size();i++){
         for(int j=0;j<vToExclude.size();j++){
@@ -297,7 +296,7 @@ SimpleGraph SimpleGraph::getInducedSubgraph(vector<Node*> vToExclude){
         }
     }
 
-    cout<<subgraph->V.size()<<" "<<this->V.size()<<"\n";
+    // cout<<subgraph->V.size()<<" "<<this->V.size()<<"\n";
     return (*subgraph);
 }
 vector<vector<Node*>> SimpleGraph:: getCliques(){
@@ -433,9 +432,9 @@ SimpleGraph *SimpleGraph::dfs(Node *s, bool colornodes, vector<string> colorops)
                 break;
             }
         }
-        cout<<newdepth;
+        // cout<<newdepth;
         if(newdepth){newdepth = false; continue;}
-        cout<<u->label<<" "<<u->color<<"\n";
+        // cout<<u->label<<" "<<u->color<<"\n";
         colors[i_u] = 0;
         if(colornodes){u->color = colorops[0];}
         RENDER
@@ -473,7 +472,7 @@ void SimpleGraph::setCanvasDimensions(int width, int height){
     canvasHeight = height;
 }
 void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
-    setCoords = true;
+    cout<<"Hello?";
     int CW, CH, CCX, CCY;
     CW = canvasWidth; CH = canvasHeight; CCX = CW/2; CCY = CH/2;
     if(config==rc::RAND){
@@ -537,11 +536,6 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
                 if(bws.size()>0){
                     getNodeByLabel(tr->V[i-numnodes+1]->label)->coords = {xmin, y};
                 }
-                cout<<totbws<<"\n";
-                for(auto x:bws){
-                    cout<<x<<" ";
-                }
-                cout<<"\n";
                 for(int j=i-numnodes+2;j<i+1;j++){
                     xmin+=(mas*((bws[j-i+numnodes-2]+bws[j-i+numnodes-1])/(2.0*totbws)));
                     getNodeByLabel(tr->V[j]->label)->coords = {xmin, y};
@@ -586,15 +580,15 @@ string SimpleGraph::serialize(string dtype){
     return data;
 }
 void SimpleGraph::appendRendData(string data){
-    cout<<"\n"<<data<<"\n";
+    // cout<<"\n"<<data<<"\n";
     vector<vector<string>> strdata = parseLists(data, 3);
     vector<vector<int>> coords;
-    cout<<strdata.size();
+    // cout<<strdata.size();
     if(strdata.size()>0){
         for(auto x:strdata[0]){
             coords.push_back(toCoords(x));
         }
-        cout<<"Hi";
+        // cout<<"Hi";
         for(int i=0;i<strdata[1].size();i++){
             for(int j=0;j<V.size();j++){
                 if(quotestring(ptrtostr((void*)(V[j])))==strdata[1][i]){
@@ -640,14 +634,14 @@ ServerSocket* SimpleGraph::setAutoRender(bool state){
         autorender = true;
     }
     else{
-        cout<<"AutoRender can be enabled only after calling initServer(port, host)!\n";
+        cout<<"E: AutoRender can be enabled only after calling initServer(port, host)!\n";
     }
     #endif
     return server;
     
 }
 void SimpleGraph::syncGraph(bool pausemain){
-    cout<<"Called";
+    // cout<<"Called";
     #ifdef SERVERUSED
     // cout<<SERVERUSED<<" ";
     if(server!=NULL){
@@ -657,7 +651,7 @@ void SimpleGraph::syncGraph(bool pausemain){
 
             //subscript with zero to allow broken transmission
             server->sendDataARP(this->serialize()+"0", *this);
-            cout<<"awaiting";
+            // cout<<"awaiting";
         }
         else{
             server->sendData(this->serialize() +"0");
@@ -666,7 +660,7 @@ void SimpleGraph::syncGraph(bool pausemain){
         }
     }
     else{
-        cout<<"You need to call initServer(port, host) before sync!\n";
+        cout<<"E: You need to call initServer(port, host) before sync!\n";
     }
     #endif
 }

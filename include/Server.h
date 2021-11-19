@@ -17,6 +17,7 @@ class SimpleGraph;
      // Receiving part
      char          recvbuff[MAXBUF], sendbuff[MAXBUF];
      int                ByteReceived, BytesSent,i, nlen, SelectTiming;
+     bool showlogs = false;
     /*✅*/ServerSocket(int port, string addr);
     /*✅*/int recvTimeOutTCP(SOCKET socket, long sec, long usec);
     /*✅*/void listenForClient();

@@ -10,38 +10,54 @@ ServerSocket::ServerSocket(int port, string addr){
     {
         // The WSAGetLastError() function is one of the only functions
         // in the Winsock 2.2 DLL that can be called in the case of a WSAStartup failure
-        printf("Server: WSAStartup failed with error %ld.\n", WSAGetLastError());
+        if(showlogs){
+            printf("Server: WSAStartup failed with error %ld.\n", WSAGetLastError());
+        }
+
         // Exit with error
         // return 1;
     }
     else
     {
-        printf("Server: The Winsock DLL found!\n");
-        printf("Server: The current status is %s.\n", wsaData.szSystemStatus);
+        if(showlogs){
+            printf("Server: The Winsock DLL found!\n");
+            printf("Server: The current status is %s.\n", wsaData.szSystemStatus);
+        }
     }
     if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2 )
     {
         //Tell the user that we could not find a usable WinSock DLL
-        printf("Server: The dll do not support the Winsock version %u.%u!\n",LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
+        if(showlogs){
+            printf("Server: The dll do not support the Winsock version %u.%u!\n",LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
+
+        }
         // Do the clean up
         WSACleanup();
     }
     else
-    {
-        printf("Server: The dll supports the Winsock version %u.%u!\n", LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
-        printf("Server: The highest version this dll can support is %u.%u\n",LOBYTE(wsaData.wHighVersion), HIBYTE(wsaData.wHighVersion));
+    {    if(showlogs)
+        {
+            printf("Server: The dll supports the Winsock version %u.%u!\n", LOBYTE(wsaData.wVersion),HIBYTE(wsaData.wVersion));
+            printf("Server: The highest version this dll can support is %u.%u\n",LOBYTE(wsaData.wHighVersion), HIBYTE(wsaData.wHighVersion));
+        }
     }
     // Create a new socket to listen for client connections.
     ListeningSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     // Check for errors to ensure that the socket is a valid socket.
     if (ListeningSocket == INVALID_SOCKET)
     {
-        printf("Server: Error at socket(), error code: %ld.\n", WSAGetLastError());
+        if(showlogs){
+            printf("Server: Error at socket(), error code: %ld.\n", WSAGetLastError());
+        }
+
         // Clean up
         WSACleanup();
     }
     else{
-        printf("Server: socket() is OK!\n");
+        if(showlogs){
+            printf("Server: socket() is OK!\n");
+        }
+
     }
     // Set up a SOCKADDR_IN structure that will tell bind that we
     // want to listen for connections on all interfaces using port 7171.
@@ -55,14 +71,20 @@ ServerSocket::ServerSocket(int port, string addr){
 
     if (bind(ListeningSocket, (SOCKADDR *)&ServerAddr, sizeof(ServerAddr))==SOCKET_ERROR)
     {
-        printf("Server: bind() failed! Error code: %ld.\n", WSAGetLastError());
+        if(showlogs){
+            printf("Server: bind() failed! Error code: %ld.\n", WSAGetLastError());
+        }
+
         // Close the socket
         closesocket(ListeningSocket);
         // Do the clean up
         WSACleanup();
     }
     else{
-        printf("Server: bind() is OK!\n");
+        if(showlogs){
+            printf("Server: bind() is OK!\n");
+        }
+
     }
 }
 
@@ -90,7 +112,10 @@ void ServerSocket::listenForClient(){
     while(1){
         if (listen(ListeningSocket, 5) == SOCKET_ERROR)
         {    
+            if(showlogs){
             printf("Server: listen(): Error listening on socket %ld.\n", WSAGetLastError());
+
+            }
             // Close the socket
             closesocket(ListeningSocket);
             // Do the clean up
@@ -99,7 +124,10 @@ void ServerSocket::listenForClient(){
             return ;
         }
         else{
+            if(showlogs){
             printf("Server: listen() is OK, I'm listening for connections...\n");
+            }
+
         }
 
         // Set 10 seconds 10 useconds timeout
@@ -107,13 +135,18 @@ void ServerSocket::listenForClient(){
         switch (SelectTiming)
         {
             case 0:{
+                if(showlogs){
                     // Timed out, do whatever you want to handle this situation
                     printf("\nServer: Timeout lor while waiting you retard client! Retrying...\n");
+
+                }
                     continue;
             }
             case -1:{
-            // Error occurred, more tweaking here and the recvTimeOutTCP()...
-            printf("\nServer: Some error encountered with code number: %ld\n", WSAGetLastError());
+                if(showlogs){
+                    // Error occurred, more tweaking here and the recvTimeOutTCP()...
+                    printf("\nServer: Some error encountered with code number: %ld\n", WSAGetLastError());
+                }
             break;
             }
             default:{
@@ -129,8 +162,11 @@ void ServerSocket::listenForClient(){
                             // it to the NewConnection socket, let the ListeningSocket
                             // do the listening for more connection
                             NewConnection = accept(ListeningSocket, NULL, NULL);
-                            printf("\nServer: accept() is OK...\n");
-                            printf("Server: New client got connected, ready to receive and send data...\n");
+                            if(showlogs){
+                                printf("\nServer: accept() is OK...\n");
+                                printf("Server: New client got connected, ready to receive and send data...\n");
+
+                            }
                             return;
                         }
                     }
@@ -154,23 +190,32 @@ string ServerSocket::awaitSignal(){
         
         if ( ByteReceived > 0 )
         {
-            printf("Server: recv() looks fine....\n");
+            if(showlogs){
+                printf("Server: recv() looks fine....\n");
+            }
+
             // Some info on the receiver side...
             getsockname(ListeningSocket, (SOCKADDR *)&ServerAddr,(int *)sizeof(ServerAddr));
-            printf("Server: Receiving IP(s) used: %s\n",inet_ntoa(ServerAddr.sin_addr));
-            printf("Server: Receiving port used: %d\n", htons(ServerAddr.sin_port));
+            if(showlogs){
+                printf("Server: Receiving IP(s) used: %s\n",inet_ntoa(ServerAddr.sin_addr));
+                printf("Server: Receiving port used: %d\n", htons(ServerAddr.sin_port));
+
+            }
             // Some info on the sender side
             // Allocate the required resources
             memset(&SenderInfo, 0, sizeof(SenderInfo));
             nlen = sizeof(SenderInfo);
             getpeername(NewConnection, (SOCKADDR *)&SenderInfo, &nlen);
-            printf("Server: Sending IP used: %s\n", inet_ntoa(SenderInfo.sin_addr));
-            printf("Server: Sending port used: %d\n", htons(SenderInfo.sin_port));
-            // Print the received bytes. Take note that this is the total
-            // byte received, it is not the size of the declared buffer
-            printf("Server: Bytes received: %d\n", ByteReceived);
-            // Print what those bytes represent
-            printf("Server: Those bytes are: \n");
+            if(showlogs){
+                printf("Server: Sending IP used: %s\n", inet_ntoa(SenderInfo.sin_addr));
+                printf("Server: Sending port used: %d\n", htons(SenderInfo.sin_port));
+                // Print the received bytes. Take note that this is the total
+                // byte received, it is not the size of the declared buffer
+                printf("Server: Bytes received: %d\n", ByteReceived);
+                // Print what those bytes represent
+                printf("Server: Those bytes are: \n");
+            }
+
             // Print the string only, discard other
             // remaining 'rubbish' in the 1024 buffer size
             recvbuff[ByteReceived] = '\0';
@@ -178,16 +223,20 @@ string ServerSocket::awaitSignal(){
             //         printf("%c", recvbuff[i]);
             // }
             ByteReceived = 0;
-            printf("\n");
-            printf("Here");
             return string(recvbuff);
         }
         else if(ByteReceived == 0 ){
+            if(showlogs){
                 printf("Server: Connection closed!\n");
+            }
+
                 return string("EXIT");
         }
         else{
-            printf("Server: recv() failed with error code: %d\n", WSAGetLastError());
+            if(showlogs){
+                printf("Server: recv() failed with error code: %d\n", WSAGetLastError());
+            }
+
             return string("EXIT");
         }
         return string(resp);
@@ -195,28 +244,43 @@ string ServerSocket::awaitSignal(){
 }
 void ServerSocket::sendData(string msg){
 // Some info on the receiver side...
-strcpy(sendbuff,msg.c_str());
-getsockname(NewConnection, (SOCKADDR *)&ServerAddr, (int *)sizeof(ServerAddr));
-printf("Server: Send IP(s) used: %s\n", inet_ntoa(ServerAddr.sin_addr));
-printf("Server: Receiver port used: %d\n", htons(ServerAddr.sin_port));
-// Sends some data to server/receiver...
-BytesSent = send(NewConnection, sendbuff, strlen(sendbuff), 0);
-if(BytesSent == SOCKET_ERROR)
-{
-    printf("Server: send() error %ld.\n", WSAGetLastError());
-}
-else
-{
-    printf("Server: send() is OK - bytes sent: %ld\n", BytesSent);
-    // Some info on this sender side...
-    // Allocate the required resources
-    memset(&SenderInfo, 0, sizeof(SenderInfo));
-    nlen = sizeof(SenderInfo);
-    getsockname(NewConnection, (SOCKADDR *)&SenderInfo, &nlen);
-    printf("Server: Sender IP(s) used: %s\n", inet_ntoa(SenderInfo.sin_addr));
-    printf("Server: Sender port used: %d\n", htons(SenderInfo.sin_port));
-    // printf("Server: Those bytes represent: \"%s\"\n", sendbuff);
-}
+    strcpy(sendbuff,msg.c_str());
+    getsockname(NewConnection, (SOCKADDR *)&ServerAddr, (int *)sizeof(ServerAddr));
+    if(showlogs){
+        printf("Server: Send IP(s) used: %s\n", inet_ntoa(ServerAddr.sin_addr));
+        printf("Server: Receiver port used: %d\n", htons(ServerAddr.sin_port));
+        
+    }
+    else{
+        printf("%s, %d\n", inet_ntoa(ServerAddr.sin_addr), htons(ServerAddr.sin_port));
+        // printf("%d\n", htons(ServerAddr.sin_port));
+    }
+    // Sends some data to server/receiver...
+    BytesSent = send(NewConnection, sendbuff, strlen(sendbuff), 0);
+    if(BytesSent == SOCKET_ERROR)
+    {   
+        if(showlogs){
+            printf("Server: send() error %ld.\n", WSAGetLastError());
+        }
+
+    }
+    else
+    {
+        if(showlogs){
+            printf("Server: send() is OK - bytes sent: %ld\n", BytesSent);
+        }
+
+        // Some info on this sender side...
+        // Allocate the required resources
+        memset(&SenderInfo, 0, sizeof(SenderInfo));
+        nlen = sizeof(SenderInfo);
+        getsockname(NewConnection, (SOCKADDR *)&SenderInfo, &nlen);
+        if(showlogs){
+            printf("Server: Sender IP(s) used: %s\n", inet_ntoa(SenderInfo.sin_addr));
+            printf("Server: Sender port used: %d\n", htons(SenderInfo.sin_port));
+        }
+        // printf("Server: Those bytes represent: \"%s\"\n", sendbuff);
+    }
 }
 
 
@@ -224,31 +288,49 @@ else
 void ServerSocket::closeConnection(){
     sendbuff[0] = '\0';
     if( shutdown(NewConnection, SD_SEND) != 0){
-        printf("\nServer: Well, there is something wrong with the shutdown(). The error code: %ld\n", WSAGetLastError());
+        if(showlogs){printf("\nServer: Well, there is something wrong with the shutdown(). The error code: %ld\n", WSAGetLastError());}
     }               
     else{
-        printf("\nServer: shutdown() looks OK...\n");
+        if(showlogs){
+            printf("\nServer: shutdown() looks OK...\n");
+        }
+
     }
     // Well, if there is no more connection in 15 seconds,
     // just exit this listening loop...
     if( recvTimeOutTCP(ListeningSocket, 2, 0) == 0){
+        if(showlogs){
         printf("\nServer: The listening socket is timeout...\n");
+        }
+
         return;
     }
 
     // When all the data communication and listening finished, close the socket
     if(closesocket(ListeningSocket) != 0){
-        printf("Server: Cannot close ListeningSocket socket. Error code: %ld\n", WSAGetLastError());
+        if(showlogs){
+            printf("Server: Cannot close ListeningSocket socket. Error code: %ld\n", WSAGetLastError());
+        }
+
     }
     else{
-        printf("Server: Closing ListeningSocket socket...\n");
+        if(showlogs){
+            printf("Server: Closing ListeningSocket socket...\n");
+        }
+
     }
     // Finally and optionally, clean up all those WSA setup
     if(WSACleanup() != 0){
+        if(showlogs){
         printf("Server: WSACleanup() failed! Error code: %ld\n", WSAGetLastError());
+
+        }
     }
     else{
-        printf("Server: WSACleanup() is OK...\n");
+        if(showlogs){
+            printf("Server: WSACleanup() is OK...\n");
+        }
+
     }
 }
 
@@ -262,11 +344,11 @@ void ServerSocket::closeConnection(){
     while(true){
         
         string resp = awaitSignal();
-        cout<<"Waiting response: ";
-        cout<<resp<<"\n";
+        // cout<<"Waiting response: ";
+        // cout<<resp<<"\n";
         if(resp=="EXIT"){
             closeConnection();
-            cout<<"\nError fsr\n";
+            cout<<"\nE:Error in Reception!\n";
             return "EXIT";
         }
         if(resp.length()>20){

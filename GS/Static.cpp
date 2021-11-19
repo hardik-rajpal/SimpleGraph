@@ -297,7 +297,7 @@ void spreadDFSBW(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     SimpleGraph *tr = bfstree;
     ht = heightFromMeta(v);
     if(bfstree->getNodesIf<int>(heightis, ht).size()==1){
-        cout<<v->label<<" is solo "<<"\n";
+        // cout<<v->label<<" is solo "<<"\n";
         main->getNodeByLabel(v->label)->coords[0] = CCX;
         spread = (1-2*FOS)*CW;
     }
@@ -318,19 +318,19 @@ void spreadDFSBW(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     bws.push_back(spread);
     totbws = max(totbws, 1);
     x = int(main->getNodeByLabel(v->label)->coords[0] - int(spread*(1/2.0)) + int(spread*(1.0*bws[0]/(2.0*totbws))));
-    cout<<"first x: "<<x<<"\n";
+    // cout<<"first x: "<<x<<"\n";
     if(unsetnodes.size()>0){
         unsetnodes[0]->coords = {x,sepy*(ht+2)};
-        cout<<"passing node: "<<unsetnodes[0]->label<<"\n";
+        // cout<<"passing node: "<<unsetnodes[0]->label<<"\n";
         spreadDFSBW(tr->getNodeByLabel(unsetnodes[0]->label), (1-2*FOS)*spread*bws[0]/(1.0*totbws), main, tr);
     }
     int cumulx = x;
     for(int j= 1;j<unsetnodes.size();j++){
         sepx = spread*(bws[j-1] + bws[j])/(2.0*totbws);
-        cout<<"sep btwn"<<unsetnodes[j-1]->label<<" "<<unsetnodes[j]->label<<" "<<sepx<<"\n";
+        // cout<<"sep btwn"<<unsetnodes[j-1]->label<<" "<<unsetnodes[j]->label<<" "<<sepx<<"\n";
         cumulx +=sepx;
         unsetnodes[j]->coords = {cumulx,sepy*(ht+2)};
-        cout<<"passing node: "<<unsetnodes[j]->label<<"\n";
+        // cout<<"passing node: "<<unsetnodes[j]->label<<"\n";
         spreadDFSBW(tr->getNodeByLabel(unsetnodes[j]->label), (1-2*FOS)*spread*bws[j]/(1.0*totbws), main, tr);
     }
 }
@@ -340,7 +340,7 @@ void spreadDFS(Node *v, int spread, SimpleGraph *main, SimpleGraph *bfstree){
     vector<Node*> unsetnodes;
     int x, y, sepx=40, sepy=CH/(bfstree->height+1), ht;
     SimpleGraph *tr = bfstree;
-    cout<<"At node: "<<v->label<<"\n";
+    // cout<<"At node: "<<v->label<<"\n";
     unsetnodes = {};
 
     ht = heightFromMeta(v);
