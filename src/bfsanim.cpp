@@ -40,6 +40,7 @@ int main(int argc, char*argv[]){
     myg.assignCoords(myg.rc::BFSFILL, myg.getNodeByLabel("0"));
     myg.syncGraph(true);
     myg.setAutoRender(true);
-    cout<<myg.bfs(myg.getNodeByLabel("0"), true, {"#50C878", "#6698FF", "white"})->getAdjList();
+    myg.setRenderDelay(500);
+    myg.bfs(myg.getNodeByLabel("0"), true, {"#50C878", "#6698FF", "white"});
     myg.syncGraph(true);
 }

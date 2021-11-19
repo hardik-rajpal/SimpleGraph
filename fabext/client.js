@@ -33,7 +33,7 @@ function exportMinTXT(){
     sendCommand("expmintxt");
 }
 function syncData(){
-    let vdata = JSON.stringify(filterForServer(global.canvas.renderMeta))
+    let vdata = JSON.stringify(filterForServer(global.canvas))
     global.client.write(vdata)
 }
 function exportJSON(){
@@ -101,6 +101,7 @@ function main(){
     client.on('data', function(data){
         setStatus("Rec.");
         recon = String.fromCharCode.apply(null,data.toJSON().data)
+        console.log("REc mgs: " + recon)
         if(recon=="paused"){
             setStatus("Connected:Paused <button class=\"btn btn-primary btn-sm\" onclick=\"syncData();sendCommand('play')\">Play</button>");
             return;
@@ -117,18 +118,24 @@ function main(){
             return;
         }
         global.datarec +=recon
-        console.log(global.datarec.substr(0,global.datarec.length-1))
+        // console.log(global.datarec.substr(0,global.datarec.length-1))
         if(global.datarec[global.datarec.length-1]=='0'){
-
+            console.log(global.datarec.substr(0, 5));
             parsedata = JSON.parse(global.datarec.substr(0,global.datarec.length-1))
             console.log(parsedata);
             // resetCanvas(canvas);
             render(parsedata,canvas);
+            canvas.renderMeta_lastsynced = {...canvas.renderMeta};
             global.datarec = ""
-            let Vdata = filterForServer(canvas.renderMeta)
+            let Vdata = filterForServer(global.canvas)
             let dat = JSON.stringify(Vdata)
-            // console.log(dat)
-            client.write(dat)
+            if(Vdata.V.length==0){
+                // client.write("play")
+            }
+            else{
+                client.write(dat)
+            }
+
         }
         setStatus("Connected");
     })

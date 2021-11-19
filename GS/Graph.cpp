@@ -71,6 +71,7 @@ SimpleGraph::SimpleGraph(string adjlist){
 
 Node* SimpleGraph::addNode(string label){
     Node *n;
+    setCoords = false;
     n = new Node(label);
     V.push_back(n);
     nv++;
@@ -458,13 +459,24 @@ void SimpleGraph::setCanvasDimensions(int width, int height){
     canvasWidth = width;
     canvasHeight = height;
 }
-void SimpleGraph::assignCoords(int config, Node* bfsroot){
+void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
+    setCoords = true;
     int CW, CH, CCX, CCY;
     CW = canvasWidth; CH = canvasHeight; CCX = CW/2; CCY = CH/2;
     if(config==rc::RAND){
-        for(int i=0;i<V.size();i++){
-            V[i]->coords = {int(CW*0.05)+rand()%(int(CW*0.9)), int(CH*0.05)+rand()%(int(CH*0.9))};
+        if(overwrite){
+            for(int i=0;i<V.size();i++){
+                V[i]->coords = {int(CW*0.05)+rand()%(int(CW*0.9)), int(CH*0.05)+rand()%(int(CH*0.9))};
+            }
         }
+        else{
+            for(int i=0;i<V.size();i++){
+                if(V[i]->coords[0]==0 && V[i]->coords[1]==0){
+                    V[i]->coords = {int(CW*0.05)+rand()%(int(CW*0.9)), int(CH*0.05)+rand()%(int(CH*0.9))};
+                }
+            }
+        }
+
     }
     else if(config==rc::BFSFILL){
         int sepy=50;
@@ -557,17 +569,20 @@ void SimpleGraph::appendRendData(string data){
     vector<vector<string>> strdata = parseLists(data, 3);
     vector<vector<int>> coords;
     cout<<strdata.size();
-    for(auto x:strdata[0]){
-        coords.push_back(toCoords(x));
-    }
-    cout<<"Hi";
-    for(int i=0;i<strdata[1].size();i++){
-        for(int j=0;j<V.size();j++){
-            if(quotestring(ptrtostr((void*)(V[j])))==strdata[1][i]){
-                V[j]->coords = coords[i];
+    if(strdata.size()>0){
+        for(auto x:strdata[0]){
+            coords.push_back(toCoords(x));
+        }
+        cout<<"Hi";
+        for(int i=0;i<strdata[1].size();i++){
+            for(int j=0;j<V.size();j++){
+                if(quotestring(ptrtostr((void*)(V[j])))==strdata[1][i]){
+                    V[j]->coords = coords[i];
+                }
             }
         }
     }
+
 }
 void SimpleGraph::parseCommand(string cmd){
     if(cmd=="expjson"){
@@ -618,10 +633,14 @@ void SimpleGraph::syncGraph(bool pausemain){
         if(pausemain){
             //subscript with zero to allow broken transmission
             server->sendDataARP(this->serialize()+"0", *this);
+            cout<<"awaiting\n";
         }
         else{
+            assignCoords(rc::RAND, V[0], false);//root is irrelevant in rc::rand
+            //assign coordinates to any node without
+            // server->sendDataARP(this->serialize()+"0", *this);
             server->sendData(this->serialize() +"0");
-            this->appendRendData(server->awaitSignal());
+            // this->appendRendData(server->awaitSignal());
             Sleep(renderDelay);
         }
     }

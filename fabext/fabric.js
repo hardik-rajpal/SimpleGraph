@@ -243,15 +243,22 @@ const hideData = (ev)=>{
     }
 
 }
-function filterForServer(renderMeta){
+function filterForServer(canvas){
+    let renderMeta_lastsynced = canvas.renderMeta_lastsynced
+    let renderMeta = canvas.renderMeta
     let V = renderMeta.V
+    let V_ls = renderMeta_lastsynced.V
     let toReturn = {};
     toReturn.V = [];
+    let keysToReturn = []
     // console.log(Object.keys(V))
     for(let v of Object.keys(V)){
-        // console.log(V[v])
-        toReturn.V.push({x:V[v].x, y:V[v].y});
+        if(V[v]!=V_ls[v]){
+            // console.log(V[v])
+            toReturn.V.push({x:V[v].x, y:V[v].y});
+            keysToReturn.push(v);
+        }
     }
-    toReturn.ptrs = Object.keys(V);
+    toReturn.ptrs = keysToReturn;
     return toReturn;
 }

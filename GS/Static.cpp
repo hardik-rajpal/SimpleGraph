@@ -56,6 +56,13 @@ vector<vector<string>> parseLists(string data, int level){
             }
         }
     }
+    // cout<<"Elements of datastr:";
+    // for(auto x:datastr){
+    //     cout<<x<<", ";
+    // }
+    if(datastr[0].length()==0){
+        return lists;
+    }
     datastr[0] = datastr[0].substr(1, datastr[0].length()-2);
     lists.push_back(split(datastr[0], "},{"));
     // lists.push_back({datastr[0]});

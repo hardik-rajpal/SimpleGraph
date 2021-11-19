@@ -83,7 +83,7 @@ class SimpleGraph{
     static const map<string,function<void(vector<int>, SimpleGraph*)>> makers;
     static const map<string, int> validvals;
     //Renderer integration
-    bool autorender=false;
+    bool autorender=false, setCoords = false;
     int renderDelay = 0;
     enum rc{BFSFILL, RAND, BFSBW, BFSFILLBW};
     vector<int> center = {200, 200};
@@ -141,7 +141,7 @@ class SimpleGraph{
     /*✅*/void translate(int x, int y);
     /*✅*/void rotate(int angle_anticlockwise);
     /*✅*/void setCanvasDimensions(int width=700, int height=650);
-    /*✅*/void assignCoords(int CONFIG, Node* bfsroot);
+    /*✅*/void assignCoords(int CONFIG, Node* bfsroot, bool overwrite=true);
     /*✅*/void setRenderDelay(int delay);
     
     //methods to serialize/parse data

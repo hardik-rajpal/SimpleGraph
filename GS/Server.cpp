@@ -260,7 +260,10 @@ void ServerSocket::closeConnection(){
 /*✅*/string ServerSocket::awaitRecParse(SimpleGraph &g){
     sendData("paused");
     while(true){
+        
         string resp = awaitSignal();
+        cout<<"Waiting response: ";
+        cout<<resp<<"\n";
         if(resp=="EXIT"){
             closeConnection();
             cout<<"\nError fsr\n";
