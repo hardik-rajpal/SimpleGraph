@@ -7,6 +7,9 @@ dfs:  src/dfsanim.cpp GS/Graph.cpp GS/Server.cpp GS/Static.cpp
 col:  src/collatz.cpp GS/Graph.cpp GS/Server.cpp GS/Static.cpp
 	echo #define SERVERUSED > ./include/config.h
 	g++ src/collatz.cpp GS/Graph.cpp GS/Static.cpp GS/Server.cpp -lws2_32 -o build/col
+colws:  src/collatz.cpp GS/Graph.cpp GS/Static.cpp
+	echo #define NOTSERVERUSED > ./include/config.h
+	g++ src/collatz.cpp GS/Graph.cpp GS/Static.cpp -o build/colws
 nodemod:
 	cd fabext
 	npm i

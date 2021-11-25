@@ -35,8 +35,9 @@ int main(int argc, char * argv[]){
     
     g2.setCanvasDimensions(700, 650);
     g2.assignCoords(g2.rc::BFSSYM, g2.getNodeByLabel("1"));
-    g2.initServer(7171)->showlogs = true;
+    g2.initServer(7171);
     Sleep(1000);
     g2.syncGraph(true);
     g2.syncGraph(true);
+    cout<<g2.getAdjList();
 }
