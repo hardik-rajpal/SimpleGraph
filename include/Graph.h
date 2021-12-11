@@ -149,7 +149,7 @@ class SimpleGraph{
     /*✅*/void setRenderDelay(int delay);//set the renderDelay
     
     //methods to serialize/parse data
-    /*✅*/string serialize(string dtype="await");//return serialized data of object, dtype is to classify signal type
+    /*✅*/string serialize(string dtype="await", bool getAll=false);//return serialized data of object, dtype is to classify signal type
     /*✅*/void appendRendData(string data);//change graph data based on data received from renderer.
     /*✅*/void parseCommand(string cmd);//process a command from the renderer.
     

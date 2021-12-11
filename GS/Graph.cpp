@@ -556,7 +556,7 @@ void SimpleGraph::assignCoords(int config, Node* bfsroot, bool overwrite){
     }
 }
 
-string SimpleGraph::serialize(string dtype){
+string SimpleGraph::serialize(string dtype, bool getAll){
     string temp, temp2;
     string data = "{ \"H\":";
     data = data + quotestring(ptrtostr(this->head)) + ",\n";
@@ -565,7 +565,7 @@ string SimpleGraph::serialize(string dtype){
     for(int i=0;i<nv-1;i++){
         temp = V[i]->lastSerialization;
         temp2 = V[i]->serialize();
-        if(temp!=temp2){
+        if((temp!=temp2)||getAll){
             data = data + temp2 + ",\n";
         }
     }
@@ -597,7 +597,7 @@ void SimpleGraph::parseCommand(string cmd){
     if(cmd=="expjson"){
         ofstream outf;
         outf.open("export.json",ios::out);
-        string output = serialize();
+        string output = serialize("await", true);
         outf.write(output.c_str(), output.length());
         outf.close();
         // cout<<"Exporting json";

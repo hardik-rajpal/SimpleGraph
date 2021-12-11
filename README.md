@@ -56,8 +56,8 @@ Renderer in ./fabext:
 Setup (Windows 10, 64bit only):
     RF = root folder contains fabext, GS, include, src, Makefile
     In RF/fabext:
-        run: "npm i" in the terminal to install node packages.
-        run: "npm start" to test the renderer. If version-based errors arise, go SO.
+        run: "npm i" in the terminal (of the right folder) to install node packages.
+        run: "npm start" to test the renderer. If version-based errors arise, go S.O.
     Once the renderer is working, you can directlly use the makefile with "nmake."
     If the renderer doesn't work, you can use the library by changing nmake commands to
     echo SERVERNOTUSED > ./include/config.h
